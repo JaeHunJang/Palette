@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Palette</string>
+
+    <string name="signIn_acc"> Account</string>
+    <string name="signIn_pw"> Password</string>
+    <string name="signIn_find">비밀번호찾기</string>
+    <string name="signIn_signUp">회원가입</string>
+    <string name="signIn_signIn">로그인</string>
+    <string name="signIn_visit">비회원으로 이용하기</string>
+
+    <string name="signUp_act_name">Sign Up</string>
+    <string name="signUp_acc">New Account</string>
+    <string name="signUp_pw">New Password</string>
+    <string name="signUp_pwChk">Password Check</string>
+    <string name="signUp_nick">NickName to Use</string>
+    <string name="signUp_birth">Your birthDay</string>
+    <string name="signUp_hint">Hint to find your ID</string>
+    <string name="signUp_signUp">가입</string>
+
+
+
+
+    <string name="main_bnv_search">Search</string>
+    <string name="main_bnv_lib">Library</string>
+    <string name="main_bnv_new">New</string>
+</resources>

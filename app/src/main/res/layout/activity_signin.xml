@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignInActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/app_name"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/signIn_til_id"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/signIn_til_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/signIn_tit_id"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_account_circle_black_24dp"
+            android:hint="@string/signIn_acc"
+            android:inputType="text" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/signIn_til_pw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signIn_til_id">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/signIn_tit_pw"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+            android:hint="@string/signIn_pw"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/signIn_btn_findID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signIn_find"
+        app:layout_constraintRight_toLeftOf="@id/signIn_btn_signUp"
+        app:layout_constraintTop_toTopOf="@id/signIn_btn_signUp" />
+
+    <Button
+        android:id="@+id/signIn_btn_signUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/signIn_signUp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signIn_til_pw" />
+
+    <Button
+        android:id="@+id/signIn_btn_signIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signIn_signIn"
+        app:layout_constraintLeft_toRightOf="@+id/signIn_btn_signUp"
+        app:layout_constraintTop_toTopOf="@id/signIn_btn_signUp" />
+
+
+    <TextView
+        android:id="@+id/signIn_tv_visit"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="@string/signIn_visit"
+        android:textColor="#000000"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signIn_btn_signUp" />
+</android.support.constraint.ConstraintLayout>
