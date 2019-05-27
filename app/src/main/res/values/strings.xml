@@ -17,10 +17,11 @@
     <string name="signUp_hint">Hint to find your ID</string>
     <string name="signUp_signUp">가입</string>
 
-
-
-
     <string name="main_bnv_search">Search</string>
     <string name="main_bnv_lib">Library</string>
     <string name="main_bnv_new">New</string>
+
+    <string name="new_ib_color_des">Selected Color</string>
+    <string name="new_edt_color_init">0</string>
+
 </resources>

@@ -2,11 +2,6 @@ package jjh.com.palette;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -17,9 +12,16 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Pattern;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUpActivity extends AppCompatActivity {
     DBHelper dbhelper;
@@ -243,13 +245,13 @@ public class SignUpActivity extends AppCompatActivity {
                 TextInputEditText dlg_ui_tit_pw;
                 TextInputLayout dlg_ui_til_pw;
 
-                dlg_ui_tv_id = dlg_userInfo.findViewById(R.id.dlg_ui_tv_id);
-                dlg_ui_tv_nick = dlg_userInfo.findViewById(R.id.dlg_ui_tv_nick);
-                dlg_ui_tv_birth = dlg_userInfo.findViewById(R.id.dlg_ui_tv_birth);
-                dlg_ui_tv_hint = dlg_userInfo.findViewById(R.id.dlg_ui_tv_hint);
+                dlg_ui_tv_id = dlg_userInfo.findViewById(R.id.ui_tv_id);
+                dlg_ui_tv_nick = dlg_userInfo.findViewById(R.id.ui_tv_nick);
+                dlg_ui_tv_birth = dlg_userInfo.findViewById(R.id.ui_tv_birth);
+                dlg_ui_tv_hint = dlg_userInfo.findViewById(R.id.ui_tv_hint);
 
-                dlg_ui_tit_pw = dlg_userInfo.findViewById(R.id.dlg_ui_tit_pw);
-                dlg_ui_til_pw = dlg_userInfo.findViewById(R.id.dlg_ui_til_pw);
+                dlg_ui_tit_pw = dlg_userInfo.findViewById(R.id.ui_tit_pw);
+                dlg_ui_til_pw = dlg_userInfo.findViewById(R.id.ui_til_pw);
 
                 dlg_ui_tv_id.setText("ID : "+id);
                 dlg_ui_tit_pw.setText(pw);

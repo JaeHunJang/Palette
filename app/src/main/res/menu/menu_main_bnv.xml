@@ -8,25 +8,22 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_account_circle_black_24dp"/>
     <item
-        android:id="@+id/action_search"
-        android:title="@string/main_bnv_search"
-        android:enabled="true"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_search_black_24dp">
-    </item>
-    <item
         android:id="@+id/action_library"
         android:title="@string/main_bnv_lib"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_library_books_black_24dp">
-    </item>
+        android:icon="@drawable/ic_library_books_black_24dp"/>
     <item
         android:id="@+id/action_new"
         android:title="@string/main_bnv_new"
         app:showAsAction="ifRoom"
         android:enabled="true"
 
-        android:icon="@drawable/ic_palette_black_24dp">
-    </item>
+        android:icon="@drawable/ic_palette_black_24dp"/>
+    <item
+        android:id="@+id/action_search"
+        android:title="@string/main_bnv_search"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_search_black_24dp"/>
 </menu>

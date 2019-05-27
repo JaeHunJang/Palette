@@ -1,52 +1,74 @@
 package jjh.com.palette;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity {
+    BottomNavigationView main_bnv_menu;
+    ViewPager viewPager;
 
+    FragmentAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationView main_bnv_menu;
+
 
         main_bnv_menu = findViewById(R.id.main_bnv_menu);
         main_bnv_menu.inflateMenu(R.menu.menu_main_bnv);
 
-        /*
-        findViewById(R.id.main_fab_setting).setOnClickListener(new View.OnClickListener() {
+
+        viewPager = findViewById(R.id.main_container);
+        adapter = new FragmentAdapter(getSupportFragmentManager());
+
+        adapter.addItem(new UserInfoFragment());
+        adapter.addItem(new MyLibraryFragment());
+        adapter.addItem(new NewThemeFragment());
+        adapter.addItem(new SearchFragment());
+        adapter.notifyDataSetChanged();
+
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(3);
+        main_bnv_menu.setSelectedItemId(R.id.action_search);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                main_bnv_menu.getMenu().getItem(position).setChecked(true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
-        */
-        main_bnv_menu.setSelected(false);
+
         main_bnv_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                Intent intent;
                 switch (id){
-                    case R.id.action_search:
-                         intent = new Intent(MainActivity.this, SearchActivity.class);
-                        startActivity(intent);
+                    case R.id.action_acc:
+                        viewPager.setCurrentItem(0);
                         break;
                     case R.id.action_library:
-                        intent = new Intent(MainActivity.this, MyLibraryActivity.class);
-                        startActivity(intent);
+                        viewPager.setCurrentItem(1);
                         break;
                     case R.id.action_new:
-                        intent = new Intent(MainActivity.this, NewThemeActivity.class);
-                        startActivity(intent);
+                        viewPager.setCurrentItem(2);
+                        break;
+                    case R.id.action_search:
+                        viewPager.setCurrentItem(3);
                         break;
                 }
                 return false;
