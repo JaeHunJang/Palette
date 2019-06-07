@@ -102,9 +102,6 @@ public class NewThemeFragment extends Fragment {
         colorPickerView.attachBrightnessSlider(brightnessSlideBar);//색상선택기에 명도 투명도 선택기 추가
         colorPickerView.attachAlphaSlider(alphaSlideBar);
 
-        selectionButton();//처음 선택버튼 알림
-        changeColor();
-
         //스피너에 색상 모드 리스트 적용
         ArrayAdapter<String> spinnerAdpater = new ArrayAdapter<>(newTheme.getContext(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.color_mode));
         spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -113,21 +110,21 @@ public class NewThemeFragment extends Fragment {
         spinner_mode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                for (View m : mode) {
+                for (View m : mode) { //색상모드들을 전부 보이지않게 초기화
                     m.setVisibility(View.INVISIBLE);
                 }
-                mode[position].setVisibility(View.VISIBLE);
+                mode[position].setVisibility(View.VISIBLE); //선택한 모드만 보이게 설정
                 int[] tempColor = colorPickerView.getColorEnvelope().getArgb(); //선택된 색상을 가져옴
-                for (int i = 0; i < tempColor.length; i++) { //색상정보를 SeekBar, EditText 에 적용
+                for (int i = 0; i < tempColor.length; i++) { //색상정보를 argb 값에 저장
                     selectedRGB[i] = tempColor[i];
                 }
-                switch (position){
+                switch (position){ //선택된 모드
                     case 0:
-                        changeEdtRgb();
+                        changeEdtRgb(); //현재 선택된 색상정보로 EditText, SeekBar 값 변경
                         changeSbRgb();
                         break;
                     case 1:
-                        RGBToCMYK(selectedRGB);
+                        RGBToCMYK(selectedRGB); //ARGB 기준으로 색상선택이 되기 때문에 CMYK 로 변환후 CMYK 를 적용
                         changeEdtCmyk();
                         changeSbCmyk();
                         break;
@@ -140,13 +137,13 @@ public class NewThemeFragment extends Fragment {
             }
         });
 
-        newTheme.findViewById(R.id.new_btn_save).setOnClickListener(new View.OnClickListener() {
+        newTheme.findViewById(R.id.new_btn_save).setOnClickListener(new View.OnClickListener() { //저장버튼
             @Override
             public void onClick(View v) {
 
             }
         });
-        newTheme.findViewById(R.id.new_btn_prev).setOnClickListener(new View.OnClickListener() {
+        newTheme.findViewById(R.id.new_btn_prev).setOnClickListener(new View.OnClickListener() { //이전버튼
             @Override
             public void onClick(View v) {
                 if (selectingColorNums > 0) {
@@ -154,10 +151,11 @@ public class NewThemeFragment extends Fragment {
                         selectedRGB[i] = 0;
                     selectingColorNums--;
                     selectionButton();
+                    btnColor[selectingColorNums].setText("Choose\nColor");
                 }
             }
         });
-        newTheme.findViewById(R.id.new_btn_next).setOnClickListener(new View.OnClickListener() {
+        newTheme.findViewById(R.id.new_btn_next).setOnClickListener(new View.OnClickListener() { //다음버튼
             @Override
             public void onClick(View v) {
                 if (selectingColorNums < btnColor.length - 1) {
@@ -165,7 +163,18 @@ public class NewThemeFragment extends Fragment {
                         selectedRGB[i] = 0;
                     selectingColorNums++;
                     selectionButton();
+                    btnColor[selectingColorNums].setText("Choose\nColor");
                 }
+            }
+        });
+        newTheme.findViewById(R.id.new_btn_reset).setOnClickListener(new View.OnClickListener() { //색상취소버튼
+            @Override
+            public void onClick(View v) {
+                colorStr[selectingColorNums] = "";
+                    selectionButton();
+                    btnColor[selectingColorNums].setBackgroundColor(Color.parseColor("#00FFFFFF"));
+                    btnColor[selectingColorNums].setText("Choose\nColor");
+
             }
         });
         for (int i = 0; i < btnColor.length; i++) {
@@ -185,29 +194,25 @@ public class NewThemeFragment extends Fragment {
                 int position = spinner_mode.getSelectedItemPosition();
                 if (fromUser) {
                     int[] tempColor = envelope.getArgb(); //선택된 색상을 가져옴
-                    for (int i = 0; i < tempColor.length; i++) { //색상정보를 SeekBar, EditText 에 적용
+                    for (int i = 0; i < tempColor.length; i++) {
                         selectedRGB[i] = tempColor[i];
                     }
-                    switch (position){
+                    switch (position){ //선택된 모드에 따라 색상 정보변경을 다르게
                         case 0:
-                            changeEdtRgb();
+                            changeEdtRgb(); //색상정보를 SeekBar, EditText 에 적용
                             changeSbRgb();
                             break;
                         case 1:
-                            RGBToCMYK(selectedRGB);
+                            RGBToCMYK(selectedRGB); //ARGB 기준으로 색상선택이 되기 때문에 CMYK 로 변환후 CMYK 를 적용
                             changeEdtCmyk();
                             changeSbCmyk();
                             break;
                     }
 
                 }
-                Log.d("rgbcomyk111111", Arrays.toString(selectedRGB) + " / " + Arrays.toString(selectedCMYK));
-
-                btnColor[selectingColorNums].setBackgroundColor(envelope.getColor());
-                colorStr[selectingColorNums] = envelope.getHexCode();
-
+                btnColor[selectingColorNums].setBackgroundColor(envelope.getColor()); //선택된 색상으로 선택팔레트(버튼)에 색상 적용
+                colorStr[selectingColorNums] = envelope.getHexCode(); //색상정보를 16진수 코드로 저장
                 selectionButton();
-
             }
         });
 
@@ -397,7 +402,6 @@ public class NewThemeFragment extends Fragment {
             else
                 btnColor[i].setText(colorStr[i]);
         }
-        btnColor[selectingColorNums].setText("Choose\nColor");
     }
 
     private float max(float a, float b, float c)

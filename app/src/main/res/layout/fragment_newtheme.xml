@@ -105,6 +105,7 @@ android:layout_marginTop="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/brightnessSlide"/>
+
     <include layout="@layout/fragment_newtheme_cmyk"
         android:layout_width="wrap_content"
         android:layout_height="120dp"
@@ -118,24 +119,31 @@ android:layout_marginTop="15dp"
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="저장"
-        android:id="@+id/new_btn_save"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:text="이전"
+        android:id="@+id/new_btn_prev"
+        app:layout_constraintRight_toLeftOf="@+id/new_btn_reset"
         app:layout_constraintTop_toBottomOf="@+id/container_rgb" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="이전"
-        android:id="@+id/new_btn_prev"
+        android:text="색상취소"
+        android:id="@+id/new_btn_reset"
         app:layout_constraintRight_toLeftOf="@+id/new_btn_save"
         app:layout_constraintTop_toBottomOf="@+id/container_rgb" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="저장"
+        android:id="@+id/new_btn_save"
+        app:layout_constraintRight_toLeftOf="@+id/new_btn_next"
+        app:layout_constraintTop_toBottomOf="@+id/container_rgb" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="다음"
         android:id="@+id/new_btn_next"
-        app:layout_constraintLeft_toRightOf="@+id/new_btn_save"
+        app:layout_constraintRight_toRightOf="@+id/container_rgb"
         app:layout_constraintTop_toBottomOf="@+id/container_rgb" />
 
     <Spinner
