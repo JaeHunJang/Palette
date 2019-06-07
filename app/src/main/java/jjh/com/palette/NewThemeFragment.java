@@ -252,8 +252,8 @@ public class NewThemeFragment extends Fragment {
         float[] hsv = new float[3];
         int selectedColor = Color.argb(selectedRGB[0],selectedRGB[1], selectedRGB[2], selectedRGB[3]);
         Color.colorToHSV(selectedColor,hsv);
-        int alphaX = (int)(((float)selectedRGB[0]/255)*alphaSlideBar.getMeasuredWidth());
-        int brightX = (int)(hsv[2]*brightnessSlideBar.getMeasuredWidth());
+        int alphaX = Math.round(((float)selectedRGB[0]/255.0f)*(float)alphaSlideBar.getMeasuredWidth());
+        int brightX = Math.round(hsv[2]*(float)brightnessSlideBar.getMeasuredWidth());
         alphaSlideBar.updateSelectorX(alphaX);
         brightnessSlideBar.updateSelectorX(brightX);
         colorPickerView.selectByHsv(Color.HSVToColor(hsv));
