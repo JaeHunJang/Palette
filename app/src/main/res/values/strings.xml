@@ -17,11 +17,18 @@
     <string name="signUp_hint">Hint to find your ID</string>
     <string name="signUp_signUp">가입</string>
 
+
+    <string name="main_bnv_user">User Info</string>
     <string name="main_bnv_search">Search</string>
     <string name="main_bnv_lib">Library</string>
     <string name="main_bnv_new">New</string>
 
+    <string name="new_menu_rgb">RGB</string>
+    <string name="new_menu_cmyk">CMYK</string>
+
     <string name="new_ib_color_des">Selected Color</string>
-    <string name="new_edt_color_init">0</string>
+
+        <string name="list_mode_01">ARGB</string>
+        <string name="list_mode_02">CMYK</string>
 
 </resources>

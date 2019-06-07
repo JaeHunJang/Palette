@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SignInActivity extends AppCompatActivity {
     DBHelper dbhelper;
     View dialog_findaccount;
+    StringChecker strChk;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class SignInActivity extends AppCompatActivity {
 
         /*****************선언 및 초기화***********************************/
         dbhelper = new DBHelper(this);
+        strChk = new StringChecker();
 
         //TextInputLayout, TextInputEditText 참고 - https://prince-mint.tistory.com/7
         final TextInputLayout signIn_til_id, signIn_til_pw;
@@ -58,19 +60,23 @@ public class SignInActivity extends AppCompatActivity {
 
         //영문, 숫자만 입력받기 참고 - https://hydok.tistory.com/17
         /****************ID 입력 필터 시작 *******************/
-        signIn_tit_id.setFilters(new InputFilter[]{new InputFilter() {
+        signIn_tit_id.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 글자수 20
+        signIn_tit_id.addTextChangedListener(new TextWatcher() {
             @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                if (source.equals("") || p.matcher(source).matches()) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signIn_til_id.setError(null);
-                    return source;
                 } else {
                     signIn_til_id.setError("ID는 영어와 숫자만 가능합니다.");
                 }
-                return null;
             }
-        }, new InputFilter.LengthFilter(20)}); //최대 글자수 20
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
         /****************ID 입력 필터 끝 *******************/
         /****************PW 입력 필터 시작 *******************/
         //비밀번호 입력 후 Enter 누르면 로그인 버튼 Click 이벤트 실행
@@ -86,19 +92,25 @@ public class SignInActivity extends AppCompatActivity {
         });
 
         //PW 입력 처리
-        signIn_tit_pw.setFilters(new InputFilter[]{new InputFilter() {
+        signIn_tit_pw.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 글자수 20
+        signIn_tit_pw.addTextChangedListener(new TextWatcher() {
             @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                if (source.equals("") || p.matcher(source).matches()) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signIn_til_pw.setError(null);
-                    return source;
                 } else {
                     signIn_til_pw.setError("PW는 영어와 숫자만 가능합니다.");
                 }
-                return null;
             }
-        }, new InputFilter.LengthFilter(20)}); //최대 글자수 20
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         /****************PW 입력 필터 끝 *******************/
 
         /****************회원가입 버튼 이벤트 시작 *******************/
@@ -134,7 +146,7 @@ public class SignInActivity extends AppCompatActivity {
                 final AlertDialog.Builder dlg = new AlertDialog.Builder(SignInActivity.this);
                 dialog_findaccount = View.inflate(SignInActivity.this, R.layout.dialog_findaccount, null);
                 final TextInputEditText dlg_fa_tit_id, dlg_fa_tit_hint; //Id, hint
-                final TextInputLayout dlg_fa_til_id, dlg_fa_til_hint; //id, hint 를 둘러싼 layout
+                final TextInputLayout dlg_fa_til_id, dlg_fa_til_hint; //id, hint 를 둘러싼 list_search
                 final DatePicker dlg_fa_dp_birth; //birth
                 final Button dlg_fa_btn_find, dlg_fa_btn_cancel; //취소, 찾기 버튼
 
@@ -158,20 +170,25 @@ public class SignInActivity extends AppCompatActivity {
 
                 /****************대화상자 ID 입력 필터 시작 *******************/
                 //id 의 필터
-                dlg_fa_tit_id.setFilters(new InputFilter[]{new InputFilter() {
+                dlg_fa_tit_id.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 길이 설정
+                dlg_fa_tit_id.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                        Pattern p = Pattern.compile("^[a-zA-Z0-9]+$");  //영문, 숫자 패턴
-                        if (source.equals("") || p.matcher(source).matches()) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                             dlg_fa_til_id.setError(null);
-                            return source;
                         } else {
                             dlg_fa_til_id.setError("ID는 영어와 숫자만 가능합니다.");
                         }
-                        return null;
                     }
-                }, new InputFilter.LengthFilter(20)}); //최대 길이 설정
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                    }
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
                 //문자 입력시 실행 리스너
                 dlg_fa_tit_id.addTextChangedListener(new TextWatcher() {
                     //문자가 입력될때마다 ID를 DB에서 검사하여 비교
@@ -198,19 +215,24 @@ public class SignInActivity extends AppCompatActivity {
 
                 /****************대화상자 HINT 입력 필터 시작 *******************/
                 //hint 의 필터
-                dlg_fa_tit_hint.setFilters(new InputFilter[]{new InputFilter() {
+                dlg_fa_tit_hint.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 길이를 20으로 제한
+                dlg_fa_tit_hint.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                        Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                        if (source.equals("") || p.matcher(source).matches()) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                             dlg_fa_til_hint.setError(null);
-                            return source;
                         } else {
                             dlg_fa_til_hint.setError("Hint는 영어와 숫자만 가능합니다.");
                         }
-                        return null;
                     }
-                }, new InputFilter.LengthFilter(20)}); //최대 길이를 20으로 제한
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                });
                 /****************대화상자 HINT 입력 필터 끝 *******************/
 
                 /****************대화상자 아이디찾기 버튼 이벤트 시작 *******************/

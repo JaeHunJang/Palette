@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -17,7 +18,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -37,6 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
         final TextInputEditText signUp_tit_id, signUp_tit_pw, signUp_tit_pwChk, signUp_tit_nick, signUp_tit_hint;
         final DatePicker signUp_dp_birth;
         final Button signUp_btn_signUp;
+        final StringChecker strChk = new StringChecker();
 
         final boolean[] flags = {false,false,false,false,false};
 
@@ -69,29 +70,28 @@ public class SignUpActivity extends AppCompatActivity {
 
         //영문, 숫자만 입력받기 참고 - https://hydok.tistory.com/17
         /*********ID 입력 필터 시작*************/
-        signUp_tit_id.setFilters(new InputFilter[]{new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                if (source.equals("") || p.matcher(source).matches()){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
-                    signUp_til_id.setError(null);
-                    flags[0] = true;
-                    return source;
-                }
-                else{
-                    flags[0] = false;
-                    signUp_til_id.setError("ID는 영어와 숫자만 가능합니다.");
-                }
-                return null;
-            }
-        },new InputFilter.LengthFilter(20)});//최대 길이 20
+        signUp_tit_id.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});//최대 길이 20
 
         //문자 입력시 실행 리스너
         signUp_tit_id.addTextChangedListener(new TextWatcher() {
             //문자가 입력될때마다 ID를 DB에서 검사하여 비교
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ( !signUp_tit_id.getText().toString().equals("")) {
+                Log.d("dd",s+" "+flags[0]);
+                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                    signUp_til_id.setError(null);
+                    flags[0] = true;
+                }
+                else{
+                    flags[0] = false;
+                    signUp_til_id.setError("ID는 영어와 숫자만 가능합니다.");
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                if ( strChk.strPatternCheck(s)) {
                     ArrayList[] result = dbhelper.select("Account", " id like ('" + signUp_tit_id.getText().toString()+"') ");
                     if (result.length == 0 ) { //result 의 length 가 0이라면 검색결과가 없는 것으로 ID가 중복되지 않았음을 알 수 있다
                         signUp_til_id.setError(null);
@@ -102,30 +102,11 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 }
             }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void afterTextChanged(Editable s) {}
         });
         /*********ID 입력 필터 끝*************/
 
         /*********PW 입력 필터 시작*************/
-        signUp_tit_pw.setFilters(new InputFilter[]{new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                if (source.equals("") || p.matcher(source).matches()){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
-                    signUp_til_pw.setError(null);
-                    flags[1] = true;
-                    return source;
-                }
-                else{
-                    flags[1] = false;
-                    signUp_til_pw.setError("PW는 영어와 숫자만 가능합니다.");
-                }
-                return null;
-            }
-        },new InputFilter.LengthFilter(20)}); //최대 길이 20
+        signUp_tit_pw.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 길이 20
 
         signUp_tit_pw.addTextChangedListener(new TextWatcher() {
             @Override
@@ -133,7 +114,14 @@ public class SignUpActivity extends AppCompatActivity {
                 if (!signUp_tit_pwChk.getText().toString().isEmpty()) { //비밀번호 입력이 새로 들어오면 비밀번호 확인란 초기화
                     signUp_tit_pwChk.setText(null);
                 }
-
+                else if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                    signUp_til_pw.setError(null);
+                    flags[1] = true;
+                }
+                else{
+                    flags[1] = false;
+                    signUp_til_pw.setError("PW는 영어와 숫자만 가능합니다.");
+                }
             }
 
             @Override
@@ -158,9 +146,7 @@ public class SignUpActivity extends AppCompatActivity {
                     flags[2] = false;
                     signUp_til_pwChk.setError("PW가 다릅니다.");
                 }
-
             }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
@@ -170,42 +156,55 @@ public class SignUpActivity extends AppCompatActivity {
 
         /*********NICK 입력 필터 시작*************/
         //nick 입력 필터
-        signUp_tit_nick.setFilters(new InputFilter[]{new InputFilter() {
+        signUp_tit_nick.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});//최대 길이 20
+        signUp_tit_nick.addTextChangedListener(new TextWatcher() {
             @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                if (source.equals("") || p.matcher(source).matches()){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signUp_til_nick.setError(null);
                     flags[3] = true;
-                    return source;
                 }
                 else{
                     flags[3] = false;
                     signUp_til_nick.setError("Nick는 영어와 숫자만 가능합니다.");
                 }
-                return null;
             }
-        },new InputFilter.LengthFilter(20)});//최대 길이 20
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         /*********NICK 입력 필터 끝*************/
 
         /*********HINT 입력 필터 시작*************/
         //hint 문자 입력 필터
-        signUp_tit_hint.setFilters(new InputFilter[]{new InputFilter() {
+        signUp_tit_hint.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 길이 20
+        signUp_tit_hint.addTextChangedListener(new TextWatcher() {
             @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                if (source.equals("") || p.matcher(source).matches()){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signUp_til_hint.setError(null);
                     flags[4] = true;
-                    return source;
                 }
                 else{
                     flags[4] = false;
                     signUp_til_hint.setError("Hint는 영어와 숫자만 가능합니다.");
                 }
-                return null;
             }
-        },new InputFilter.LengthFilter(20)}); //최대 길이 20
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         /*********HINT 입력 필터 끝*************/
 
         /*********가입 버튼 이벤트 처리 시작*************/
@@ -224,7 +223,6 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), today +" 이전 날짜를 지정해야합니다.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
 
                 if ((signUp_tit_nick.getText().toString().isEmpty() && flags[0])){ //닉네임이 비어있으면 자동으로 id 입력
                     signUp_tit_nick.setText(id);

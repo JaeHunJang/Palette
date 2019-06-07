@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="rgb_max">255</integer>
+    <integer name="new_edt_rgb_init">255</integer>
+    <integer name="new_sb_rgb_init">255</integer>
+
+    <integer name="cmyk_max">100</integer>
+    <integer name="new_edt_cmyk_init">0</integer>
+    <integer name="new_sb_cmyk_init">0</integer>
+
+</resources>

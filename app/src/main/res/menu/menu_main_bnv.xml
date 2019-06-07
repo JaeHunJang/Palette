@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_acc"
-        android:title="User Info"
+        android:title="@string/main_bnv_user"
         android:enabled="true"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_account_circle_black_24dp"/>

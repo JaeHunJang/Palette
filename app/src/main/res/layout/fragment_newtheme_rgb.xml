@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content">
+
+       <!-- <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="A "
+            android:textSize="@dimen/mode_text_size"
+            app:layout_constraintBottom_toBottomOf="@id/new_sb_rgb_alpha"
+            app:layout_constraintRight_toLeftOf="@id/new_sb_rgb_alpha"
+            app:layout_constraintTop_toTopOf="@id/new_sb_rgb_alpha" />
+
+        <SeekBar
+            android:id="@+id/new_sb_rgb_alpha"
+            android:layout_width="250dp"
+            android:layout_height="17dp"
+            android:max="@integer/rgb_max"
+            android:progress="@integer/new_sb_rgb_init"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/new_edt_rgb_alpha"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@integer/new_edt_rgb_init"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@id/new_sb_rgb_alpha"
+            app:layout_constraintLeft_toRightOf="@id/new_sb_rgb_alpha"
+            app:layout_constraintTop_toTopOf="@id/new_sb_rgb_alpha"
+            tools:targetApi="P" />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="R "
+            android:textSize="@dimen/mode_text_size"
+            app:layout_constraintBottom_toBottomOf="@id/new_sb_rgb_red"
+            app:layout_constraintRight_toLeftOf="@id/new_sb_rgb_red"
+            app:layout_constraintTop_toTopOf="@id/new_sb_rgb_red" />
+
+        <SeekBar
+            android:id="@+id/new_sb_rgb_red"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mode_margin_top"
+            android:max="@integer/rgb_max"
+            android:progress="@integer/new_sb_rgb_init"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/new_sb_rgb_alpha"
+            />
+        <EditText
+            android:id="@+id/new_edt_rgb_red"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@integer/new_edt_rgb_init"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@id/new_sb_rgb_red"
+            app:layout_constraintLeft_toRightOf="@id/new_sb_rgb_red"
+            app:layout_constraintTop_toTopOf="@id/new_sb_rgb_red"
+            tools:targetApi="P" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="G "
+            android:textSize="@dimen/mode_text_size"
+            app:layout_constraintBottom_toBottomOf="@id/new_sb_rgb_green"
+            app:layout_constraintRight_toLeftOf="@id/new_sb_rgb_green"
+            app:layout_constraintTop_toTopOf="@id/new_sb_rgb_green" />
+
+
+        <SeekBar
+            android:id="@+id/new_sb_rgb_green"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mode_margin_top"
+            android:max="@integer/rgb_max"
+            android:progress="@integer/new_sb_rgb_init"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/new_sb_rgb_red" />
+
+        <EditText
+            android:id="@+id/new_edt_rgb_green"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@integer/new_edt_rgb_init"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@id/new_sb_rgb_green"
+            app:layout_constraintLeft_toRightOf="@id/new_sb_rgb_green"
+            app:layout_constraintTop_toTopOf="@id/new_sb_rgb_green"
+            tools:targetApi="P" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="B "
+            android:textSize="@dimen/mode_text_size"
+            app:layout_constraintBottom_toBottomOf="@id/new_sb_rgb_blue"
+            app:layout_constraintRight_toLeftOf="@id/new_sb_rgb_blue"
+            app:layout_constraintTop_toTopOf="@id/new_sb_rgb_blue" />
+
+
+        <SeekBar
+            android:id="@+id/new_sb_rgb_blue"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mode_margin_top"
+            android:max="@integer/rgb_max"
+            android:progress="@integer/new_sb_rgb_init"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/new_sb_rgb_green" />
+
+        <EditText
+            android:id="@+id/new_edt_rgb_blue"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@integer/new_edt_rgb_init"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@id/new_sb_rgb_blue"
+            app:layout_constraintLeft_toRightOf="@id/new_sb_rgb_blue"
+            app:layout_constraintTop_toTopOf="@id/new_sb_rgb_blue"
+            tools:targetApi="P" />
+</androidx.constraintlayout.widget.ConstraintLayout>

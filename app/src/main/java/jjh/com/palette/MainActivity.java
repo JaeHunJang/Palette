@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(3);
+        viewPager.setCurrentItem(2); //시작화면을 검색화면으로 띄어줌
         main_bnv_menu.setSelectedItemId(R.id.action_search);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
