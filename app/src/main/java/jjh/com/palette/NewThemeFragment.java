@@ -23,6 +23,8 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
 
+import java.util.Arrays;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -35,10 +37,10 @@ public class NewThemeFragment extends Fragment {
     AlphaSlideBar alphaSlideBar; //명도 선택
     final Button[] btnColor = new Button[5]; //선택된 색상을 보여줄 뷰
     final String[] colorStr = new String[5]; //선택된 색상값을 가진 배열
-    final int[] selectedRGB = new int[3]; //선택된 색상의 RGB 값
+    final int[] selectedRGB = new int[4]; //선택된 색상의 RGB 값
     final int[] selectedCMYK = new int[4]; //선택된 색상의 CMYK 값
-    final SeekBar[] sbRgb = new SeekBar[3]; //rgb 컨트롤
-    final EditText[] edtRgb = new EditText[3];
+    final SeekBar[] sbRgb = new SeekBar[4]; //rgb 컨트롤
+    final EditText[] edtRgb = new EditText[4];
     final SeekBar[] sbCmyk = new SeekBar[4]; //cmyk 컨트롤
     final EditText[] edtCmyk = new EditText[4];
     final View[] mode = new ConstraintLayout[2];
@@ -67,15 +69,15 @@ public class NewThemeFragment extends Fragment {
         btnColor[3] = newTheme.findViewById(R.id.new_btn_color4);
         btnColor[4] = newTheme.findViewById(R.id.new_btn_color5);
 
-        //sbRgb[0] = newTheme.findViewById(R.id.new_sb_rgb_alpha);
-        sbRgb[0] = newTheme.findViewById(R.id.new_sb_rgb_red);
-        sbRgb[1] = newTheme.findViewById(R.id.new_sb_rgb_green);
-        sbRgb[2] = newTheme.findViewById(R.id.new_sb_rgb_blue);
+        sbRgb[0] = newTheme.findViewById(R.id.new_sb_rgb_alpha);
+        sbRgb[1] = newTheme.findViewById(R.id.new_sb_rgb_red);
+        sbRgb[2] = newTheme.findViewById(R.id.new_sb_rgb_green);
+        sbRgb[3] = newTheme.findViewById(R.id.new_sb_rgb_blue);
 
-        //edtRgb[0] = newTheme.findViewById(R.id.new_edt_rgb_alpha);
-        edtRgb[0] = newTheme.findViewById(R.id.new_edt_rgb_red);
-        edtRgb[1] = newTheme.findViewById(R.id.new_edt_rgb_green);
-        edtRgb[2] = newTheme.findViewById(R.id.new_edt_rgb_blue);
+        edtRgb[0] = newTheme.findViewById(R.id.new_edt_rgb_alpha);
+        edtRgb[1] = newTheme.findViewById(R.id.new_edt_rgb_red);
+        edtRgb[2] = newTheme.findViewById(R.id.new_edt_rgb_green);
+        edtRgb[3] = newTheme.findViewById(R.id.new_edt_rgb_blue);
 
         sbCmyk[0] = newTheme.findViewById(R.id.new_sb_cmyk_cyan);
         sbCmyk[1] = newTheme.findViewById(R.id.new_sb_cmyk_magenta);
@@ -106,7 +108,7 @@ public class NewThemeFragment extends Fragment {
         ArrayAdapter<String> spinnerAdpater = new ArrayAdapter<>(newTheme.getContext(),android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.color_mode));
         spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_mode.setAdapter(spinnerAdpater);
-        spinner_mode.setSelection(0); //처음 선택은 argb
+        spinner_mode.setSelection(1); //처음 선택은 argb
         spinner_mode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -161,41 +163,55 @@ public class NewThemeFragment extends Fragment {
             });
         }
 
-        /*alphaSlideBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedRGB[0] = colorPickerView.getColorEnvelope().getArgb()[0];
-                changeAlpha();
-                Log.d("alpha",selectedRGB[0]+"");
-            }
-        });*/
-
         colorPickerView.setColorListener(new ColorEnvelopeListener() {
             @Override
             public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
                 int position = spinner_mode.getSelectedItemPosition();
-                if (fromUser){
+                int[] tempColor = envelope.getArgb(); //선택된 색상을 가져옴
+                for (int i = 0; i < tempColor.length; i++) { //색상정보를 SeekBar, EditText 에 적용
+                    selectedRGB[i] = tempColor[i];
+                }
+                RGBToCMYK(selectedRGB);
+                changeEdtRgb();
+                changeSbRgb();
+                changeEdtCmyk();
+                changeSbCmyk();
+                /*if (fromUser){
                     switch (position){
                         case 0:
-                            int[] tempColor = envelope.getArgb(); //선택된 색상을 가져옴
-                            for (int i = 1; i < tempColor.length; i++) { //색상정보를 SeekBar, EditText 에 적용
-                                selectedRGB[i-1] = tempColor[i];
-                            }
                             changeEdtRgb();
                             changeSbRgb();
-                            RGBToCMYK(selectedRGB);
                             changeEdtCmyk();
                             changeSbCmyk();
+                            Log.d("user0", Arrays.toString(selectedRGB)+" / "+Arrays.toString(selectedCMYK));
+
                             break;
                         case 1:
-                            changeEdtRgb();
-                            changeSbRgb();
-                            RGBToCMYK(selectedRGB);
                             changeEdtCmyk();
                             changeSbCmyk();
+                            changeEdtRgb();
+                            changeSbRgb();Log.d("user1", Arrays.toString(selectedRGB)+" / "+Arrays.toString(selectedCMYK));
                             break;
                     }
                 }
+                else
+                {
+                    switch (position){
+                        case 0:
+                            changeEdtRgb();
+                            changeSbRgb();
+                            changeEdtCmyk();
+                            changeSbCmyk();Log.d("userNon0", Arrays.toString(selectedRGB)+" / "+Arrays.toString(selectedCMYK));
+                            break;
+                        case 1:
+                            changeEdtCmyk();
+                            changeSbCmyk();
+                            changeEdtRgb();
+                            changeSbRgb();Log.d("userNon1", Arrays.toString(selectedRGB)+" / "+Arrays.toString(selectedCMYK));
+                            break;
+                    }
+                }*/
+                Log.d("rgbcomyk11", Arrays.toString(selectedRGB)+" / "+Arrays.toString(selectedCMYK));
 
                 btnColor[selectingColorNums].setBackgroundColor(envelope.getColor());
                 colorStr[selectingColorNums] = envelope.getHexCode();
@@ -214,6 +230,7 @@ public class NewThemeFragment extends Fragment {
                     if (fromUser) { //SeekBar 값이 바뀌면 EditText 의 값도 바꿔주고 색상선택기 리로드
                         selectedRGB[index] = progress;
                         changeEdtRgb();
+                        RGBToCMYK(selectedRGB);
                         changeEdtCmyk();
                         changeSbCmyk();
                         changeColor();
@@ -249,6 +266,7 @@ public class NewThemeFragment extends Fragment {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) { //값 입력후 Enter 입력시 색상선택기 리로드
                         changeSbRgb();
+                        RGBToCMYK(selectedRGB);
                         changeEdtCmyk();
                         changeSbCmyk();
                         changeColor();
@@ -258,13 +276,16 @@ public class NewThemeFragment extends Fragment {
             }});
             /***** ARGB 이벤트 설정 *****/
 
-            /***** CMYK 이벤트 설정 *****//*
+            /***** CMYK 이벤트 설정 *****/
             sbCmyk[index].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if (fromUser) { //SeekBar 값이 바뀌면 EditText 의 값도 바꿔주고 색상선택기 리로드
                         selectedCMYK[index] = progress;
                         changeEdtCmyk();
+                        CMYKToRGB(selectedCMYK);
+                        changeEdtRgb();
+                        changeSbRgb();
                         changeColor();
                     }
                 }
@@ -289,7 +310,6 @@ public class NewThemeFragment extends Fragment {
                     if (s.length() != 0) {
                         int temp = Integer.parseInt(s.toString());
                         selectedCMYK[index] = temp;
-                        changeSbCmyk();
                     }
                 }
             });
@@ -298,6 +318,10 @@ public class NewThemeFragment extends Fragment {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) { //값 입력후 Enter 입력시 색상선택기 리로드
+                        changeSbCmyk();
+                        CMYKToRGB(selectedCMYK);
+                        changeEdtRgb();
+                        changeSbRgb();
                         changeColor();
                         return true;
                     }
@@ -310,24 +334,14 @@ public class NewThemeFragment extends Fragment {
 
     void changeColor(){
         float[] hsv = new float[3];
-        int selectedColor = Color.argb(colorPickerView.getColorEnvelope().getArgb()[0],selectedRGB[0], selectedRGB[1], selectedRGB[2]);
+        int selectedColor = Color.argb(colorPickerView.getColorEnvelope().getArgb()[0],selectedRGB[1], selectedRGB[2], selectedRGB[3]);
         Color.colorToHSV(selectedColor,hsv);
-        colorPickerView.selectByHsv(Color.HSVToColor(hsv));
-        //int alphaX = (int)(hsv[1]*alphaSlideBar.getMeasuredWidth());
+        int alphaX = (int)(hsv[1]*alphaSlideBar.getMeasuredWidth());
         int brightX = (int)(hsv[2]*brightnessSlideBar.getMeasuredWidth());
-        //alphaSlideBar.updateSelectorX(alphaX);
-        brightnessSlideBar.updateSelectorX(brightX);
-    }
-    /*void changeAlpha(){
-        //float[] hsv = new float[3];
-        //int selectedColor = Color.argb(selectedRGB[0], selectedRGB[1], selectedRGB[2], selectedRGB[3]);
-        //colorPickerView.selectByHsv(selectedColor);
-        //Color.colorToHSV(selectedColor,hsv);
-        int alphaX = (selectedRGB[0]*alphaSlideBar.getMeasuredWidth())/255;
-        //int brightX = (int)(hsv[2]*brightnessSlideBar.getMeasuredWidth());
         alphaSlideBar.updateSelectorX(alphaX);
-        //brightnessSlideBar.updateSelectorX(brightX);
-    }*/
+        brightnessSlideBar.updateSelectorX(brightX);
+        colorPickerView.selectByHsv(Color.HSVToColor(hsv));
+    }
 
     void changeEdtRgb(){
         for (int i = 0; i < edtRgb.length; i++) {
@@ -364,22 +378,38 @@ public class NewThemeFragment extends Fragment {
 
     //https://www.ginifab.com/feeds/pms/cmyk_to_rgb.php 인용
     void CMYKToRGB(int[] cmyk){
-        selectedRGB[0] = 255 * ( 1 - cmyk[0] / 10000 ) * ( 1 - cmyk[3] / 10000 );
-        selectedRGB[1] = 255 * ( 1 - cmyk[1] / 10000 ) * ( 1 - cmyk[3] / 10000 );
-        selectedRGB[2] = 255 * ( 1 - cmyk[2] / 10000 ) * ( 1 - cmyk[3] / 10000 );
+        //selectedRGB[0] = colorPickerView.getColorEnvelope().getArgb()[0];
+        float key = ((float)cmyk[3] / 100 );
+        selectedRGB[1] = (int)(255 * ( 1 - ((float)cmyk[0] / 100) ) * ( 1 - key));
+        selectedRGB[2] = (int)(255 * ( 1 - ((float)cmyk[1] / 100) ) * ( 1 - key));
+        selectedRGB[3] = (int)(255 * ( 1 - ((float)cmyk[2] / 100) ) * ( 1 - key));
+        for (int i = 0; i <selectedRGB.length; i++){
+            if (selectedRGB[i] < 0)
+                selectedRGB[i] = 0;
+            if (selectedRGB[i] > 255)
+                selectedRGB[i] = 255;
+        }
+        Log.d("rgbconv", Arrays.toString(selectedRGB));
+        Log.d("CMYK", Arrays.toString(selectedCMYK));
     }
     void RGBToCMYK(int[] rgb){
-        float _r = (float) rgb[0] / 255.0f;
-        float _g = (float) rgb[1] / 255.0f;
-        float _b = (float) rgb[2] / 255.0f;
+        float _r = (float) rgb[1] / 255.0f;
+        float _g = (float) rgb[2] / 255.0f;
+        float _b = (float) rgb[3] / 255.0f;
 
         float key = 1.0f - max(_r, _g, _b);
 
         selectedCMYK[0] = Math.round(((1.0f - _r - key) / (1.0f - key))*100);
         selectedCMYK[1] = Math.round(((1.0f - _g - key) / (1.0f - key))*100);
         selectedCMYK[2] = Math.round(((1.0f - _b - key) / (1.0f - key))*100);
-        selectedCMYK[3] = Math.round(key*100);
-
+        //selectedCMYK[3] = Math.round(key)*100;
+        for (int i = 0; i <selectedCMYK.length; i++){
+            if (selectedCMYK[i] < 0)
+                selectedCMYK[i] = 0;
+            if (selectedCMYK[i] > 100)
+                selectedCMYK[i] = 100;
+        }
+        Log.d("rgbconv11", Arrays.toString(selectedCMYK));
     }
 
     private float max(float a, float b, float c)
