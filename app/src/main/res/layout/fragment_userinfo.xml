@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/ui_tv_id"
+        android:id="@+id/ui_tv_id_no"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -17,6 +17,18 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/ui_til_pw"
         app:layout_constraintRight_toRightOf="@+id/ui_tv_pw"
+        />
+<TextView
+        android:id="@+id/ui_tv_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+    app:layout_constraintTop_toTopOf="@+id/ui_tv_id_no"
+    app:layout_constraintBottom_toBottomOf="@+id/ui_tv_id_no"
+    app:layout_constraintLeft_toRightOf="@+id/ui_tv_id_no"
         />
 
     <TextView
@@ -54,7 +66,7 @@
         android:id="@+id/ui_tv_nick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name : "
+        android:text="Nick\nName : "
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintRight_toLeftOf="@+id/ui_til_nick"
@@ -81,17 +93,26 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/ui_tv_birth"
+        android:id="@+id/ui_tv_birth_no"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:text="BirthDay : "
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/ui_tv_nick"
         app:layout_constraintRight_toRightOf="@+id/ui_tv_nick"
         app:layout_constraintBottom_toTopOf="@+id/ui_tv_hint"/>
+    <TextView
+        android:id="@+id/ui_tv_birth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="@+id/ui_tv_birth_no"
+        app:layout_constraintBottom_toBottomOf="@+id/ui_tv_birth_no"
+        app:layout_constraintLeft_toRightOf="@+id/ui_tv_birth_no"
+        />
 
     <TextView
         android:id="@+id/ui_tv_hint"
@@ -127,11 +148,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="200dp"
         android:text="ID, BirthDay는 변경할 수 없습니다."
         android:textColor="#000000"
         android:textSize="15sp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -143,6 +163,13 @@
         android:layout_marginTop="20dp"
         android:text="회원정보 수정"
         app:layout_constraintTop_toBottomOf="@id/ui_tv_no"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="@+id/ui_tv_no" />
+    <Button
+        android:id="@+id/ui_btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="로그아웃"
+        app:layout_constraintTop_toBottomOf="@id/ui_tv_no"
+        app:layout_constraintLeft_toLeftOf="@+id/ui_tv_no" />
 </androidx.constraintlayout.widget.ConstraintLayout>

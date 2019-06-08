@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/ui_tit_pw"
             android:inputType="textPassword"
-            android:editable="false"
+            android:enabled="false"
             />
     </com.google.android.material.textfield.TextInputLayout>
     <TextView

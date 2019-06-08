@@ -143,15 +143,15 @@ public class NewThemeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putStringArray("colors",str_selectedColor);
                 SaveThemeFragment fragment = new SaveThemeFragment();
-                //Intent intent = new Intent();
-               // intent.putExtra("colors",str_selectedColor);
-                //getActivity().startActivityFromFragment(fragment,intent,0);
                 fragment.setArguments(bundle);
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.main_container,fragment);
-                fragmentTransaction.addToBackStack(null);
+                //fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+                /*Intent intent = new Intent(getActivity(),SaveThemeFragment.class);
+                intent.putExtra("colors",str_selectedColor);
+                startActivity(intent);*/
                 Log.d("넘어감","넘어감");
             }
         });

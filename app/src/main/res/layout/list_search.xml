@@ -21,7 +21,7 @@
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         android:background="@drawable/background_horizontal"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/theme_name">
 
         <Button
             android:id="@+id/color1"

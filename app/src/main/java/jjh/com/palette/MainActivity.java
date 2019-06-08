@@ -1,28 +1,29 @@
 package jjh.com.palette;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+//https://stackoverflow.com/questions/47714606/viewpager-using-bottom-navigation-view-is-not-swiping-the-fragments
+//BottomNavigationView 사용법 인용
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView main_bnv_menu;
     ViewPager viewPager;
-
     FragmentAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         main_bnv_menu = findViewById(R.id.main_bnv_menu);
         main_bnv_menu.inflateMenu(R.menu.menu_main_bnv);
-
 
         viewPager = findViewById(R.id.main_container);
         adapter = new FragmentAdapter(getSupportFragmentManager());
@@ -31,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.addItem(new MyLibraryFragment());
         adapter.addItem(new NewThemeFragment());
         adapter.addItem(new SearchFragment());
+        adapter.addItem(new SaveThemeFragment());
         adapter.notifyDataSetChanged();
 
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(2); //시작화면을 검색화면으로 띄어줌
+        viewPager.setCurrentItem(0); //시작화면을 검색화면으로 띄어줌
         main_bnv_menu.setSelectedItemId(R.id.action_search);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                if (position < 4)
                 main_bnv_menu.getMenu().getItem(position).setChecked(true);
             }
 

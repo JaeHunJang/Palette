@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,102 +17,219 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
+import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 public class UserInfoFragment extends Fragment {
-    private TextView id, birth;
-    private TextInputLayout til_pw, til_nick, til_hint;
-    private TextInputEditText pw, nick, hint;
+    DBHelper dbhelper;
+    StringChecker strChk;
+    View dlg_userInfo;
+    String id, pw, nick, birth, hint;
+    boolean[] flags = {true, true, true};
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View userInfo = inflater.inflate(R.layout.fragment_userinfo,container,false);
 
         /****************선언 및 초기화 ********************************/
+        final Button ui_btn_update, ui_btn_logout;
+        final TextView ui_tv_id, ui_tv_birth;
+        final TextInputLayout ui_til_pw, ui_til_nick, ui_til_hint;
+        final TextInputEditText ui_tit_pw, ui_tit_nick, ui_tit_hint;
 
-        Button ui_btn_update;
+        dbhelper = new DBHelper(getContext());
+        ArrayList[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
+        id = result[0].get(0).toString();
+         pw = result[0].get(1).toString();
+         nick = result[0].get(2).toString();
+         birth = result[0].get(3).toString();
+         hint = result[0].get(4).toString();
 
-        id = userInfo.findViewById(R.id.ui_tv_id);
-        birth = userInfo.findViewById(R.id.ui_tv_birth);
-        pw = userInfo.findViewById(R.id.ui_tit_pw);
-        nick = userInfo.findViewById(R.id.ui_tit_nick);
-        hint = userInfo.findViewById(R.id.ui_tit_hint);
-        til_pw = userInfo.findViewById(R.id.ui_til_pw);
-        til_nick = userInfo.findViewById(R.id.ui_til_nick);
-        til_hint = userInfo.findViewById(R.id.ui_til_hint);
+        ui_tv_id = userInfo.findViewById(R.id.ui_tv_id);
+        ui_tv_birth = userInfo.findViewById(R.id.ui_tv_birth);
+        ui_tit_pw = userInfo.findViewById(R.id.ui_tit_pw);
+        ui_tit_nick = userInfo.findViewById(R.id.ui_tit_nick);
+        ui_tit_hint = userInfo.findViewById(R.id.ui_tit_hint);
+
+        ui_til_pw = userInfo.findViewById(R.id.ui_til_pw);
+        ui_til_nick = userInfo.findViewById(R.id.ui_til_nick);
+        ui_til_hint = userInfo.findViewById(R.id.ui_til_hint);
+
         ui_btn_update = userInfo.findViewById(R.id.ui_btn_update);
+        ui_btn_logout = userInfo.findViewById(R.id.ui_btn_logout);
+
+        ui_til_pw.setCounterEnabled(true);
+        ui_til_pw.setCounterMaxLength(20);
+        ui_til_pw.setPasswordVisibilityToggleEnabled(true);
+
+        strChk = new StringChecker();
+
+        String temp = ui_tv_id.getText().toString() + id;
+        ui_tv_id.setText(temp);
+        temp = ui_tv_birth.getText().toString() + id;
+        ui_tv_birth.setText(temp);
+        ui_tit_pw.setText(pw);
+        ui_tit_nick.setText(nick);
+        ui_tv_birth.setText(birth);
+        ui_tit_hint.setText(hint);
         /****************선언 및 초기화 ********************************/
 
 
         /****************PW 입력 필터 시작 *******************/
         //PW 입력 처리
-        pw.setFilters(new InputFilter[]{new InputFilter() {
+        ui_tit_pw.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 길이 20
+
+        ui_tit_pw.addTextChangedListener(new TextWatcher() {
             @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                if (source.equals("") || p.matcher(source).matches()) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
-                    til_pw.setError(null);
-                    return source;
-                } else {
-                    til_pw.setError("PW는 영어와 숫자만 가능합니다.");
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                    ui_til_pw.setError(null);
+                    flags[0] = true;
                 }
-                return null;
+                else{
+                    ui_til_pw.setError("PW는 영어와 숫자만 가능합니다.");
+                    flags[0] = false;
+                }
             }
-        }, new InputFilter.LengthFilter(20)}); //최대 글자수 20
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
         /****************PW 입력 필터 끝 *******************/
 
-        /****************nick 입력 필터 시작 *******************/
-        //PW 입력 처리
-        nick.setFilters(new InputFilter[]{new InputFilter() {
+        /*********NICK 입력 필터 시작*************/
+        //ui_tit_nick 입력 필터
+        ui_tit_nick.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});//최대 길이 20
+        ui_tit_nick.addTextChangedListener(new TextWatcher() {
             @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                if (source.equals("") || p.matcher(source).matches()) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
-                    til_nick.setError(null);
-                    return source;
-                } else {
-                    til_nick.setError("Nick는 영어와 숫자만 가능합니다.");
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                    ui_til_nick.setError(null);
+                    flags[1] = true;
                 }
-                return null;
+                else{
+                    ui_til_nick.setError("Nick는 영어와 숫자만 가능합니다.");
+                    flags[1] = false;
+
+                }
             }
-        }, new InputFilter.LengthFilter(20)}); //최대 글자수 20
-        /****************nick 입력 필터 끝 *******************/
-
-
-        /****************hint 입력 필터 시작 *******************/
-        //PW 입력 처리
-        hint.setFilters(new InputFilter[]{new InputFilter() {
             @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                Pattern p = Pattern.compile("^[a-zA-Z0-9]+$"); //영문, 숫자 패턴
-                if (source.equals("") || p.matcher(source).matches()) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
-                    til_hint.setError(null);
-                    return source;
-                } else {
-                    til_hint.setError("Hint는 영어와 숫자만 가능합니다.");
-                }
-                return null;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
-        }, new InputFilter.LengthFilter(20)}); //최대 글자수 20
-        /****************hint 입력 필터 끝 *******************/
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        /*********NICK 입력 필터 끝*************/
+
+        /*********HINT 입력 필터 시작*************/
+        //ui_tit_hint 문자 입력 필터
+        ui_tit_hint.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 길이 20
+        ui_tit_hint.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                    ui_til_hint.setError(null);
+                    flags[2] = true;
+
+                }
+                else{
+                    ui_til_hint.setError("Hint는 영어와 숫자만 가능합니다.");
+                    flags[2] = false;
+
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        /*********HINT 입력 필터 끝*************/
 
 
 
+        ui_btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Login.getInstance().setId(null);
+                Login.getInstance().setLoginState(false);
+                getActivity().finish();
+                Intent intent = new Intent(getContext(),SignInActivity.class);
+                startActivity(intent);
+            }
+        });
         /****************비밀번호 변경 확인 대화상자 시작 *******************/
         //비밀번호 변경 확인 대화상자
         ui_btn_update.setOnClickListener(new View.OnClickListener() {
-            DialogInterface dlgInterface = null;
-
             @Override
             public void onClick(View v) {
+                for (int i = 0; i < flags.length; i++){ //모든 조건이 만족할때까지 입력 확인
+                    if (ui_tit_pw.getText().toString().equals(""))
+                        ui_tit_pw.setText(pw);
+                    if (ui_tit_hint.getText().toString().equals(""))
+                        ui_tit_hint.setText(hint);
+                    if (ui_tit_nick.getText().toString().equals(""))
+                        ui_tit_nick.setText(nick);
+                    if (!flags[i]){
+                        Toast.makeText(getContext(), "입력을 확인해주세요.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                final String pw = ui_tit_pw.getText().toString(); //입력받은 ui_tit_pw
+                final String hint = ui_tit_hint.getText().toString(); //입력받은 ui_tit_hint
+                final String nick = ui_tit_nick.getText().toString(); //입력받은 ui_tit_nick
+
+                /***************AlertDialog 선언 및 초기화 ******************/
+                AlertDialog.Builder dlg = new AlertDialog.Builder(getContext());
+                dlg_userInfo = View.inflate(getContext(), R.layout.dialog_userinfo, null);
+                TextView dlg_ui_tv_id, dlg_ui_tv_nick, dlg_ui_tv_birth, dlg_ui_tv_hint;
+                TextInputEditText dlg_ui_tit_pw;
+                TextInputLayout dlg_ui_til_pw;
+
+                dlg_ui_tv_id = dlg_userInfo.findViewById(R.id.ui_tv_id);
+                dlg_ui_tv_nick = dlg_userInfo.findViewById(R.id.ui_tv_nick);
+                dlg_ui_tv_birth = dlg_userInfo.findViewById(R.id.ui_tv_birth);
+                dlg_ui_tv_hint = dlg_userInfo.findViewById(R.id.ui_tv_hint);
+
+                dlg_ui_tit_pw = dlg_userInfo.findViewById(R.id.ui_tit_pw);
+                dlg_ui_til_pw = dlg_userInfo.findViewById(R.id.ui_til_pw);
+
+                dlg_ui_tv_id.setText("ID : "+id);
+                dlg_ui_tit_pw.setText(pw);
+                dlg_ui_tv_nick.setText("Nick : "+nick);
+                dlg_ui_tv_birth.setText("BirthDay : "+birth);
+                dlg_ui_tv_hint.setText("Hint : "+hint);
+                dlg_ui_til_pw.setPasswordVisibilityToggleEnabled(true);
+                /***************AlertDialog 선언 및 초기화 ******************/
+
+                dlg.setTitle("회원정보")
+                        .setView(dlg_userInfo)
+                        .setPositiveButton("수정하기", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbhelper.update("Account","pw = '" + pw + "', nick ='" + nick + "', hint ='" + hint+"'", "id = '" + id + "'"); //테이블에 데이터 삽입
+                                ui_btn_logout.callOnClick(); //회원정보가 수정되었으니 다시 로그인을 해야함
+                            }
+                        })
+                        .setNegativeButton("취소",null)
+                        .show();
+
             }
         });
+        /****************비밀번호 변경 확인 대화상자 시작 *******************/
         return userInfo;
     }
 

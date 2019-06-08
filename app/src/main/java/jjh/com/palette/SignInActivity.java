@@ -23,10 +23,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+//TextInputLayout, TextInputEditText 참고 - https://prince-mint.tistory.com/7
 public class SignInActivity extends AppCompatActivity {
     DBHelper dbhelper;
     View dialog_findaccount;
     StringChecker strChk;
+    boolean[] flags = {false, false};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,9 +37,11 @@ public class SignInActivity extends AppCompatActivity {
 
         /*****************선언 및 초기화***********************************/
         dbhelper = new DBHelper(this);
+
+      //  dbhelper.insert("Account","'admin', 'admin1234','admin', '1997-01-20','admin'");
+       // dbhelper.insert("Library","'admin', '기본 라이브러리'");
         strChk = new StringChecker();
 
-        //TextInputLayout, TextInputEditText 참고 - https://prince-mint.tistory.com/7
         final TextInputLayout signIn_til_id, signIn_til_pw;
         final TextInputEditText signIn_tit_id, signIn_tit_pw;
         final Button signIn_btn_signIn, signIn_btn_findID;
@@ -66,8 +70,10 @@ public class SignInActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signIn_til_id.setError(null);
+                    flags[0] = true;
                 } else {
                     signIn_til_id.setError("ID는 영어와 숫자만 가능합니다.");
+                    flags[0] = false;
                 }
             }
             @Override
@@ -78,7 +84,7 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
         /****************ID 입력 필터 끝 *******************/
-        /****************PW 입력 필터 시작 *******************/
+        /****************PW 입력 필터, 이벤트 시작 *******************/
         //비밀번호 입력 후 Enter 누르면 로그인 버튼 Click 이벤트 실행
         signIn_tit_pw.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -98,8 +104,10 @@ public class SignInActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signIn_til_pw.setError(null);
+                    flags[1] = true;
                 } else {
                     signIn_til_pw.setError("PW는 영어와 숫자만 가능합니다.");
+                    flags[1] = false;
                 }
             }
             @Override
@@ -111,7 +119,7 @@ public class SignInActivity extends AppCompatActivity {
 
             }
         });
-        /****************PW 입력 필터 끝 *******************/
+        /****************PW 입력 필터, 이벤트 끝 *******************/
 
         /****************회원가입 버튼 이벤트 시작 *******************/
         //회원가입
@@ -139,7 +147,7 @@ public class SignInActivity extends AppCompatActivity {
         //아이디 찾기
         signIn_btn_findID.setOnClickListener(new View.OnClickListener() {
             DialogInterface dlgInterface = null;
-
+            boolean[] flags = {false, false};
             @Override
             public void onClick(View v) {
                 /***************AlertDialog 선언 및 초기화 ******************/
@@ -176,8 +184,10 @@ public class SignInActivity extends AppCompatActivity {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                             dlg_fa_til_id.setError(null);
+                            flags[0] = true;
                         } else {
                             dlg_fa_til_id.setError("ID는 영어와 숫자만 가능합니다.");
+                            flags[0] = false;
                         }
                     }
                     @Override
@@ -189,28 +199,6 @@ public class SignInActivity extends AppCompatActivity {
 
                     }
                 });
-                //문자 입력시 실행 리스너
-                dlg_fa_tit_id.addTextChangedListener(new TextWatcher() {
-                    //문자가 입력될때마다 ID를 DB에서 검사하여 비교
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        String id = dlg_fa_tit_id.getText().toString();
-                        ArrayList[] result = dbhelper.select("Account", " id=" + id);
-                        if (!id.equals("") && result.length != 0) {
-                            String str = result[0].get(0).toString();
-                            if (str.equals(id)) {
-                                dlg_fa_til_id.setError(null);
-                            } else {
-                                dlg_fa_til_id.setError("해당 ID가 없습니다.");
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-                    @Override
-                    public void afterTextChanged(Editable s) {}
-                });
                 /****************대화상자 ID 입력 필터 끝 *******************/
 
                 /****************대화상자 HINT 입력 필터 시작 *******************/
@@ -221,8 +209,10 @@ public class SignInActivity extends AppCompatActivity {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                             dlg_fa_til_hint.setError(null);
+                            flags[1] = true;
                         } else {
                             dlg_fa_til_hint.setError("Hint는 영어와 숫자만 가능합니다.");
+                            flags[1] = false;
                         }
                     }
                     @Override
@@ -239,6 +229,12 @@ public class SignInActivity extends AppCompatActivity {
                 dlg_fa_btn_find.setOnClickListener(new View.OnClickListener() { //찾기 버튼의 클릭 이벤트
                     @Override
                     public void onClick(View v) {
+                        for(boolean f : flags){
+                            if (!f) {
+                                Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
                         String birth = String.format("%4d-%02d-%02d", dlg_fa_dp_birth.getYear(), dlg_fa_dp_birth.getMonth() + 1, dlg_fa_dp_birth.getDayOfMonth()); //format을 통해 문자열 형식에 맞춰 만듬
                         String id = dlg_fa_tit_id.getText().toString(); //입력된 id
                         String hint = dlg_fa_tit_hint.getText().toString(); //입력된 hint
@@ -278,21 +274,31 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ArrayList[] result;
+                for(boolean f : flags){
+                    if (!f) {
+                        Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
                 String id = signIn_tit_id.getText().toString(); //입력받은 id
                 String pw = signIn_tit_pw.getText().toString(); //입력받은 pw
-                if (id.isEmpty() || pw.isEmpty()) { //id와 pw 가 입력되지 않았는지 확인
+                result = dbhelper.select("Account", " id= '" + id + "'"); //테이블에서 id 조회
+                if (result.length == 0) { //id가 존재하는 지 확인
                     Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
                     return;
-                } else {
-                    result = dbhelper.select("Account", " id= '" + id + "'"); //테이블에서 id 조회
                 }
 
                 if (result[0].get(0).equals(id) && result[0].get(1).equals(pw)) { //id와 pw 일치시 MainActivity 실행
+                    Login login = Login.getInstance();
+                    login.setId(id);
+                    login.setLoginState(true);
                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                finish();
             }
         });
         /****************로그인 버튼 이벤트 끝 *******************/

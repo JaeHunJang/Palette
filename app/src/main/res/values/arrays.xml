@@ -2,7 +2,32 @@
 <resources>
 
     <string-array name="color_mode">
-        <item>@string/list_mode_01</item>
-        <item>@string/list_mode_02</item>
+        <item>ARGB</item>
+        <item>CMYK</item>
+    </string-array>
+
+    <string-array name="theme_tags">
+        <item>따뜻함</item>
+        <item>차가움</item>
+        <item>산뜻함</item>
+        <item>어두운</item>
+        <item>밝은</item>
+        <item>무더운</item>
+        <item>추운</item>
+        <item>붉은</item>
+        <item>푸른</item>
+        <item>노란</item>
+        <item>초록</item>
+        <item>청록</item>
+        <item>자홍</item>
+        <item>봄</item>
+        <item>여름</item>
+        <item>가을</item>
+        <item>겨울</item>
+    </string-array>
+
+    <string-array name="desc_mode">
+        <item>최신순</item>
+        <item>오래된순</item>
     </string-array>
 </resources>
