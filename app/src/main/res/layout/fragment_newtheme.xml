@@ -16,7 +16,7 @@
         android:layout_height="50dp"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/background"
+        android:background="@drawable/background_horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button

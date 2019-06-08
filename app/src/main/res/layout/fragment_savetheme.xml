@@ -1,199 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <LinearLayout
-        android:padding="10dp"
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/save_tv_ColorPalette1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@drawable/background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/save_tv_ColorName1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="30dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette1"
+        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette1"
+        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette1"
+        tools:text="#ff0000" />
+
+    <TextView
+        android:id="@+id/save_tv_ColorPalette2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette1" />
+
+    <TextView
+        android:id="@+id/save_tv_ColorName2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette2"
+        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette2"
+        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette2"
+        tools:text="#ff0000" />
+
+    <TextView
+        android:id="@+id/save_tv_ColorPalette3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette2" />
+
+    <TextView
+        android:id="@+id/save_tv_ColorName3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette3"
+        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette3"
+        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette3"
+        tools:text="#ff0000" />
+
+    <TextView
+        android:id="@+id/save_tv_ColorPalette4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette3" />
+
+    <TextView
+        android:id="@+id/save_tv_ColorName4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette4"
+        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette4"
+        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette4"
+        tools:text="#ff0000" />
+
+    <TextView
+        android:id="@+id/save_tv_ColorPalette5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette4" />
+
+    <TextView
+        android:id="@+id/save_tv_ColorName5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette5"
+        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette5"
+        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette5"
+        tools:text="#ff0000" />
+
+    <TextView
+        android:id="@+id/save_tv_themeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="이름"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette5" />
+
+    <EditText
+        android:id="@+id/save_edt_themeName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:hint="테마 이름 입력"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_tv_themeName"
+        app:layout_constraintLeft_toRightOf="@+id/save_tv_themeName"
+        app:layout_constraintTop_toTopOf="@+id/save_tv_themeName" />
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="90dp"
-                android:layout_height="50dp"
-                android:background="#ff0000" />
+    <TextView
+        android:id="@+id/save_tv_library"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="라이브러리"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_tv_themeName" />
+
+    <Spinner
+        android:id="@+id/save_sp_library"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toBottomOf="@+id/save_tv_library"
+        app:layout_constraintLeft_toRightOf="@+id/save_tv_library"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/save_tv_library" />
+
+    <TextView
+        android:id="@+id/save_tv_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="태그"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_tv_library" />
+
+    <Spinner
+        android:id="@+id/save_sp_tag1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_tv_tag"
+        app:layout_constraintLeft_toRightOf="@+id/save_tv_tag"
+        app:layout_constraintTop_toTopOf="@+id/save_tv_tag" />
+
+    <Spinner
+        android:id="@+id/save_sp_tag2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_sp_tag1"
+        app:layout_constraintLeft_toRightOf="@+id/save_sp_tag1"
+        app:layout_constraintTop_toTopOf="@+id/save_sp_tag1" />
+
+    <Spinner
+        android:id="@+id/save_sp_tag3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_sp_tag2"
+        app:layout_constraintLeft_toRightOf="@+id/save_sp_tag2"
+        app:layout_constraintTop_toTopOf="@+id/save_sp_tag2" />
 
 
-            <TextView
-                android:layout_marginStart="30dp"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="#ff0000"
-                android:textSize="20sp" />
-        </LinearLayout><LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="90dp"
-                android:layout_height="50dp"
-                android:background="#0ff000" />
+    <Button
+        android:id="@+id/save_btn_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="30dp"
+        android:text="취소"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="@+id/save_edt_themeName"
+        app:layout_constraintTop_toBottomOf="@+id/save_sp_tag1" />
+
+    <Button
+        android:id="@+id/save_btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="저장"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_btn_reset"
+        app:layout_constraintLeft_toRightOf="@+id/save_btn_reset"
+        app:layout_constraintRight_toRightOf="@+id/save_edt_themeName"
+        app:layout_constraintTop_toTopOf="@+id/save_btn_reset" />
 
 
-            <TextView
-                android:layout_marginStart="30dp"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="#0ff000"
-                android:textSize="20sp" />
-        </LinearLayout><LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="90dp"
-                android:layout_height="50dp"
-                android:background="#055550" />
-
-
-            <TextView
-                android:layout_marginStart="30dp"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="#055550"
-                android:textSize="20sp" />
-        </LinearLayout><LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="90dp"
-                android:layout_height="50dp"
-                android:background="#111111" />
-
-
-            <TextView
-                android:layout_marginStart="30dp"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="#111111"
-                android:textSize="20sp" />
-        </LinearLayout><LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="90dp"
-                android:layout_height="50dp"
-                android:background="#0000ff" />
-
-
-            <TextView
-                android:layout_marginStart="30dp"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="#0000ff"
-                android:textSize="20sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!--입력칸-->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center|end"
         android:orientation="vertical"
-        android:padding="20dp">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
+            android:text="Color Mode"
+            android:textSize="20sp" />
 
-            <TextView
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:text="이름"
-                android:textSize="35sp" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="테마 이름 입력"
-                android:textSize="35sp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Switch
+            android:id="@+id/save_sw_hex"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:text="HEXA "
+            android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:text="라이브러리"
-                android:textSize="30sp" />
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:spinnerMode="dropdown" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Switch
+            android:id="@+id/save_sw_argb"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp">
+            android:text="ARGB "
+            android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="태그"
-                android:textSize="30sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <Spinner
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-
-                    />
-                <Spinner
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    />
-                <Spinner
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|bottom"
-            android:orientation="horizontal">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="취소"
-                android:textSize="20sp" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="저장"
-                android:textSize="20sp" />
-        </LinearLayout>
+        <Switch
+            android:id="@+id/save_sw_cmyk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CMYK "
+            android:textSize="20sp" />
     </LinearLayout>
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
