@@ -24,12 +24,12 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
 
+import java.util.Arrays;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 
 public class NewThemeFragment extends Fragment {
@@ -37,7 +37,7 @@ public class NewThemeFragment extends Fragment {
     BrightnessSlideBar brightnessSlideBar; //채도 선택
     AlphaSlideBar alphaSlideBar; //명도 선택
     final Button[] new_btn_selectedColor = new Button[5]; //선택된 색상을 보여줄 뷰
-    final String[] str_selectedColor = new String[5]; //선택된 색상값을 가진 배열
+    String[] str_selectedColor = new String[5]; //선택된 색상값을 가진 배열
     final int[] selectedRGB = new int[4]; //선택된 색상의 RGB 값
     final int[] selectedCMYK = new int[4]; //선택된 색상의 CMYK 값
     final SeekBar[] new_sb_rgb = new SeekBar[4]; //rgb 컨트롤
@@ -140,18 +140,10 @@ public class NewThemeFragment extends Fragment {
         newTheme.findViewById(R.id.new_btn_save).setOnClickListener(new View.OnClickListener() { //저장버튼
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putStringArray("colors",str_selectedColor);
-                SaveThemeFragment fragment = new SaveThemeFragment();
-                fragment.setArguments(bundle);
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container,fragment);
-                //fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                /*Intent intent = new Intent(getActivity(),SaveThemeFragment.class);
+                Intent intent = new Intent(getContext(), SaveThemeActivity.class);
                 intent.putExtra("colors",str_selectedColor);
-                startActivity(intent);*/
+                Log.d("색깔배열", Arrays.toString(str_selectedColor));
+                startActivity(intent);
                 Log.d("넘어감","넘어감");
             }
         });

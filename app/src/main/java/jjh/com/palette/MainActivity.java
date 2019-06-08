@@ -2,8 +2,6 @@ package jjh.com.palette;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -29,14 +27,13 @@ public class MainActivity extends AppCompatActivity {
         adapter = new FragmentAdapter(getSupportFragmentManager());
 
         adapter.addItem(new UserInfoFragment());
-        adapter.addItem(new MyLibraryFragment());
+        adapter.addItem(new LibraryFragment());
         adapter.addItem(new NewThemeFragment());
         adapter.addItem(new SearchFragment());
-        adapter.addItem(new SaveThemeFragment());
         adapter.notifyDataSetChanged();
 
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(0); //시작화면을 검색화면으로 띄어줌
+        viewPager.setCurrentItem(2); //시작화면을 검색화면으로 띄어줌
         main_bnv_menu.setSelectedItemId(R.id.action_search);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

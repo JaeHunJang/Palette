@@ -11,101 +11,47 @@
     android:paddingRight="10dp"
     >
 
-    <TextView
-        android:id="@+id/save_tv_ColorPalette1"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical"
+        android:id="@+id/save_layout_palette"
+        android:background="@drawable/background_vertical">
 
-    <TextView
-        android:id="@+id/save_tv_ColorName1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="30dp"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette1"
-        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette1"
-        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette1"
-        tools:text="#ff0000" />
 
-    <TextView
-        android:id="@+id/save_tv_ColorPalette2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette1" />
-
-    <TextView
-        android:id="@+id/save_tv_ColorName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette2"
-        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette2"
-        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette2"
-        tools:text="#ff0000" />
-
-    <TextView
-        android:id="@+id/save_tv_ColorPalette3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette2" />
-
-    <TextView
-        android:id="@+id/save_tv_ColorName3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette3"
-        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette3"
-        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette3"
-        tools:text="#ff0000" />
-
-    <TextView
-        android:id="@+id/save_tv_ColorPalette4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette3" />
-
-    <TextView
-        android:id="@+id/save_tv_ColorName4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette4"
-        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette4"
-        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette4"
-        tools:text="#ff0000" />
-
-    <TextView
-        android:id="@+id/save_tv_ColorPalette5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette4" />
-
-    <TextView
-        android:id="@+id/save_tv_ColorName5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/save_tv_ColorPalette5"
-        app:layout_constraintLeft_toRightOf="@+id/save_tv_ColorPalette5"
-        app:layout_constraintTop_toTopOf="@+id/save_tv_ColorPalette5"
-        tools:text="#ff0000" />
+        <TextView
+            android:id="@+id/save_tv_ColorPalette1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/background" />
+        <TextView
+            android:id="@+id/save_tv_ColorPalette2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/background" />
+        <TextView
+            android:id="@+id/save_tv_ColorPalette3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/background" />
+        <TextView
+            android:id="@+id/save_tv_ColorPalette4"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/background" />
+        <TextView
+            android:id="@+id/save_tv_ColorPalette5"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/background" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/save_tv_themeName"
@@ -115,7 +61,8 @@
         android:text="이름"
         android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_tv_ColorPalette5" />
+        app:layout_constraintTop_toBottomOf="@+id/save_layout_palette"
+        />
 
     <EditText
         android:id="@+id/save_edt_themeName"
