@@ -17,7 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {//테이블 생성
         db.execSQL("CREATE TABLE Account (id VARCHAR2(20) PRIMARY KEY, pw VARCHAR2(20), nick VARCHAR2(20), birth VARCHAR2(20), hint VARCHAR2(20));"); //회원정보 테이블
-        db.execSQL("CREATE TABLE Library (id VARCHAR2(20), library VARCHAR2(20), FOREIGN KEY(id) REFERENCES Account(id) );"); //회원의 라이브러리 정보를 가진 테이블
+        db.execSQL("CREATE TABLE Library (id VARCHAR2(20), library VARCHAR2(20) PRIMARY KEY, FOREIGN KEY(id) REFERENCES Account(id) );"); //회원의 라이브러리 정보를 가진 테이블
         db.execSQL("CREATE TABLE Theme (library VARCHAR2(20), name VARCHAR2(20), color VARCHAR2(20), date VARCHAR2(20), tags VARCHAR2(60), FOREIGN KEY(library) REFERENCES Library(library));");
 
         //db.execSQL("CREATE TABLE HashTags (tagName VARCHAR2(20));"); //태그 종류를 가진 테이블
@@ -29,24 +29,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 ", FOREIGN KEY(tag2) REFERENCES HashTags(tagName)" +
                 ", FOREIGN KEY(tag3) REFERENCES HashTags(tagName));");
                 */
-        /*
-        insert("TagName", "'따뜻함'");
-        insert("TagName", "'차가움'");
-        insert("TagName", "'산뜻함'");
-        insert("TagName", "'어두운'");
-        insert("TagName", "'밝은'");
-        insert("TagName", "'무더운'");
-        insert("TagName", "'붉은'");
-        insert("TagName", "'푸른'");
-        insert("TagName", "'노란'");
-        insert("TagName", "'초록'");
-        insert("TagName", "'청록'");
-        insert("TagName", "'자홍'");
-        insert("TagName", "'봄'");
-        insert("TagName", "'여름'");
-        insert("TagName", "'가을'");
-        insert("TagName", "'겨울'");
-        */
     }
 
     @Override

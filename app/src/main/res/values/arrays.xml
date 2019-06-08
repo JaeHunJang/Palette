@@ -7,6 +7,7 @@
     </string-array>
 
     <string-array name="theme_tags">
+        <item> </item>
         <item>따뜻함</item>
         <item>차가움</item>
         <item>산뜻함</item>

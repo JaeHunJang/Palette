@@ -6,7 +6,7 @@ import java.util.Locale;
 
 public class ColorUtils {
 
-    public static String getHexCode(int color) {
+    public static String toHexCode(int color) {
         int a = Color.alpha(color);
         int r = Color.red(color);
         int g = Color.green(color);
@@ -14,7 +14,7 @@ public class ColorUtils {
         return String.format(Locale.getDefault(), "%02X%02X%02X%02X", a, r, g, b);
     }
 
-    public static int[] getColorARGB(int color) {
+    public static int[] toColorARGB(int color) {
         int[] argb = new int[4];
         argb[0] = Color.alpha(color);
         argb[1] = Color.red(color);

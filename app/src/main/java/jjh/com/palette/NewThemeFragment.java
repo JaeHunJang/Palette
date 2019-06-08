@@ -142,9 +142,7 @@ public class NewThemeFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), SaveThemeActivity.class);
                 intent.putExtra("colors",str_selectedColor);
-                Log.d("색깔배열", Arrays.toString(str_selectedColor));
                 startActivity(intent);
-                Log.d("넘어감","넘어감");
             }
         });
         newTheme.findViewById(R.id.new_btn_prev).setOnClickListener(new View.OnClickListener() { //이전버튼
@@ -188,6 +186,7 @@ public class NewThemeFragment extends Fragment {
                 public void onClick(View v) {
                     selectingColorNums = index; //버튼을 누르면 해당 버튼의 색상선택으로 변경
                     selectedColorHexUpdate();
+                    new_btn_selectedColor[selectingColorNums].setText("Choose\nColor");
                 }
             });
         }
