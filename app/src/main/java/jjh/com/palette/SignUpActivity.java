@@ -265,7 +265,7 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dbhelper.insert("Account","'" + id +"','" + pw + "','" + nick + "','" + birth + "','" + hint+"'"); //테이블에 데이터 삽입
-                                dbhelper.insert("Library", "'" + id +"','" + "'기본 라이브러리'"); //기본 라이브러리 제공
+                                dbhelper.insert("Library", "'" + id +"','" + "기본 라이브러리'"); //기본 라이브러리 제공
                                 finish();
                             }
                         })

@@ -37,9 +37,6 @@ public class SignInActivity extends AppCompatActivity {
 
         /*****************선언 및 초기화***********************************/
         dbhelper = new DBHelper(this);
-
-      //  dbhelper.insert("Account","'admin', 'admin1234','admin', '1997-01-20','admin'");
-       // dbhelper.insert("Library","'admin', '기본 라이브러리'");
         strChk = new StringChecker();
 
         final TextInputLayout signIn_til_id, signIn_til_pw;
@@ -132,16 +129,6 @@ public class SignInActivity extends AppCompatActivity {
         });
         /****************회원가입 버튼 이벤트 끝 *******************/
 
-        /****************비회원 버튼 이벤트 시작 *******************/
-        //비회원 이용
-        (findViewById(R.id.signIn_tv_visit)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this, NewThemeFragment.class);
-                startActivity(intent);
-            }
-        });
-        /****************비회원 버튼 이벤트 끝 *******************/
 
         /****************아이디찾기 버튼 이벤트 시작 *******************/
         //아이디 찾기

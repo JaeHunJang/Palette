@@ -27,7 +27,7 @@
         <item>겨울</item>
     </string-array>
 
-    <string-array name="desc_mode">
+    <string-array name="sort_mode">
         <item>최신순</item>
         <item>오래된순</item>
     </string-array>

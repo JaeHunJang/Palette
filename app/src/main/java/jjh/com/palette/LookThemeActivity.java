@@ -3,11 +3,8 @@ package jjh.com.palette;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,15 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-
-public class SaveThemeActivity extends AppCompatActivity {
-
+public class LookThemeActivity extends AppCompatActivity {
     DBHelper dbHelper;
     Button[] save_tv_colorPalette = new Button[5];
     TextView[] save_tv_colorName = new TextView[5];
@@ -119,8 +113,8 @@ public class SaveThemeActivity extends AppCompatActivity {
                     for (int i = 0; i < values.length; i++) {
                         if (colors[i] == null)
                             continue;
-                            temp = ColorUtils.toColorARGB(Color.parseColor("#" + colors[i]));
-                            values[i] = temp[0] + "," + temp[1] + "," + temp[2] + "," + temp[3];
+                        temp = ColorUtils.toColorARGB(Color.parseColor("#" + colors[i]));
+                        values[i] = temp[0] + "," + temp[1] + "," + temp[2] + "," + temp[3];
 
                     }
                     colorUpdate(colors,values);
@@ -139,8 +133,8 @@ public class SaveThemeActivity extends AppCompatActivity {
                     for (int i = 0; i < values.length; i++) {
                         if (colors[i] == null)
                             continue;
-                            temp = ColorUtils.toColorARGB(Color.parseColor("#" + colors[i]));
-                            ColorUtils.RGBToCMYK(temp,temp2);
+                        temp = ColorUtils.toColorARGB(Color.parseColor("#" + colors[i]));
+                        ColorUtils.RGBToCMYK(temp,temp2);
                         values[i] = temp2[0] + "," + temp2[1] + "," + temp2[2] + "," + temp2[3] + ", " + Math.round((float)temp[0]/255.0f*100.0f) + "%";
 
                     }
@@ -194,7 +188,7 @@ public class SaveThemeActivity extends AppCompatActivity {
                     tag += s.getSelectedItem().toString() + "#";
                 }
                 dbHelper.insert("Theme","'"+Login.getInstance().getId()+"','" + lib + "', '" + themeName + "', '" + color + "', '" + today + "', '" + tag + "'");
-                Intent intent = new Intent(SaveThemeActivity.this, MainActivity.class);
+                Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -2,8 +2,11 @@ package jjh.com.palette;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -15,10 +18,10 @@ public class DBHelper extends SQLiteOpenHelper {
         //version > DB의 version
     }
     @Override
-    public void onCreate(SQLiteDatabase db) {//테이블 생성
+    public void onCreate(SQLiteDatabase db) throws SQLException {//테이블 생성
         db.execSQL("CREATE TABLE Account (id VARCHAR2(20) PRIMARY KEY, pw VARCHAR2(20), nick VARCHAR2(20), birth VARCHAR2(20), hint VARCHAR2(20));"); //회원정보 테이블
-        db.execSQL("CREATE TABLE Library (id VARCHAR2(20), library VARCHAR2(20) PRIMARY KEY, FOREIGN KEY(id) REFERENCES Account(id) );"); //회원의 라이브러리 정보를 가진 테이블
-        db.execSQL("CREATE TABLE Theme (library VARCHAR2(20), name VARCHAR2(20), color VARCHAR2(20), date VARCHAR2(20), tags VARCHAR2(60), FOREIGN KEY(library) REFERENCES Library(library));");
+        db.execSQL("CREATE TABLE Library (id VARCHAR2(20), library VARCHAR2(20),PRIMARY KEY(id,library), FOREIGN KEY(id) REFERENCES Account(id) );"); //회원의 라이브러리 정보를 가진 테이블
+        db.execSQL("CREATE TABLE Theme (id VARCHAR2(20), library VARCHAR2(20), name VARCHAR2(20), color VARCHAR2(20), date VARCHAR2(20), tags VARCHAR2(60), FOREIGN KEY(library) REFERENCES Library(library));");
 
         //db.execSQL("CREATE TABLE HashTags (tagName VARCHAR2(20));"); //태그 종류를 가진 테이블
 
@@ -32,36 +35,36 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) throws SQLException {
         db.execSQL("DROP TABLE IF EXISTS groupTBL");
         onCreate(db);
     }
 
-    public void insert(String insert_into, String values){
+    public void insert(String insert_into, String values) throws SQLException{
         db = this.getWritableDatabase();
         db.execSQL("INSERT INTO " + insert_into +" VALUES (" + values + ");");
         db.close();
     }
 
-    public void update(String update, String set){
+    public void update(String update, String set) throws SQLException{
         db = this.getWritableDatabase();
         db.execSQL("UPDATE " + update +" SET " + set + ";");
         db.close();
     }
 
-    public void update(String update, String set, String where){
+    public void update(String update, String set, String where) throws SQLException{
         db = this.getWritableDatabase();
         db.execSQL("UPDATE " + update +" SET " + set + " WHERE " + where + ";");
         db.close();
     }
 
-    public void delete(String delete_from, String where){
+    public void delete(String delete_from, String where) throws SQLException{
         db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + delete_from +" WHERE " + where  + ";");
         db.close();
     }
 
-    public ArrayList[] select(String select_from, String where){
+    public ArrayList[] select(String select_from, String where) throws SQLException{
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + select_from + " WHERE " + where + ";",null);
         ArrayList[] arrayList = new ArrayList[cursor.getCount()];
@@ -75,5 +78,23 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return  arrayList;
+    }
+    public ArrayList[] select(String select_from) throws SQLException{
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + select_from +";",null);
+        ArrayList[] arrayList = new ArrayList[cursor.getCount()];
+        if (cursor.getCount() != 0) {
+            for (int i = 0; cursor.moveToNext() ; i++){
+                arrayList[i] = new ArrayList();
+                for (int j = 0; j < cursor.getColumnCount(); j++)
+                arrayList[i].add(cursor.getString(j));
+            }
+        }
+        cursor.close();
+        db.close();
+        return  arrayList;
+    }
+    void getError(SQLException sqle){
+        Log.d("SQLException",sqle.getMessage());
     }
 }

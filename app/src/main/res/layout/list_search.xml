@@ -1,27 +1,51 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="10dp"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <TextView
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/theme_name"
-        android:text="테마 이름"
-        android:textSize="20sp" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/theme_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            tools:text="테마 이름" />
+
+        <TextView
+            android:id="@+id/tags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textSize="16sp"
+            tools:text="태그들" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        tools:text="날짜" />
+</LinearLayout>
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:background="@drawable/background_horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/theme_name">
+        >
 
         <Button
             android:id="@+id/color1"
@@ -60,4 +84,4 @@
             android:background="#00ffffff"
             android:layout_weight="1" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

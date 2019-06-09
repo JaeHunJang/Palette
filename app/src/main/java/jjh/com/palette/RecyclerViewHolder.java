@@ -9,12 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
-    TextView themeName;
+    TextView themeName, tags, date;
     LinearLayout container;
     Button[] colors;
     public RecyclerViewHolder(@NonNull View itemView) {
         super(itemView);
         themeName = itemView.findViewById(R.id.theme_name);
+        tags = itemView.findViewById(R.id.tags);
+        date = itemView.findViewById(R.id.date);
         container = itemView.findViewById(R.id.container);
         colors = new Button[5];
         colors[0] = itemView.findViewById(R.id.color1);

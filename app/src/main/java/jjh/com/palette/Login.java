@@ -9,8 +9,8 @@ public final class Login {
     private boolean loginState;
 
     private Login() {
-        id = "admin";
-        loginState = true;
+        id = null;
+        loginState = false;
     }
 
     public String getId() {

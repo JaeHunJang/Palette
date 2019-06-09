@@ -129,6 +129,7 @@
         android:layout_marginStart="20dp"
         android:hint="테마 이름 입력"
         android:textSize="20sp"
+        android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="@+id/save_tv_themeName"
         app:layout_constraintLeft_toRightOf="@+id/save_tv_themeName"
         app:layout_constraintTop_toTopOf="@+id/save_tv_themeName" />

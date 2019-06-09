@@ -33,8 +33,12 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(2); //시작화면을 검색화면으로 띄어줌
+        viewPager.setCurrentItem(3); //시작화면을 검색화면으로 띄어줌
         main_bnv_menu.setSelectedItemId(R.id.action_search);
+        if (Login.getInstance().getLoginState()){
+            viewPager.setEnabled(false);
+            main_bnv_menu.setEnabled(false);
+        }
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

@@ -79,15 +79,4 @@
         app:layout_constraintLeft_toRightOf="@+id/signIn_btn_signUp"
         app:layout_constraintTop_toTopOf="@id/signIn_btn_signUp" />
 
-
-    <TextView
-        android:id="@+id/signIn_tv_visit"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="@string/signIn_visit"
-        android:textColor="#000000"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signIn_btn_signUp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
