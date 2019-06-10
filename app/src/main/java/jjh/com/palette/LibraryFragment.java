@@ -1,18 +1,27 @@
 package jjh.com.palette;
 
+import android.content.DialogInterface;
 import android.database.SQLException;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +31,7 @@ public class LibraryFragment extends Fragment {
     Spinner lib_sp_lib;
     DBHelper dbHelper;
     RecyclerViewAdapter recyclerViewAdapter;
+    View dialog_newLibrary;
 
     @Nullable
     @Override
@@ -49,6 +59,75 @@ public class LibraryFragment extends Fragment {
 
             }
         });
+        lib.findViewById(R.id.lib_btn_addLib).setOnClickListener(new View.OnClickListener() {
+            boolean flag = false;
+            DialogInterface dlgInterface = null;
+
+            @Override
+            public void onClick(View v) {
+                /***************AlertDialog 선언 및 초기화 ******************/
+                final AlertDialog.Builder dlg = new AlertDialog.Builder(getContext());
+                dialog_newLibrary = View.inflate(getContext(), R.layout.dialog_newlibrary, null);
+                final TextInputEditText dlg_fa_tit_lib; //lib
+                final TextInputLayout dlg_fa_til_lib;
+                dlg_fa_tit_lib = dialog_newLibrary.findViewById(R.id.dlg_fa_tit_lib);
+
+                dlg_fa_til_lib = dialog_newLibrary.findViewById(R.id.dlg_fa_til_lib);
+
+                dlg_fa_til_lib.setCounterEnabled(true);
+                dlg_fa_til_lib.setCounterMaxLength(20);
+
+
+                /***************AlertDialog 선언 및 초기화 ******************/
+
+                /****************대화상자 입력 필터 시작 *******************/
+                //id 의 필터
+                dlg_fa_tit_lib.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 길이 설정
+                dlg_fa_tit_lib.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        StringChecker strChk = new StringChecker();
+                        if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                            dlg_fa_til_lib.setError(null);
+                            flag = true;
+                        } else {
+                            dlg_fa_til_lib.setError("ID는 영어와 숫자만 가능합니다.");
+                            flag = false;
+                        }
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                /****************대화상자 입력 필터 끝 *******************/
+
+                dlg.setTitle("새 라이브러리 만들기") //AlertDialog 의 Builder Setting
+                        .setNegativeButton("취소",null)
+                        .setPositiveButton("추가", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (flag) {
+                                    dbHelper.insert("Library","'"+Login.getInstance().getId()+"', '"+dlg_fa_tit_lib.getText().toString()+"'");
+                                    Toast.makeText(getContext(), "라이브러리가 추가되었습니다.",Toast.LENGTH_SHORT).show();
+                                    setSpinnerData();
+                                }
+                                else
+                                    Toast.makeText(getContext(), "입력정보를 확인해주세요.",Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setView(dialog_newLibrary)
+                        .create();
+                dlgInterface = dlg.show(); //Dialog 를 종료하기 위해 Interface 를 덧씌움
+            }
+
+        });
         return lib;
     }
 
@@ -60,7 +139,7 @@ public class LibraryFragment extends Fragment {
 
     }
 
-    void setSpinnerData(){
+    void setSpinnerData() {
         ArrayList[] libResult = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'");
         ArrayList<String> spItems = new ArrayList<>();
         for (ArrayList r : libResult) {
@@ -69,8 +148,10 @@ public class LibraryFragment extends Fragment {
         ArrayAdapter spinnerAdpater = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spItems);
         spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lib_sp_lib.setAdapter(spinnerAdpater);
+        lib_sp_lib.setSelection(spItems.size()-1);
     }
-    void setRecyclerData(String lib){
+
+    void setRecyclerData(String lib) {
         try {
             ArrayList<RecyclerViewItems> items = new ArrayList<>();
             ArrayList[] result = dbHelper.select("Theme", "library = '" + lib + "' and id = '" + Login.getInstance().getId() + "'");
@@ -79,7 +160,7 @@ public class LibraryFragment extends Fragment {
             for (int i = 0; i < result.length; i++) {
                 if (result.length == 0)
                     break;
-                items.add(new RecyclerViewItems(result[i].get(2).toString(), result[i].get(3).toString(), result[i].get(4).toString(),result[i].get(5).toString(),result[i].get(0).toString(),result[i].get(1).toString()));
+                items.add(new RecyclerViewItems(result[i].get(2).toString(), result[i].get(3).toString(), result[i].get(4).toString(), result[i].get(5).toString(), result[i].get(0).toString(), result[i].get(1).toString()));
             }
             lib_rv_themeList.setLayoutManager(new LinearLayoutManager(getContext()));
 

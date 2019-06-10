@@ -90,7 +90,7 @@ public class SaveThemeActivity extends AppCompatActivity {
         ArrayAdapter<String> spinnerAdpater = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, items);
         spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         save_sp_LibraryName.setAdapter(spinnerAdpater);
-        save_sp_LibraryName.setSelection(0);
+        save_sp_LibraryName.setSelection(items.size()-1);
 
 
         colorUpdate(colors,colors);
