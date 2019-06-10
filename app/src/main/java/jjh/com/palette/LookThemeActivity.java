@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import androidx.annotation.Nullable;
@@ -23,46 +26,43 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LookThemeActivity extends AppCompatActivity {
     DBHelper dbHelper;
-    Button[] save_tv_colorPalette = new Button[5];
-    TextView[] save_tv_colorName = new TextView[5];
-    EditText save_edt_themeName;
-    Spinner save_sp_LibraryName;
-    Spinner[] save_sp_Tags = new Spinner[3];
-    Switch[] save_sw_ColorMode = new Switch[3];
-    Button save_btn_reset, save_btn_save;
+    Button[] look_tv_colorPalette = new Button[5];
+    TextView[] look_tv_colorName = new TextView[5];
+    TextView look_tv_userID,look_tv_themeName,look_tv_LibraryName,look_tv_Tags, look_tv_date;
+    Switch[] look_sw_ColorMode = new Switch[3];
+    Button look_btn_delete,look_btn_copy;
     String[] colors;
     StringChecker strChk;
     boolean flag;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_savetheme);
-        save_tv_colorPalette[0] = findViewById(R.id.save_btn_ColorPalette1);
-        save_tv_colorPalette[1] = findViewById(R.id.save_btn_ColorPalette2);
-        save_tv_colorPalette[2] = findViewById(R.id.save_btn_ColorPalette3);
-        save_tv_colorPalette[3] = findViewById(R.id.save_btn_ColorPalette4);
-        save_tv_colorPalette[4] = findViewById(R.id.save_btn_ColorPalette5);
+    protected void onCreate(@Nullable Bundle lookdInstanceState) {
+        super.onCreate(lookdInstanceState);
+        setContentView(R.layout.activity_looktheme);
+        look_tv_colorPalette[0] = findViewById(R.id.look_btn_ColorPalette1);
+        look_tv_colorPalette[1] = findViewById(R.id.look_btn_ColorPalette2);
+        look_tv_colorPalette[2] = findViewById(R.id.look_btn_ColorPalette3);
+        look_tv_colorPalette[3] = findViewById(R.id.look_btn_ColorPalette4);
+        look_tv_colorPalette[4] = findViewById(R.id.look_btn_ColorPalette5);
 
-        save_tv_colorName[0] = findViewById(R.id.save_tv_ColorName1);
-        save_tv_colorName[1] = findViewById(R.id.save_tv_ColorName2);
-        save_tv_colorName[2] = findViewById(R.id.save_tv_ColorName3);
-        save_tv_colorName[3] = findViewById(R.id.save_tv_ColorName4);
-        save_tv_colorName[4] = findViewById(R.id.save_tv_ColorName5);
+        look_tv_colorName[0] = findViewById(R.id.look_tv_ColorName1);
+        look_tv_colorName[1] = findViewById(R.id.look_tv_ColorName2);
+        look_tv_colorName[2] = findViewById(R.id.look_tv_ColorName3);
+        look_tv_colorName[3] = findViewById(R.id.look_tv_ColorName4);
+        look_tv_colorName[4] = findViewById(R.id.look_tv_ColorName5);
 
-        save_edt_themeName = findViewById(R.id.save_edt_themeName);
-        save_sp_LibraryName = findViewById(R.id.save_sp_library);
+        look_tv_userID = findViewById(R.id.look_tv_userId);
+        look_tv_themeName = findViewById(R.id.look_tv_themeName);
+        look_tv_LibraryName = findViewById(R.id.look_tv_libraryName);
+        look_tv_Tags = findViewById(R.id.look_tv_tags);
+        look_tv_date = findViewById(R.id.look_tv_date);
 
-        save_sp_Tags[0] = findViewById(R.id.save_sp_tag1);
-        save_sp_Tags[1] = findViewById(R.id.save_sp_tag2);
-        save_sp_Tags[2] = findViewById(R.id.save_sp_tag3);
+        look_sw_ColorMode[0] = findViewById(R.id.look_sw_hex);
+        look_sw_ColorMode[1] = findViewById(R.id.look_sw_argb);
+        look_sw_ColorMode[2] = findViewById(R.id.look_sw_cmyk);
 
-        save_sw_ColorMode[0] = findViewById(R.id.save_sw_hex);
-        save_sw_ColorMode[1] = findViewById(R.id.save_sw_argb);
-        save_sw_ColorMode[2] = findViewById(R.id.save_sw_cmyk);
-
-        save_btn_reset = findViewById(R.id.save_btn_reset);
-        save_btn_save = findViewById(R.id.save_btn_save);
+        look_btn_delete = findViewById(R.id.look_btn_delete);
+        look_btn_copy = findViewById(R.id.look_btn_copy);
 
         dbHelper = new DBHelper(this);
         strChk = new StringChecker();
@@ -70,44 +70,84 @@ public class LookThemeActivity extends AppCompatActivity {
         colors = new String[5];
 
         Intent intent = getIntent();
-        String[] temp = intent.getStringArrayExtra("colors");
+        final String[] data = intent.getStringArrayExtra("selectedItem");
+        String[] temp = data[1].split("#");
         int j = 0;
         for (String t : temp) {
             if (t == null)
                 continue;
             colors[j++] = t;
         }
+        String[] tags = data[3].split("#");
 
-        ArrayList[] result = dbHelper.select("Library","id = '"+Login.getInstance().getId() + "'");
-        ArrayList<String> items = new ArrayList<>();
-        for (ArrayList r : result){
-            items.add(r.get(1).toString());
+        String tag = "";
+        for (int i = 0; i < tags.length; i++){
+            if (!tags[i].equals("")) {
+                tag += " #" + tags[i];
+            }
         }
-        ArrayAdapter<String> spinnerAdpater = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, items);
-        spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        save_sp_LibraryName.setAdapter(spinnerAdpater);
-        save_sp_LibraryName.setSelection(0);
+        String themeName = data[0];
+        String date = data[2];
+        String userId = data[4];
+        String userLib = data[5];
 
+        look_tv_themeName.setText(themeName);
+        look_tv_date.setText(date);
+        look_tv_userID.setText(userId);
+        look_tv_LibraryName.setText(userLib);
+        look_tv_Tags.setText(tag);
+
+        if (userId.equals(Login.getInstance().getId())){ //본인이 만든거면 삭제만
+            look_btn_copy.setVisibility(View.GONE);
+        }
+        else{ //본인 것이 아니면 복사 가능
+            look_btn_delete.setVisibility(View.GONE);
+        }
 
         colorUpdate(colors,colors);
-        save_sw_ColorMode[0].setChecked(true);
 
-        save_sw_ColorMode[0].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        look_sw_ColorMode[0].setChecked(true);
+
+        look_btn_copy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList[] result = dbHelper.select("Library","id = '"+Login.getInstance().getId()+"'");
+                dbHelper.insert("Theme","'"+Login.getInstance().getId()+"','" + result[0].get(1).toString() + "', '" + data[0] + "', '" + data[1] + "', '" + data[2] + "', '" + data[3] + "'");
+                Toast.makeText(getApplicationContext(),"복사되었습니다.",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        look_btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.delete("Theme","id = '" + Login.getInstance().getId() + "' and library = '" + data[5] + "' and name = '" + data[0] + "'");
+                Log.d("delete","id = '" + Login.getInstance().getId() + "' and library = '" + data[0] + "' and name = '" + data[5] + "'");
+                Toast.makeText(getApplicationContext(),"삭제되었습니다.",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        look_sw_ColorMode[0].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    save_sw_ColorMode[1].setChecked(false);
-                    save_sw_ColorMode[2].setChecked(false);
+                    look_sw_ColorMode[1].setChecked(false);
+                    look_sw_ColorMode[2].setChecked(false);
                     colorUpdate(colors,colors);
                 }
             }
         });
-        save_sw_ColorMode[1].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        look_sw_ColorMode[1].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    save_sw_ColorMode[0].setChecked(false);
-                    save_sw_ColorMode[2].setChecked(false);
+                    look_sw_ColorMode[0].setChecked(false);
+                    look_sw_ColorMode[2].setChecked(false);
                     String[] values = new String[5];
                     int[] temp;
                     for (int i = 0; i < values.length; i++) {
@@ -121,12 +161,12 @@ public class LookThemeActivity extends AppCompatActivity {
                 }
             }
         });
-        save_sw_ColorMode[2].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        look_sw_ColorMode[2].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    save_sw_ColorMode[0].setChecked(false);
-                    save_sw_ColorMode[1].setChecked(false);
+                    look_sw_ColorMode[0].setChecked(false);
+                    look_sw_ColorMode[1].setChecked(false);
                     String[] values = new String[5];
                     int[] temp, temp2;
                     temp2 = new int[4];
@@ -143,63 +183,13 @@ public class LookThemeActivity extends AppCompatActivity {
             }
         });
 
-        save_edt_themeName.setFilters(new InputFilter[]{new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (strChk.strPatternCheck(source)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
-                    flag = true;
-                }
-                else{
-                    flag = false;
-                }
-                return source;
-            }
-        },new InputFilter.LengthFilter(20)});//최대 길이 20
-
-
-        save_btn_reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        save_btn_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!flag) {
-                    Toast.makeText(getApplicationContext(), "테마 이름은 영숫자만 가능합니다.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String themeName = save_edt_themeName.getText().toString();
-                String lib = save_sp_LibraryName.getSelectedItem().toString();
-                String color = "";
-                String tag = "";
-                Date current = new Date(); //오늘 날짜
-                String today = String.format("%4d-%02d-%02d",current.getYear()+1900, current.getMonth()+1,current.getDate());
-                for(String s : colors){
-                    if (s == null)
-                        continue;
-                    color += s + "#";
-                }
-                for(Spinner s : save_sp_Tags){
-                    if (s.getSelectedItem().toString().equals(" "))
-                        continue;
-                    tag += s.getSelectedItem().toString() + "#";
-                }
-                dbHelper.insert("Theme","'"+Login.getInstance().getId()+"','" + lib + "', '" + themeName + "', '" + color + "', '" + today + "', '" + tag + "'");
-                Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
     void colorUpdate(String[] hex, String[] values){
         int j = 0;
         for (int i = 0; i < values.length; i++){
             if (values[i] != null && hex[i] != null) {
-                save_tv_colorPalette[j].setBackgroundColor(Color.parseColor("#"+ hex[i]));
-                save_tv_colorName[j++].setText(values[i]);
+                look_tv_colorPalette[j].setBackgroundColor(Color.parseColor("#"+ hex[i]));
+                look_tv_colorName[j++].setText(values[i]);
             }
         }
     }

@@ -20,6 +20,7 @@
         <activity android:name=".MainActivity"/>
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".SaveThemeActivity"/>
+        <activity android:name=".LookThemeActivity"/>
     </application>
 
 </manifest>

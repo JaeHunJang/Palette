@@ -79,12 +79,11 @@ public class LibraryFragment extends Fragment {
             for (int i = 0; i < result.length; i++) {
                 if (result.length == 0)
                     break;
-                items.add(new RecyclerViewItems(result[i].get(2).toString(), result[i].get(3).toString(), result[i].get(4).toString(),result[i].get(5).toString()));
+                items.add(new RecyclerViewItems(result[i].get(2).toString(), result[i].get(3).toString(), result[i].get(4).toString(),result[i].get(5).toString(),result[i].get(0).toString(),result[i].get(1).toString()));
             }
             lib_rv_themeList.setLayoutManager(new LinearLayoutManager(getContext()));
 
             lib_rv_themeList.setAdapter(recyclerViewAdapter);
-            lib_rv_themeList.addItemDecoration(new RecyclerViewItemDecoration(40));
             recyclerViewAdapter.notifyDataSetChanged();
 
 

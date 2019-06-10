@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/search_edt_keyword"
         android:singleLine="true"
+        android:hint="테마 이름 검색"
         android:drawableEnd="@drawable/ic_search_black_24dp"/>
     <LinearLayout
         android:layout_gravity="right"

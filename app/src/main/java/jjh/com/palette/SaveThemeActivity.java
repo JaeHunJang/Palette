@@ -3,11 +3,8 @@ package jjh.com.palette;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 import androidx.annotation.Nullable;
@@ -57,7 +53,7 @@ public class SaveThemeActivity extends AppCompatActivity {
         save_tv_colorName[4] = findViewById(R.id.save_tv_ColorName5);
 
         save_edt_themeName = findViewById(R.id.save_edt_themeName);
-        save_sp_LibraryName = findViewById(R.id.save_sp_library);
+        save_sp_LibraryName = findViewById(R.id.save_sp_libraryName);
 
         save_sp_Tags[0] = findViewById(R.id.save_sp_tag1);
         save_sp_Tags[1] = findViewById(R.id.save_sp_tag2);
@@ -76,13 +72,15 @@ public class SaveThemeActivity extends AppCompatActivity {
         colors = new String[5];
 
         Intent intent = getIntent();
-        String[] temp = intent.getStringArrayExtra("colors");
-        int j = 0;
-        for (String t : temp) {
-            if (t == null)
-                continue;
-            colors[j++] = t;
+        String[] temp;
+            temp= intent.getStringArrayExtra("colors");
+            int j = 0;
+            for (String t : temp) {
+                if (t == null)
+                    continue;
+                colors[j++] = t;
         }
+
 
         ArrayList[] result = dbHelper.select("Library","id = '"+Login.getInstance().getId() + "'");
         ArrayList<String> items = new ArrayList<>();

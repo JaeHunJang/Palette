@@ -21,17 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) throws SQLException {//테이블 생성
         db.execSQL("CREATE TABLE Account (id VARCHAR2(20) PRIMARY KEY, pw VARCHAR2(20), nick VARCHAR2(20), birth VARCHAR2(20), hint VARCHAR2(20));"); //회원정보 테이블
         db.execSQL("CREATE TABLE Library (id VARCHAR2(20), library VARCHAR2(20),PRIMARY KEY(id,library), FOREIGN KEY(id) REFERENCES Account(id) );"); //회원의 라이브러리 정보를 가진 테이블
-        db.execSQL("CREATE TABLE Theme (id VARCHAR2(20), library VARCHAR2(20), name VARCHAR2(20), color VARCHAR2(20), date VARCHAR2(20), tags VARCHAR2(60), FOREIGN KEY(library) REFERENCES Library(library));");
-
-        //db.execSQL("CREATE TABLE HashTags (tagName VARCHAR2(20));"); //태그 종류를 가진 테이블
-
-        /*db.execSQL("CREATE TABLE Theme (library VARCHAR2(20), name VARCHAR2(20), color VARCHAR2(20)" +
-                ", date VARCHAR2(20), tag1 VARCHAR2(20), tag2 VARCHAR2(20), tag3 VARCHAR2(20)" +
-                ", FOREIGN KEY(library) REFERENCES Library(library)" +
-                ", FOREIGN KEY(tag1) REFERENCES HashTags(tagName)" +
-                ", FOREIGN KEY(tag2) REFERENCES HashTags(tagName)" +
-                ", FOREIGN KEY(tag3) REFERENCES HashTags(tagName));");
-                */
+        db.execSQL("CREATE TABLE Theme (id VARCHAR2(20), library VARCHAR2(20), name VARCHAR2(20), color VARCHAR2(20), date VARCHAR2(20), tags VARCHAR2(60), FOREIGN KEY(id,library) REFERENCES Library(id,library));");
     }
 
     @Override

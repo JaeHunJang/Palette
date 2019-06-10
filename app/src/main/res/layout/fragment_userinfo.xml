@@ -96,7 +96,7 @@
         android:id="@+id/ui_tv_birth_no"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BirthDay : "
+        android:text="Birth\n  Day : "
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/ui_tv_nick"

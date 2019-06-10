@@ -5,12 +5,32 @@ public class RecyclerViewItems {
     private String color;
     private String date;
     private String tags;
+    private String id;
+    private String lib;
 
-    public RecyclerViewItems(String name, String color, String date, String tags) {
+    public RecyclerViewItems(String name, String color, String date, String tags, String id, String lib) {
         this.name = name;
         this.color = color;
         this.date = date;
         this.tags = tags;
+        this.id = id;
+        this.lib = lib;
+    }
+
+    public String getLib() {
+        return lib;
+    }
+
+    public void setLib(String lib) {
+        this.lib = lib;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setName(String name) {
