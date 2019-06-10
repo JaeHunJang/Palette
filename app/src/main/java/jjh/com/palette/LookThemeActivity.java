@@ -1,5 +1,6 @@
 package jjh.com.palette;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LookThemeActivity extends AppCompatActivity {
@@ -34,6 +36,8 @@ public class LookThemeActivity extends AppCompatActivity {
     String[] colors;
     StringChecker strChk;
     boolean flag;
+    String[] items;
+    int selected;
 
     @Override
     protected void onCreate(@Nullable Bundle lookdInstanceState) {
@@ -112,11 +116,31 @@ public class LookThemeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ArrayList[] result = dbHelper.select("Library","id = '"+Login.getInstance().getId()+"'");
-                dbHelper.insert("Theme","'"+Login.getInstance().getId()+"','" + result[0].get(1).toString() + "', '" + data[0] + "', '" + data[1] + "', '" + data[2] + "', '" + data[3] + "'");
-                Toast.makeText(getApplicationContext(),"복사되었습니다.",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                items= new String[result.length];
+                for (int i = 0; i < result.length; i++){
+                    items[i]= result[i].get(1).toString();
+                }
+                AlertDialog.Builder dlg = new AlertDialog.Builder(LookThemeActivity.this);
+                dlg.setTitle("라이브러리 선택")
+                        .setSingleChoiceItems(items, items.length - 1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                selected = which;
+                            }
+                        })
+                        .setNegativeButton("닫기",null)
+                        .setPositiveButton("추가", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbHelper.insert("Theme","'"+Login.getInstance().getId()+"','" + items[selected] + "', '" + data[0] + "', '" + data[1] + "', '" + data[2] + "', '" + data[3] + "'");
+                                Toast.makeText(getApplicationContext(),"복사되었습니다.",Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                        .show();
+
             }
         });
 

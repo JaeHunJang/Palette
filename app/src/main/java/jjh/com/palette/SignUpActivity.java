@@ -33,18 +33,17 @@ public class SignUpActivity extends AppCompatActivity {
 
         /***************선언 및 초기화 ****************/
         dbhelper = new DBHelper(this);
-        final TextInputLayout signUp_til_id, signUp_til_pw, signUp_til_pwChk, signUp_til_nick, signUp_til_hint;
-        final TextInputEditText signUp_tit_id, signUp_tit_pw, signUp_tit_pwChk, signUp_tit_nick, signUp_tit_hint;
+        final TextInputLayout signUp_til_id, signUp_til_pw, signUp_til_pwChk, signUp_til_hint;
+        final TextInputEditText signUp_tit_id, signUp_tit_pw, signUp_tit_pwChk, signUp_tit_hint;
         final DatePicker signUp_dp_birth;
         final Button signUp_btn_signUp;
         final StringChecker strChk = new StringChecker();
 
-        final boolean[] flags = {false,false,false,false,false};
+        final boolean[] flags = {false,false,false,false};
 
         signUp_til_id = findViewById(R.id.signUp_til_id);
         signUp_til_pw = findViewById(R.id.signUp_til_pw);
         signUp_til_pwChk = findViewById(R.id.signUp_til_pwChk);
-        signUp_til_nick = findViewById(R.id.signUp_til_nick);
         signUp_til_hint = findViewById(R.id.signUp_til_hint);
 
         signUp_dp_birth = findViewById(R.id.signUp_dp_birth);
@@ -53,7 +52,6 @@ public class SignUpActivity extends AppCompatActivity {
         signUp_tit_id = findViewById(R.id.signUp_tit_id);
         signUp_tit_pw = findViewById(R.id.signUp_tit_pw);
         signUp_tit_pwChk = findViewById(R.id.signUp_tit_pwChk);
-        signUp_tit_nick = findViewById(R.id.signUp_tit_nick);
         signUp_tit_hint = findViewById(R.id.signUp_tit_hint);
 
         signUp_til_id.setCounterEnabled(true);
@@ -154,31 +152,6 @@ public class SignUpActivity extends AppCompatActivity {
         });
         /*********PW CHECK 입력 필터 끝*************/
 
-        /*********NICK 입력 필터 시작*************/
-        //nick 입력 필터
-        signUp_tit_nick.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});//최대 길이 20
-        signUp_tit_nick.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
-                    signUp_til_nick.setError(null);
-                    flags[3] = true;
-                }
-                else{
-                    flags[3] = false;
-                    signUp_til_nick.setError("Nick는 영어와 숫자만 가능합니다.");
-                }
-            }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        /*********NICK 입력 필터 끝*************/
 
         /*********HINT 입력 필터 시작*************/
         //hint 문자 입력 필터
@@ -188,10 +161,10 @@ public class SignUpActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signUp_til_hint.setError(null);
-                    flags[4] = true;
+                    flags[3] = true;
                 }
                 else{
-                    flags[4] = false;
+                    flags[3] = false;
                     signUp_til_hint.setError("Hint는 영어와 숫자만 가능합니다.");
                 }
             }
@@ -224,11 +197,6 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
-                if ((signUp_tit_nick.getText().toString().isEmpty() && flags[0])){ //닉네임이 비어있으면 자동으로 id 입력
-                    signUp_tit_nick.setText(id);
-                }
-                final String nick = signUp_tit_nick.getText().toString(); //입력받은 nick이 비어있을 경우 id를 입력후 받기 위해 뒤에서 선언
-
                 for (int i = 0; i < flags.length; i++){ //모든 조건이 만족할때까지 입력 확인
                     if (!flags[i]){
                         Toast.makeText(getApplicationContext(), "입력을 확인해주세요.", Toast.LENGTH_SHORT).show();
@@ -239,12 +207,11 @@ public class SignUpActivity extends AppCompatActivity {
                 /***************AlertDialog 선언 및 초기화 ******************/
                 AlertDialog.Builder dlg = new AlertDialog.Builder(SignUpActivity.this);
                 dlg_userInfo = View.inflate(SignUpActivity.this, R.layout.dialog_userinfo, null);
-                TextView dlg_ui_tv_id, dlg_ui_tv_nick, dlg_ui_tv_birth, dlg_ui_tv_hint;
+                TextView dlg_ui_tv_id, dlg_ui_tv_birth, dlg_ui_tv_hint;
                 TextInputEditText dlg_ui_tit_pw;
                 TextInputLayout dlg_ui_til_pw;
 
                 dlg_ui_tv_id = dlg_userInfo.findViewById(R.id.ui_tv_id);
-                dlg_ui_tv_nick = dlg_userInfo.findViewById(R.id.ui_tv_nick);
                 dlg_ui_tv_birth = dlg_userInfo.findViewById(R.id.ui_tv_birth);
                 dlg_ui_tv_hint = dlg_userInfo.findViewById(R.id.ui_tv_hint);
 
@@ -253,7 +220,6 @@ public class SignUpActivity extends AppCompatActivity {
 
                 dlg_ui_tv_id.setText("ID : "+id);
                 dlg_ui_tit_pw.setText(pw);
-                dlg_ui_tv_nick.setText("Nick : "+nick);
                 dlg_ui_tv_birth.setText("BirthDay : "+birth);
                 dlg_ui_tv_hint.setText("Hint : "+hint);
                 dlg_ui_til_pw.setPasswordVisibilityToggleEnabled(true);
@@ -264,7 +230,7 @@ public class SignUpActivity extends AppCompatActivity {
                         .setPositiveButton("가입하기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                dbhelper.insert("Account","'" + id +"','" + pw + "','" + nick + "','" + birth + "','" + hint+"'"); //테이블에 데이터 삽입
+                                dbhelper.insert("Account","'" + id +"','" + pw + "','" + birth + "','" + hint+"'"); //테이블에 데이터 삽입
                                 dbhelper.insert("Library", "'" + id +"','" + "기본 라이브러리'"); //기본 라이브러리 제공
                                 finish();
                             }

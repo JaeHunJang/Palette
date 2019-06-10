@@ -28,39 +28,37 @@ public class UserInfoFragment extends Fragment {
     DBHelper dbhelper;
     StringChecker strChk;
     View dlg_userInfo;
-    String id, pw, nick, birth, hint;
-    boolean[] flags = {true, true, true};
+    String id, pw,  birth, hint;
+    boolean[] flags = {true, true};
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View userInfo = inflater.inflate(R.layout.fragment_userinfo,container,false);
 
         /****************선언 및 초기화 ********************************/
-        final Button ui_btn_update, ui_btn_logout;
+        final Button ui_btn_update, ui_btn_logout, ui_btn_cancel;
         final TextView ui_tv_id, ui_tv_birth;
-        final TextInputLayout ui_til_pw, ui_til_nick, ui_til_hint;
-        final TextInputEditText ui_tit_pw, ui_tit_nick, ui_tit_hint;
+        final TextInputLayout ui_til_pw,ui_til_hint;
+        final TextInputEditText ui_tit_pw, ui_tit_hint;
 
         dbhelper = new DBHelper(getContext());
         ArrayList[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
         id = result[0].get(0).toString();
          pw = result[0].get(1).toString();
-         nick = result[0].get(2).toString();
-         birth = result[0].get(3).toString();
-         hint = result[0].get(4).toString();
+         birth = result[0].get(2).toString();
+         hint = result[0].get(3).toString();
 
         ui_tv_id = userInfo.findViewById(R.id.ui_tv_id);
         ui_tv_birth = userInfo.findViewById(R.id.ui_tv_birth);
         ui_tit_pw = userInfo.findViewById(R.id.ui_tit_pw);
-        ui_tit_nick = userInfo.findViewById(R.id.ui_tit_nick);
         ui_tit_hint = userInfo.findViewById(R.id.ui_tit_hint);
 
         ui_til_pw = userInfo.findViewById(R.id.ui_til_pw);
-        ui_til_nick = userInfo.findViewById(R.id.ui_til_nick);
         ui_til_hint = userInfo.findViewById(R.id.ui_til_hint);
 
         ui_btn_update = userInfo.findViewById(R.id.ui_btn_update);
         ui_btn_logout = userInfo.findViewById(R.id.ui_btn_logout);
+        ui_btn_cancel = userInfo.findViewById(R.id.ui_btn_cancel);
 
         ui_til_pw.setCounterEnabled(true);
         ui_til_pw.setCounterMaxLength(20);
@@ -73,7 +71,6 @@ public class UserInfoFragment extends Fragment {
         temp = ui_tv_birth.getText().toString() + id;
         ui_tv_birth.setText(temp);
         ui_tit_pw.setText(pw);
-        ui_tit_nick.setText(nick);
         ui_tv_birth.setText(birth);
         ui_tit_hint.setText(hint);
         /****************선언 및 초기화 ********************************/
@@ -103,32 +100,6 @@ public class UserInfoFragment extends Fragment {
         });
         /****************PW 입력 필터 끝 *******************/
 
-        /*********NICK 입력 필터 시작*************/
-        //ui_tit_nick 입력 필터
-        ui_tit_nick.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});//최대 길이 20
-        ui_tit_nick.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
-                    ui_til_nick.setError(null);
-                    flags[1] = true;
-                }
-                else{
-                    ui_til_nick.setError("Nick는 영어와 숫자만 가능합니다.");
-                    flags[1] = false;
-
-                }
-            }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        /*********NICK 입력 필터 끝*************/
 
         /*********HINT 입력 필터 시작*************/
         //ui_tit_hint 문자 입력 필터
@@ -138,12 +109,12 @@ public class UserInfoFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     ui_til_hint.setError(null);
-                    flags[2] = true;
+                    flags[1] = true;
 
                 }
                 else{
                     ui_til_hint.setError("Hint는 영어와 숫자만 가능합니다.");
-                    flags[2] = false;
+                    flags[1] = false;
 
                 }
             }
@@ -171,6 +142,27 @@ public class UserInfoFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        ui_btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(getContext());
+                dlg.setTitle("회원탈퇴")
+                        .setMessage("정말로 탈퇴하시겠습니까?")
+                        .setNegativeButton("취소",null)
+                        .setPositiveButton("탈퇴", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbhelper.delete("Account","id = '"+Login.getInstance().getId()+"'");
+                                dbhelper.delete("Library","id = '"+Login.getInstance().getId()+"'");
+                                dbhelper.delete("Theme","id = '"+Login.getInstance().getId()+"'");
+                                getActivity().finish();
+                                Intent intent = new Intent(getContext(),SignInActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .show();
+            }
+        });
         /****************비밀번호 변경 확인 대화상자 시작 *******************/
         //비밀번호 변경 확인 대화상자
         ui_btn_update.setOnClickListener(new View.OnClickListener() {
@@ -181,8 +173,6 @@ public class UserInfoFragment extends Fragment {
                         ui_tit_pw.setText(pw);
                     if (ui_tit_hint.getText().toString().equals(""))
                         ui_tit_hint.setText(hint);
-                    if (ui_tit_nick.getText().toString().equals(""))
-                        ui_tit_nick.setText(nick);
                     if (!flags[i]){
                         Toast.makeText(getContext(), "입력을 확인해주세요.", Toast.LENGTH_SHORT).show();
                         return;
@@ -190,17 +180,15 @@ public class UserInfoFragment extends Fragment {
                 }
                 final String pw = ui_tit_pw.getText().toString(); //입력받은 ui_tit_pw
                 final String hint = ui_tit_hint.getText().toString(); //입력받은 ui_tit_hint
-                final String nick = ui_tit_nick.getText().toString(); //입력받은 ui_tit_nick
 
                 /***************AlertDialog 선언 및 초기화 ******************/
                 AlertDialog.Builder dlg = new AlertDialog.Builder(getContext());
                 dlg_userInfo = View.inflate(getContext(), R.layout.dialog_userinfo, null);
-                TextView dlg_ui_tv_id, dlg_ui_tv_nick, dlg_ui_tv_birth, dlg_ui_tv_hint;
+                TextView dlg_ui_tv_id, dlg_ui_tv_birth, dlg_ui_tv_hint;
                 TextInputEditText dlg_ui_tit_pw;
                 TextInputLayout dlg_ui_til_pw;
 
                 dlg_ui_tv_id = dlg_userInfo.findViewById(R.id.ui_tv_id);
-                dlg_ui_tv_nick = dlg_userInfo.findViewById(R.id.ui_tv_nick);
                 dlg_ui_tv_birth = dlg_userInfo.findViewById(R.id.ui_tv_birth);
                 dlg_ui_tv_hint = dlg_userInfo.findViewById(R.id.ui_tv_hint);
 
@@ -209,7 +197,6 @@ public class UserInfoFragment extends Fragment {
 
                 dlg_ui_tv_id.setText("ID : "+id);
                 dlg_ui_tit_pw.setText(pw);
-                dlg_ui_tv_nick.setText("Nick : "+nick);
                 dlg_ui_tv_birth.setText("BirthDay : "+birth);
                 dlg_ui_tv_hint.setText("Hint : "+hint);
                 dlg_ui_til_pw.setPasswordVisibilityToggleEnabled(true);
@@ -220,7 +207,7 @@ public class UserInfoFragment extends Fragment {
                         .setPositiveButton("수정하기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                dbhelper.update("Account","pw = '" + pw + "', nick ='" + nick + "', hint ='" + hint+"'", "id = '" + id + "'"); //테이블에 데이터 삽입
+                                dbhelper.update("Account","pw = '" + pw + "', hint ='" + hint+"'", "id = '" + id + "'"); //테이블에 데이터 삽입
                                 ui_btn_logout.callOnClick(); //회원정보가 수정되었으니 다시 로그인을 해야함
                             }
                         })

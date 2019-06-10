@@ -44,20 +44,10 @@
             android:enabled="false"
             />
     </com.google.android.material.textfield.TextInputLayout>
+
     <TextView
         app:layout_constraintLeft_toLeftOf="@id/ui_tv_pw"
         app:layout_constraintTop_toBottomOf="@id/ui_tv_pw"
-        android:layout_marginTop="20dp"
-        android:id="@+id/ui_tv_nick"
-        android:textColor="#000000"
-        android:text="Name : "
-        android:textSize="20sp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    />
-    <TextView
-        app:layout_constraintLeft_toLeftOf="@id/ui_tv_nick"
-        app:layout_constraintTop_toBottomOf="@id/ui_tv_nick"
         android:layout_marginTop="20dp"
         android:id="@+id/ui_tv_birth"
         android:textColor="#000000"

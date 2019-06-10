@@ -57,7 +57,6 @@ public class SignInActivity extends AppCompatActivity {
         signIn_til_pw.setCounterEnabled(true);
         signIn_til_pw.setCounterMaxLength(20);
         signIn_til_pw.setPasswordVisibilityToggleEnabled(true); //비밀번호 확인하기 설정
-        signIn_tit_pw.setFocusable(true); //포커스 유지를 위한 설정
         /****************선언 및 초기화 ********************************/
 
         //영문, 숫자만 입력받기 참고 - https://hydok.tistory.com/17
@@ -89,10 +88,8 @@ public class SignInActivity extends AppCompatActivity {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     signIn_btn_signIn.callOnClick();
-                    signIn_tit_pw.requestFocus(); //포커스 요청
                     return true;
                 }
-                signIn_tit_pw.requestFocus(); //포커스 요청
                 return false;
             }
         });

@@ -43,14 +43,12 @@ public class SearchFragment extends Fragment {
 
         dbHelper = new DBHelper(search.getContext());
         setRecyclerData("id like '%%'"); //모든 테마를 보여줌
-        search_edt_keyword.setFocusable(true); //검색 이후에도 포커스를 유지하기 위한 설정
 
         search_edt_keyword.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     selectionQuery();
-                    search_edt_keyword.requestFocus(); //검색이후 포커스 재설정
                 }
                 return false;
             }
@@ -89,12 +87,6 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setRecyclerData("library = '기본 라이브러리'");
-
-    }
 
     void setRecyclerData(String where) {
         try {
