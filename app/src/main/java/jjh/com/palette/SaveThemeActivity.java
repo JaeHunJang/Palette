@@ -81,9 +81,9 @@ public class SaveThemeActivity extends AppCompatActivity {
                 continue;
             colors[j++] = t;
         }
+        ArrayList<String> items = new ArrayList<>();
         try {
             ArrayList[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인한 아이디의 라이브러리를 불러옴
-            ArrayList<String> items = new ArrayList<>();
             for (ArrayList r : result) {
                 items.add(r.get(1).toString());
             }
@@ -93,6 +93,28 @@ public class SaveThemeActivity extends AppCompatActivity {
             save_sp_LibraryName.setSelection(items.size() - 1);
         } catch (SQLException sqle) {
             dbHelper.getError(sqle);
+        }
+
+        if(intent.getBooleanExtra("request",false)){ //수정버튼을 통해 왔을때
+            final String[] data = intent.getStringArrayExtra("selectedItem"); //기존 데이터를 가져옴
+            save_edt_themeName.setText(data[0]); //기존 이름 적용
+            String[] tags = data[3].split("#"); //사용할 형태로 변환
+            String[] themeTags = getResources().getStringArray(R.array.theme_tags);
+            j = 0;
+            for (int i = 0; i < tags.length; i++) { //기존 태그들을 선택
+                if (!tags[i].equals("")) {
+                    for (int k=0; k < themeTags.length; k++){
+                        if (tags[i].equals(themeTags[k])){
+                            save_sp_Tags[j++].setSelection(k);
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i< items.size(); i++){ //기존 라이브러리 선택
+                if (items.get(i).equals(data[5])){
+                    save_sp_LibraryName.setSelection(i);
+                }
+            }
         }
 
         colorUpdate(colors, colors); //변경된 색상 모드에 맞게 색상코드값을 바꿔주는 메소드
@@ -194,7 +216,15 @@ public class SaveThemeActivity extends AppCompatActivity {
                     tag += s.getSelectedItem().toString() + "#";
                 }
                 try {
-                    dbHelper.insert("Theme", "'" + Login.getInstance().getId() + "','" + lib + "', '" + themeName + "', '" + color + "', '" + today + "', '" + tag + "'");
+                    Intent getIntent = getIntent();
+                    boolean request = getIntent.getBooleanExtra("request",false); //수정 버튼을 통해서 왔을때
+                    if (request) {
+                        final String[] data = getIntent.getStringArrayExtra("selectedItem"); //기존 데이터를 가져옴
+                        String where = "id = '"+data[4] +"' and library ='" + data[5] +"' and name = '"+data[0]+"'"; //기존 데이터를 update 의 where 절로 활용
+                        dbHelper.update("Theme", "id ='" + Login.getInstance().getId() + "', library ='" + lib + "', name ='" + themeName + "', color = '" + color + "', date= '" + today + "',tags= '" + tag + "'", where);
+                    }
+                    else
+                        dbHelper.insert("Theme", "'" + Login.getInstance().getId() + "','" + lib + "', '" + themeName + "', '" + color + "', '" + today + "', '" + tag + "'");
                 } catch (SQLException sqle) {
                     dbHelper.getError(sqle);
                 }

@@ -105,7 +105,7 @@ public class SearchFragment extends Fragment {
             ArrayList<RecyclerViewItems> items = new ArrayList<>();
             result = dbHelper.select("Theme", where);
 
-            recyclerViewAdapter = new RecyclerViewAdapter(items);
+            recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
             for (int i = 0; i < result.length; i++) {
                 if (result.length == 0)
                     break;

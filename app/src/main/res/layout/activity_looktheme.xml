@@ -230,6 +230,13 @@
 
 
         <Button
+            android:id="@+id/look_btn_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="수정"
+            android:textSize="20sp" />
+        <Button
             android:id="@+id/look_btn_copy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,5 +1,6 @@
 package jjh.com.palette;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -38,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
         if (Login.getInstance().getLoginState()){
             viewPager.setEnabled(false);
             main_bnv_menu.setEnabled(false);
+        }
+        Intent intent = getIntent();
+        int fragment = intent.getIntExtra("fragment",-1);
+        if (fragment != -1){
+            viewPager.setCurrentItem(fragment);
+            main_bnv_menu.setSelectedItemId(R.id.action_new);
         }
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

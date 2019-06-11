@@ -15,6 +15,13 @@ public class ColorUtils {
         argb[3] = Color.blue(color);
         return argb;
     }
+    public static String toHexCode(int color) {
+        int a = Color.alpha(color);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        return String.format(Locale.getDefault(), "%02X%02X%02X%02X", a, r, g, b);
+    }
 
     //https://www.ginifab.com/feeds/pms/cmyk_to_rgb.php 인용
     public static void RGBToCMYK(int[] argb, int[] cmyk){ //argb 값을 cmyk 값으로 변환해 저장

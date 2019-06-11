@@ -149,7 +149,7 @@ public class LibraryFragment extends Fragment {
             ArrayList<RecyclerViewItems> items = new ArrayList<>();
             ArrayList[] result = dbHelper.select("Theme", "library = '" + lib + "' and id = '" + Login.getInstance().getId() + "'");
 
-            recyclerViewAdapter = new RecyclerViewAdapter(items);
+            recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
             for (int i = 0; i < result.length; i++) {
                 if (result.length == 0)
                     break;

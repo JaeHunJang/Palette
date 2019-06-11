@@ -1,5 +1,6 @@
 package jjh.com.palette;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,16 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 //리사이클러뷰에 탑재될 어댑터 클래스
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     private ArrayList<RecyclerViewItems> itemList; //리사이클러뷰홀더에 탑재될 데이터를 받아옴
-    private Context context; //대화상자를 표시할 컨택스트를 받아옴
+    private Activity activity; //대화상자를 표시할 컨택스트를 받아옴
 
-    RecyclerViewAdapter(ArrayList list) {
+    RecyclerViewAdapter(ArrayList list, Activity activity) {
         this.itemList = list;
+        this.activity = activity;
     }
 
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        Context context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.list_search, parent, false);
         return new RecyclerViewHolder(view);
     }
@@ -48,9 +50,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //아이템을 클릭하면 테마정보를 보여줌
-                Intent intent = new Intent(context, LookThemeActivity.class);
+                Intent intent = new Intent(activity, LookThemeActivity.class);
                 intent.putExtra("selectedItem", selectedItem);
-                context.startActivity(intent);
+                activity.startActivity(intent);
             }
         });
         for (int i = 0; i < colors.length; i++) {

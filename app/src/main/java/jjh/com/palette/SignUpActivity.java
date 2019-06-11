@@ -76,7 +76,6 @@ public class SignUpActivity extends AppCompatActivity {
             //문자가 입력될때마다 ID를 DB에서 검사하여 비교
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.d("dd", s + " " + flags[0]);
                 if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signUp_til_id.setError(null);
                     flags[0] = true;

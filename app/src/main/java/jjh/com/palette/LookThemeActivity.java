@@ -25,7 +25,7 @@ public class LookThemeActivity extends AppCompatActivity {
     TextView[] look_tv_colorName = new TextView[5]; //색상코드를 보여줄 뷰
     TextView look_tv_userID, look_tv_themeName, look_tv_LibraryName, look_tv_Tags, look_tv_date; //테마 이름, 만든이, 만든날짜 등의 정보를 보여줄 뷰
     Switch[] look_sw_ColorMode = new Switch[3]; //색상정보를 다른것으로 보여줄 뷰
-    Button look_btn_delete, look_btn_copy; //색상테마 삭제, 복사 버튼
+    Button look_btn_delete, look_btn_copy, look_btn_update; //색상테마 삭제, 복사 버튼
     String[] colors; //색상정보를 가질 배열
     StringChecker strChk; //문자열 규칙을 확인할 객체
     String[] items; //복사할때 복사될 라이브러리들을 가진 배열
@@ -59,6 +59,7 @@ public class LookThemeActivity extends AppCompatActivity {
         look_sw_ColorMode[2] = findViewById(R.id.look_sw_cmyk);
 
         look_btn_delete = findViewById(R.id.look_btn_delete);
+        look_btn_update = findViewById(R.id.look_btn_update);
         look_btn_copy = findViewById(R.id.look_btn_copy);
 
         dbHelper = new DBHelper(this);
@@ -95,15 +96,26 @@ public class LookThemeActivity extends AppCompatActivity {
         look_tv_LibraryName.setText(userLib);
         look_tv_Tags.setText(tag);
 
-        if (userId.equals(Login.getInstance().getId())) { //본인이 만든거면 삭제만
+        if (userId.equals(Login.getInstance().getId())) { //본인이 만든거면 복사버튼 비활성화
             look_btn_copy.setVisibility(View.GONE);
-        } else { //본인 것이 아니면 복사 가능
+        } else { //본인이 만든것이 아니면 복사버튼만 활성화
             look_btn_delete.setVisibility(View.GONE);
+            look_btn_update.setVisibility(View.GONE);
         }
         colorUpdate(colors, colors);
         look_sw_ColorMode[0].setChecked(true);
         /*************** 선언 및 초기화 ******************/
-
+        look_btn_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent outIntent = new Intent(LookThemeActivity.this, MainActivity.class);
+                outIntent.putExtra("selectedItem",data);
+                outIntent.putExtra("fragment",2);
+                outIntent.putExtra("request",true);
+                startActivity(outIntent);
+                finish();
+            }
+        });
         look_btn_copy.setOnClickListener(new View.OnClickListener() { //복사 버튼 이벤트
             @Override
             public void onClick(View v) {
@@ -144,9 +156,7 @@ public class LookThemeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-
                     dbHelper.delete("Theme", "id = '" + Login.getInstance().getId() + "' and library = '" + data[5] + "' and name = '" + data[0] + "'");
-                    Log.d("delete", "id = '" + Login.getInstance().getId() + "' and library = '" + data[0] + "' and name = '" + data[5] + "'");
                     Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
                     startActivity(intent);

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
+
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,13 +46,13 @@ public class NewThemeFragment extends Fragment {
     private final EditText[] new_edt_cmyk = new EditText[4];
     private final View[] mode = new ConstraintLayout[2]; //색상선택모드
     private int selectingColorNums; //현재 선택된 팔레트버튼
+    Button new_btn_save,new_btn_next,new_btn_prev,new_btn_reset;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         /*************** 선언 및 초기화 ******************/
-
         View newTheme = inflater.inflate(R.layout.fragment_newtheme, container, false);
         final Spinner spinner_mode; //색상모드 선택
 
@@ -87,6 +90,11 @@ public class NewThemeFragment extends Fragment {
         new_edt_cmyk[2] = newTheme.findViewById(R.id.new_edt_cmyk_yello);
         new_edt_cmyk[3] = newTheme.findViewById(R.id.new_edt_cmyk_key);
 
+        new_btn_save = newTheme.findViewById(R.id.new_btn_save);
+        new_btn_next = newTheme.findViewById(R.id.new_btn_next);
+        new_btn_prev = newTheme.findViewById(R.id.new_btn_prev);
+        new_btn_reset = newTheme.findViewById(R.id.new_btn_reset);
+
         for (int i = 0; i < str_selectedColor.length; i++) //색상 저장 배열 초기화
             str_selectedColor[i] = null;
 
@@ -104,6 +112,29 @@ public class NewThemeFragment extends Fragment {
         spinner_mode.setAdapter(spinnerAdpater);
         spinner_mode.setSelection(0); //처음 선택은 argb
 
+        Intent intent = getActivity().getIntent();
+        boolean request = intent.getBooleanExtra("request",false); //수정버튼을 통해 fragment 가 Call 되었을때
+        if (request){
+            final String[] data = intent.getStringArrayExtra("selectedItem"); //기존 데이터를 가져옴
+            String[] temp = data[1].split("#"); //사용할 형태로 변환
+            int j = 0;
+            for (String t : temp) { //기존 색상을 적용
+                if (t == null)
+                    continue;
+                str_selectedColor[j] = t;
+                new_btn_selectedColor[j].setBackgroundColor(Color.parseColor("#"+str_selectedColor[j++]));
+            }
+            int[] colors = ColorUtils.toColorARGB(Color.parseColor("#"+str_selectedColor[0]));
+            for (int i = 0; i < colors.length; i++) {
+                selectedRGB[i] = colors[i];
+            }
+            colorPickerUpdate();
+            changeEdtRgb();
+            changeSbRgb();
+            selectedColorHexUpdate();
+        }
+        new_btn_selectedColor[selectingColorNums].setText("Choose\nColor");
+
         /*************** 선언 및 초기화 ******************/
         spinner_mode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -116,17 +147,7 @@ public class NewThemeFragment extends Fragment {
                 for (int i = 0; i < tempColor.length; i++) { //색상정보를 argb 값에 저장
                     selectedRGB[i] = tempColor[i];
                 }
-                switch (position){ //선택된 모드
-                    case 0:
-                        changeEdtRgb(); //현재 선택된 색상정보로 EditText, SeekBar 값 변경
-                        changeSbRgb();
-                        break;
-                    case 1:
-                        ColorUtils.RGBToCMYK(selectedRGB,selectedCMYK); //ARGB 기준으로 색상선택이 되기 때문에 CMYK 로 변환후 CMYK 를 적용
-                        changeEdtCmyk();
-                        changeSbCmyk();
-                        break;
-                }
+                changeAll(position);
             }
 
             @Override
@@ -135,44 +156,70 @@ public class NewThemeFragment extends Fragment {
             }
         });
 
-        newTheme.findViewById(R.id.new_btn_save).setOnClickListener(new View.OnClickListener() { //저장버튼
+        new_btn_save.setOnClickListener(new View.OnClickListener() { //저장버튼
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), SaveThemeActivity.class);
-                intent.putExtra("colors",str_selectedColor);
-                startActivity(intent);
+                Intent outIntent = new Intent(getContext(), SaveThemeActivity.class);
+                Intent intent = getActivity().getIntent();
+                boolean request = intent.getBooleanExtra("request",false);
+                if (request){
+                    final String[] data = intent.getStringArrayExtra("selectedItem");
+                    outIntent.putExtra("selectedItem",data);
+                    outIntent.putExtra("request",true);
+                }
+                outIntent.putExtra("colors",str_selectedColor);
+                startActivity(outIntent);
             }
         });
-        newTheme.findViewById(R.id.new_btn_prev).setOnClickListener(new View.OnClickListener() { //이전버튼
+        new_btn_prev.setOnClickListener(new View.OnClickListener() { //이전버튼
             @Override
             public void onClick(View v) {
                 if (selectingColorNums > 0) {
-                    for (int i = 0; i < selectedRGB.length; i++) //선택색상 배열 초기화
-                        selectedRGB[i] = 0;
                     selectingColorNums--;
+                    if (str_selectedColor[selectingColorNums]== null) {
+                        for (int i = 0; i < selectedRGB.length; i++) //선택색상 배열 초기화
+                            selectedRGB[i] = 0;
+                    }
+                    else{
+                        int[] colors = ColorUtils.toColorARGB(Color.parseColor("#"+str_selectedColor[selectingColorNums]));
+                        for (int i = 0; i < colors.length; i++) {
+                            selectedRGB[i] = colors[i];
+                        }
+                        colorPickerUpdate();
+                        changeAll(spinner_mode.getSelectedItemPosition());
+                    }
                     selectedColorHexUpdate();
                     new_btn_selectedColor[selectingColorNums].setText("Choose\nColor");
                 }
             }
         });
-        newTheme.findViewById(R.id.new_btn_next).setOnClickListener(new View.OnClickListener() { //다음버튼
+        new_btn_next.setOnClickListener(new View.OnClickListener() { //다음버튼
             @Override
             public void onClick(View v) {
                 if (selectingColorNums < new_btn_selectedColor.length - 1) {
-                    for (int i = 0; i < selectedRGB.length; i++) //선택색상 배열 초기화
-                        selectedRGB[i] = 0;
                     selectingColorNums++;
+                    if (str_selectedColor[selectingColorNums] == null) {
+                        for (int i = 0; i < selectedRGB.length; i++) //선택색상 배열 초기화
+                            selectedRGB[i] = 0;
+                    }else{
+                        int[] colors = ColorUtils.toColorARGB(Color.parseColor("#"+str_selectedColor[selectingColorNums]));
+                        for (int i = 0; i < colors.length; i++) {
+                            selectedRGB[i] = colors[i];
+                        }
+                        colorPickerUpdate();
+                        changeAll(spinner_mode.getSelectedItemPosition());
+                    }
                     selectedColorHexUpdate();
                     new_btn_selectedColor[selectingColorNums].setText("Choose\nColor");
                 }
             }
         });
-        newTheme.findViewById(R.id.new_btn_reset).setOnClickListener(new View.OnClickListener() { //색상취소버튼
+        new_btn_reset.setOnClickListener(new View.OnClickListener() { //색상취소버튼
             @Override
             public void onClick(View v) {
-                str_selectedColor[selectingColorNums] = "";
+                str_selectedColor[selectingColorNums] = null;
                     selectedColorHexUpdate();
-                    new_btn_selectedColor[selectingColorNums].setBackgroundColor(Color.parseColor("#00FFFFFF"));
+                    new_btn_selectedColor[selectingColorNums].setBackgroundColor(Color.parseColor("#00000000")); //투명으로 만들어서 초기화
                     new_btn_selectedColor[selectingColorNums].setText("Choose\nColor");
 
             }
@@ -192,27 +239,15 @@ public class NewThemeFragment extends Fragment {
         colorPickerView.setColorListener(new ColorEnvelopeListener() {
             @Override
             public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
-                int position = spinner_mode.getSelectedItemPosition();
                 if (fromUser) {
                     int[] tempColor = envelope.getArgb(); //선택된 색상을 가져옴
                     for (int i = 0; i < tempColor.length; i++) {
                         selectedRGB[i] = tempColor[i];
                     }
-                    switch (position){ //선택된 모드에 따라 색상 정보변경을 다르게
-                        case 0:
-                            changeEdtRgb(); //색상정보를 SeekBar, EditText 에 적용
-                            changeSbRgb();
-                            break;
-                        case 1:
-                            ColorUtils.RGBToCMYK(selectedRGB,selectedCMYK); //ARGB 기준으로 색상선택이 되기 때문에 CMYK 로 변환후 CMYK 를 적용
-                            changeEdtCmyk();
-                            changeSbCmyk();
-                            break;
-                    }
-
+                    changeAll(spinner_mode.getSelectedItemPosition());
                 }
-                new_btn_selectedColor[selectingColorNums].setBackgroundColor(envelope.getColor()); //선택된 색상으로 선택팔레트(버튼)에 색상 적용
-                str_selectedColor[selectingColorNums] = envelope.getHexCode(); //색상정보를 16진수 코드로 저장
+                str_selectedColor[selectingColorNums] = ColorUtils.toHexCode(Color.argb(selectedRGB[0],selectedRGB[1],selectedRGB[2],selectedRGB[3])); //색상정보를 16진수 코드로 저장
+                new_btn_selectedColor[selectingColorNums].setBackgroundColor(Color.parseColor("#"+str_selectedColor[selectingColorNums])); //선택된 색상으로 선택팔레트(버튼)에 색상 적용
                 selectedColorHexUpdate();
             }
         });
@@ -329,7 +364,6 @@ public class NewThemeFragment extends Fragment {
         return newTheme;
     }
 
-
     void colorPickerUpdate() {  //colorPickerView 업데이트
         float[] hsv = new float[3];
         int selectedColor = Color.argb(selectedRGB[0], selectedRGB[1], selectedRGB[2], selectedRGB[3]);
@@ -339,6 +373,20 @@ public class NewThemeFragment extends Fragment {
         alphaSlideBar.updateSelectorX(alphaX); //selector 위치 전부 변경해줌
         brightnessSlideBar.updateSelectorX(brightX);
         colorPickerView.selectByHsv(Color.HSVToColor(hsv));
+    }
+
+    void changeAll(int position){
+        switch (position){ //선택된 모드
+            case 0:
+                changeEdtRgb(); //현재 선택된 색상정보로 EditText, SeekBar 값 변경
+                changeSbRgb();
+                break;
+            case 1:
+                ColorUtils.RGBToCMYK(selectedRGB,selectedCMYK); //ARGB 기준으로 색상선택이 되기 때문에 CMYK 로 변환후 CMYK 를 적용
+                changeEdtCmyk();
+                changeSbCmyk();
+                break;
+        }
     }
 
     void changeEdtRgb() { //ARGB SeekBar 값이 변경됬을때 EditText 값 업데이트
