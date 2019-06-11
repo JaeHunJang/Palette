@@ -2,6 +2,7 @@ package jjh.com.palette;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 //TextInputLayout, TextInputEditText 참고 - https://prince-mint.tistory.com/7
+//로그인화면
 public class SignInActivity extends AppCompatActivity {
     DBHelper dbhelper;
     View dialog_findaccount;
@@ -73,9 +75,11 @@ public class SignInActivity extends AppCompatActivity {
                     flags[0] = false;
                 }
             }
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -107,10 +111,12 @@ public class SignInActivity extends AppCompatActivity {
                     flags[1] = false;
                 }
             }
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -135,6 +141,7 @@ public class SignInActivity extends AppCompatActivity {
         signIn_btn_findID.setOnClickListener(new View.OnClickListener() {
             DialogInterface dlgInterface = null;
             boolean[] flags = {false, false};
+
             @Override
             public void onClick(View v) {
                 /***************AlertDialog 선언 및 초기화 ******************/
@@ -177,10 +184,12 @@ public class SignInActivity extends AppCompatActivity {
                             flags[0] = false;
                         }
                     }
+
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                     }
+
                     @Override
                     public void afterTextChanged(Editable s) {
 
@@ -202,10 +211,12 @@ public class SignInActivity extends AppCompatActivity {
                             flags[1] = false;
                         }
                     }
+
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                     }
+
                     @Override
                     public void afterTextChanged(Editable s) {
                     }
@@ -216,7 +227,7 @@ public class SignInActivity extends AppCompatActivity {
                 dlg_fa_btn_find.setOnClickListener(new View.OnClickListener() { //찾기 버튼의 클릭 이벤트
                     @Override
                     public void onClick(View v) {
-                        for(boolean f : flags){
+                        for (boolean f : flags) {
                             if (!f) {
                                 Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
                                 return;
@@ -225,14 +236,20 @@ public class SignInActivity extends AppCompatActivity {
                         String birth = String.format("%4d-%02d-%02d", dlg_fa_dp_birth.getYear(), dlg_fa_dp_birth.getMonth() + 1, dlg_fa_dp_birth.getDayOfMonth()); //format을 통해 문자열 형식에 맞춰 만듬
                         String id = dlg_fa_tit_id.getText().toString(); //입력된 id
                         String hint = dlg_fa_tit_hint.getText().toString(); //입력된 hint
-                        ArrayList[] result = dbhelper.select("Account", " id='" + id + "' and birth='" + birth + "' and hint='" + hint + "'"); //테이블에서 데이터 조회
-                        if (result.length == 0) { //검색결과가 없으면 다시 입력
-                            Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
-                        } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
-                            dbhelper.update("Account", " pw = '0000' ", " id = '" + id + "'"); //테이블의 비밀번호 수정
-                            signIn_tit_id.setText(result[0].get(0) + ""); //로그인화면의 아이디 자동 입력
-                            Toast.makeText(SignInActivity.this, "비밀번호를 0000으로 초기화했습니다.", Toast.LENGTH_SHORT).show();
-                            dlg_fa_btn_cancel.callOnClick(); //종료
+                        try {
+                            ArrayList[] result = dbhelper.select("Account", " id='" + id + "' and birth='" + birth + "' and hint='" + hint + "'"); //테이블에서 데이터 조회
+                            if (result.length == 0) { //검색결과가 없으면 다시 입력
+                                Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+                            } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                dbhelper.update("Account", " pw = '0000' ", " id = '" + id + "'"); //테이블의 비밀번호 수정
+                                signIn_tit_id.setText(result[0].get(0) + ""); //로그인화면의 아이디 자동 입력
+                                Toast.makeText(SignInActivity.this, "비밀번호를 0000으로 초기화했습니다.", Toast.LENGTH_SHORT).show();
+                                dlg_fa_btn_cancel.callOnClick(); //종료
+                            }
+
+
+                        } catch (SQLException sqle) {
+                            dbhelper.getError(sqle);
                         }
                     }
                 });
@@ -261,7 +278,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ArrayList[] result;
-                for(boolean f : flags){
+                for (boolean f : flags) {
                     if (!f) {
                         Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
                         return;
@@ -269,21 +286,24 @@ public class SignInActivity extends AppCompatActivity {
                 }
                 String id = signIn_tit_id.getText().toString(); //입력받은 id
                 String pw = signIn_tit_pw.getText().toString(); //입력받은 pw
-                result = dbhelper.select("Account", " id= '" + id + "'"); //테이블에서 id 조회
-                if (result.length == 0) { //id가 존재하는 지 확인
-                    Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (result[0].get(0).equals(id) && result[0].get(1).equals(pw)) { //id와 pw 일치시 MainActivity 실행
-                    Login login = Login.getInstance();
-                    login.setId(id);
-                    login.setLoginState(true);
-                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
-                    return;
+                try {
+                    result = dbhelper.select("Account", " id= '" + id + "'"); //테이블에서 id 조회
+                    if (result.length == 0) { //id가 존재하는 지 확인
+                        Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (result[0].get(0).equals(id) && result[0].get(1).equals(pw)) { //id와 pw 일치시 MainActivity 실행
+                        Login login = Login.getInstance();
+                        login.setId(id);
+                        login.setLoginState(true);
+                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } catch (SQLException sqle) {
+                    dbhelper.getError(sqle);
                 }
                 finish();
             }

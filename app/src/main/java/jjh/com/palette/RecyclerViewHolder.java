@@ -8,10 +8,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+//리사이클러뷰에 사용될 layout inflation
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     TextView themeName, tags, date, id;
     LinearLayout container;
     TextView[] colors;
+
     public RecyclerViewHolder(@NonNull View itemView) {
         super(itemView);
         themeName = itemView.findViewById(R.id.theme_name);

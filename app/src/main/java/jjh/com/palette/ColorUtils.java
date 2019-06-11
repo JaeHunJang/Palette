@@ -4,17 +4,10 @@ import android.graphics.Color;
 
 import java.util.Locale;
 
+//색상 정보를 컨트롤 하는 클래스
 public class ColorUtils {
 
-    public static String toHexCode(int color) {
-        int a = Color.alpha(color);
-        int r = Color.red(color);
-        int g = Color.green(color);
-        int b = Color.blue(color);
-        return String.format(Locale.getDefault(), "%02X%02X%02X%02X", a, r, g, b);
-    }
-
-    public static int[] toColorARGB(int color) {
+    public static int[] toColorARGB(int color) { //색상을 argb 값으로 변경해 저장
         int[] argb = new int[4];
         argb[0] = Color.alpha(color);
         argb[1] = Color.red(color);

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,39 +23,37 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
 
-import java.util.Arrays;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-
+//테마를 만드는 화면
 public class NewThemeFragment extends Fragment {
-    ColorPickerView colorPickerView; //색상선택기
-    BrightnessSlideBar brightnessSlideBar; //채도 선택
-    AlphaSlideBar alphaSlideBar; //명도 선택
-    final Button[] new_btn_selectedColor = new Button[5]; //선택된 색상을 보여줄 뷰
-    String[] str_selectedColor = new String[5]; //선택된 색상값을 가진 배열
-    final int[] selectedRGB = new int[4]; //선택된 색상의 RGB 값
-    final int[] selectedCMYK = new int[4]; //선택된 색상의 CMYK 값
-    final SeekBar[] new_sb_rgb = new SeekBar[4]; //rgb 컨트롤
-    final EditText[] new_edt_rgb = new EditText[4];
-    final SeekBar[] new_sb_cmyk = new SeekBar[4]; //cmyk 컨트롤
-    final EditText[] new_edt_cmyk = new EditText[4];
-    final View[] mode = new ConstraintLayout[2]; //색상선택모드
-    int selectingColorNums; //현재 선택된 팔레트버튼
+    private ColorPickerView colorPickerView; //색상선택기
+    private BrightnessSlideBar brightnessSlideBar; //채도 선택
+    private AlphaSlideBar alphaSlideBar; //명도 선택
+    private final Button[] new_btn_selectedColor = new Button[5]; //선택된 색상을 보여줄 뷰
+    private String[] str_selectedColor = new String[5]; //선택된 색상값을 가진 배열
+    private final int[] selectedRGB = new int[4]; //선택된 색상의 RGB 값
+    private final int[] selectedCMYK = new int[4]; //선택된 색상의 CMYK 값
+    private  final SeekBar[] new_sb_rgb = new SeekBar[4]; //rgb 컨트롤
+    private final EditText[] new_edt_rgb = new EditText[4];
+    private  final SeekBar[] new_sb_cmyk = new SeekBar[4]; //cmyk 컨트롤
+    private final EditText[] new_edt_cmyk = new EditText[4];
+    private final View[] mode = new ConstraintLayout[2]; //색상선택모드
+    private int selectingColorNums; //현재 선택된 팔레트버튼
 
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View newTheme = inflater.inflate(R.layout.fragment_newtheme, container, false);
+        /*************** 선언 및 초기화 ******************/
 
+        View newTheme = inflater.inflate(R.layout.fragment_newtheme, container, false);
         final Spinner spinner_mode; //색상모드 선택
 
         selectingColorNums = 0; //색상 선택을 진행할 순서
-
         colorPickerView = newTheme.findViewById(R.id.colorPickerView);
         brightnessSlideBar = newTheme.findViewById(R.id.brightnessSlide);
         alphaSlideBar = newTheme.findViewById(R.id.alphaSlideBar);
@@ -98,7 +95,6 @@ public class NewThemeFragment extends Fragment {
             selectedCMYK[i] = 0;
         }
 
-
         colorPickerView.attachBrightnessSlider(brightnessSlideBar);//색상선택기에 명도 투명도 선택기 추가
         colorPickerView.attachAlphaSlider(alphaSlideBar);
 
@@ -107,6 +103,8 @@ public class NewThemeFragment extends Fragment {
         spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_mode.setAdapter(spinnerAdpater);
         spinner_mode.setSelection(0); //처음 선택은 argb
+
+        /*************** 선언 및 초기화 ******************/
         spinner_mode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -335,10 +333,10 @@ public class NewThemeFragment extends Fragment {
     void colorPickerUpdate() {  //colorPickerView 업데이트
         float[] hsv = new float[3];
         int selectedColor = Color.argb(selectedRGB[0], selectedRGB[1], selectedRGB[2], selectedRGB[3]);
-        Color.colorToHSV(selectedColor, hsv);
-        int alphaX = Math.round(((float) selectedRGB[0] / 255.0f) * (float) alphaSlideBar.getMeasuredWidth());
-        int brightX = Math.round(hsv[2] * (float) brightnessSlideBar.getMeasuredWidth());
-        alphaSlideBar.updateSelectorX(alphaX);
+        Color.colorToHSV(selectedColor, hsv); //색상값을 hsv 모델에 맞게 변경
+        int alphaX = Math.round(((float) selectedRGB[0] / 255.0f) * (float) alphaSlideBar.getMeasuredWidth()); //투명도를 alphaSlideBar 가로길이로 계산
+        int brightX = Math.round(hsv[2] * (float) brightnessSlideBar.getMeasuredWidth()); //채도를 brightnesSlideBar 가로길이로 계산
+        alphaSlideBar.updateSelectorX(alphaX); //selector 위치 전부 변경해줌
         brightnessSlideBar.updateSelectorX(brightX);
         colorPickerView.selectByHsv(Color.HSVToColor(hsv));
     }

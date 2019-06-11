@@ -1,5 +1,6 @@
 package jjh.com.palette;
 
+//리사이클러뷰를 구성할 아이템의 데이터를 가질 객체 클래스
 public class RecyclerViewItems {
     private String name;
     private String color;

@@ -16,9 +16,9 @@
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/ui_til_pw"
-        app:layout_constraintRight_toRightOf="@+id/ui_tv_pw"
-        />
-<TextView
+        app:layout_constraintRight_toRightOf="@+id/ui_tv_pw" />
+
+    <TextView
         android:id="@+id/ui_tv_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,10 +26,9 @@
         android:layout_marginBottom="8dp"
         android:textColor="#000000"
         android:textSize="20sp"
-    app:layout_constraintTop_toTopOf="@+id/ui_tv_id_no"
-    app:layout_constraintBottom_toBottomOf="@+id/ui_tv_id_no"
-    app:layout_constraintLeft_toRightOf="@+id/ui_tv_id_no"
-        />
+        app:layout_constraintBottom_toBottomOf="@+id/ui_tv_id_no"
+        app:layout_constraintLeft_toRightOf="@+id/ui_tv_id_no"
+        app:layout_constraintTop_toTopOf="@+id/ui_tv_id_no" />
 
     <TextView
         android:id="@+id/ui_tv_pw"
@@ -38,8 +37,8 @@
         android:text="PW : "
         android:textColor="#000000"
         android:textSize="20sp"
-        app:layout_constraintRight_toLeftOf="@+id/ui_til_pw"
         app:layout_constraintBottom_toBottomOf="@+id/ui_til_pw"
+        app:layout_constraintRight_toLeftOf="@+id/ui_til_pw"
         app:layout_constraintTop_toTopOf="@+id/ui_til_pw"
         tools:layout_editor_absoluteX="10dp" />
 
@@ -70,19 +69,19 @@
         android:text="Birth : "
         android:textColor="#000000"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@+id/ui_tv_pw"
+        app:layout_constraintBottom_toTopOf="@+id/ui_tv_hint"
         app:layout_constraintRight_toRightOf="@+id/ui_tv_pw"
-        app:layout_constraintBottom_toTopOf="@+id/ui_tv_hint"/>
+        app:layout_constraintTop_toBottomOf="@+id/ui_tv_pw" />
+
     <TextView
         android:id="@+id/ui_tv_birth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#000000"
         android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="@+id/ui_tv_birth_no"
         app:layout_constraintBottom_toBottomOf="@+id/ui_tv_birth_no"
         app:layout_constraintLeft_toRightOf="@+id/ui_tv_birth_no"
-        />
+        app:layout_constraintTop_toTopOf="@+id/ui_tv_birth_no" />
 
     <TextView
         android:id="@+id/ui_tv_hint"
@@ -109,7 +108,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ui_tit_hint"
             android:layout_width="200dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -128,29 +128,30 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"            android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
 
-        app:layout_constraintTop_toBottomOf="@id/ui_tv_no"
         app:layout_constraintLeft_toLeftOf="@+id/ui_tv_no"
-        app:layout_constraintRight_toRightOf="@+id/ui_tv_no">
+        app:layout_constraintRight_toRightOf="@+id/ui_tv_no"
+        app:layout_constraintTop_toBottomOf="@id/ui_tv_no">
+
         <Button
             android:id="@+id/ui_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="회원탈퇴"
-             />
+            android:text="회원탈퇴" />
+
         <Button
             android:id="@+id/ui_btn_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="회원정보 수정"
-             />
+            android:text="회원정보 수정" />
+
         <Button
             android:id="@+id/ui_btn_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="로그아웃"
-           />
+            android:text="로그아웃" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

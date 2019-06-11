@@ -4,21 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder>{
-    ArrayList<RecyclerViewItems> itemList;
-    Context context;
+//리사이클러뷰에 탑재될 어댑터 클래스
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
+    private ArrayList<RecyclerViewItems> itemList; //리사이클러뷰홀더에 탑재될 데이터를 받아옴
+    private Context context; //대화상자를 표시할 컨택스트를 받아옴
 
-    public RecyclerViewAdapter(ArrayList list){
+    RecyclerViewAdapter(ArrayList list) {
         this.itemList = list;
     }
 
@@ -31,7 +30,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position ) {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerViewItems item = itemList.get(position);
         String name = item.getName();
         String color = item.getColor();
@@ -41,27 +40,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         String lib = item.getLib();
         String[] colors = color.split("#");
         String[] tags = tag.split("#");
-        final String[] selectedItem = {name,color,date,tag,id,lib};
+        final String[] selectedItem = {name, color, date, tag, id, lib};
         holder.themeName.setText(name);
         holder.date.setText(date);
         holder.id.setText(id);
 
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //아이템을 클릭하면 테마정보를 보여줌
                 Intent intent = new Intent(context, LookThemeActivity.class);
-                intent.putExtra("selectedItem",selectedItem);
+                intent.putExtra("selectedItem", selectedItem);
                 context.startActivity(intent);
             }
         });
-        for (int i = 0; i < colors.length; i++){
+        for (int i = 0; i < colors.length; i++) {
             if (colors[i] != null) {
                 holder.colors[i].setBackgroundColor(Color.parseColor("#" + colors[i]));
                 holder.colors[i].setText(colors[i]);
             }
         }
         tag = "";
-        for (int i = 0; i < tags.length; i++){
+        for (int i = 0; i < tags.length; i++) {
             if (!tags[i].equals("")) {
                 tag += " #" + tags[i];
             }
@@ -69,7 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.tags.setText(tag);
     }
 
-
+    //구성된 아이템의 전체 크기
     @Override
     public int getItemCount() {
         return itemList.size();

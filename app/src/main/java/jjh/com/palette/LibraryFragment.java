@@ -25,13 +25,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+//라이브러리에 저장된 테마들을 보는 화면
 public class LibraryFragment extends Fragment {
-    RecyclerView lib_rv_themeList;
-    Spinner lib_sp_lib;
-    DBHelper dbHelper;
-    RecyclerViewAdapter recyclerViewAdapter;
-    View dialog_newLibrary;
+    private RecyclerView lib_rv_themeList; //테마를 출력할 리사이클러뷰
+    private Spinner lib_sp_lib; //라이브러리를 가진 스피너
+    private DBHelper dbHelper;
+    private RecyclerViewAdapter recyclerViewAdapter;
+    private View dialog_newLibrary; //라이브러리 추가시 띄울 대화상자
 
     @Nullable
     @Override
@@ -43,15 +43,12 @@ public class LibraryFragment extends Fragment {
 
         dbHelper = new DBHelper(lib.getContext());
 
-
-        setSpinnerData();
-
-
-        setRecyclerData("기본 라이브러리");
+        setSpinnerData();//라이브러리를 표시할 스피너를 갱신하는 메소드
+        setRecyclerData("기본 라이브러리"); //처음엔 기본 라이브러리를 표시
         lib_sp_lib.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setRecyclerData(lib_sp_lib.getSelectedItem().toString());
+                setRecyclerData(lib_sp_lib.getSelectedItem().toString()); //선택된 라이브러리의 색상리스트를 보여줌
             }
 
             @Override
@@ -59,7 +56,7 @@ public class LibraryFragment extends Fragment {
 
             }
         });
-        lib.findViewById(R.id.lib_btn_addLib).setOnClickListener(new View.OnClickListener() {
+        lib.findViewById(R.id.lib_btn_addLib).setOnClickListener(new View.OnClickListener() { //라이브러리 추가 이벤트
             boolean flag = false;
             DialogInterface dlgInterface = null;
 
@@ -67,17 +64,14 @@ public class LibraryFragment extends Fragment {
             public void onClick(View v) {
                 /***************AlertDialog 선언 및 초기화 ******************/
                 final AlertDialog.Builder dlg = new AlertDialog.Builder(getContext());
-                dialog_newLibrary = View.inflate(getContext(), R.layout.dialog_newlibrary, null);
-                final TextInputEditText dlg_fa_tit_lib; //lib
+                dialog_newLibrary = View.inflate(getContext(), R.layout.dialog_newlibrary, null); //대화상자 뷰
+                final TextInputEditText dlg_fa_tit_lib; //lib를 입력받을 EditText
                 final TextInputLayout dlg_fa_til_lib;
                 dlg_fa_tit_lib = dialog_newLibrary.findViewById(R.id.dlg_fa_tit_lib);
-
                 dlg_fa_til_lib = dialog_newLibrary.findViewById(R.id.dlg_fa_til_lib);
 
                 dlg_fa_til_lib.setCounterEnabled(true);
                 dlg_fa_til_lib.setCounterMaxLength(20);
-
-
                 /***************AlertDialog 선언 및 초기화 ******************/
 
                 /****************대화상자 입력 필터 시작 *******************/
@@ -109,17 +103,20 @@ public class LibraryFragment extends Fragment {
                 /****************대화상자 입력 필터 끝 *******************/
 
                 dlg.setTitle("새 라이브러리 만들기") //AlertDialog 의 Builder Setting
-                        .setNegativeButton("취소",null)
+                        .setNegativeButton("취소", null)
                         .setPositiveButton("추가", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (flag) {
-                                    dbHelper.insert("Library","'"+Login.getInstance().getId()+"', '"+dlg_fa_tit_lib.getText().toString()+"'");
-                                    Toast.makeText(getContext(), "라이브러리가 추가되었습니다.",Toast.LENGTH_SHORT).show();
-                                    setSpinnerData();
-                                }
-                                else
-                                    Toast.makeText(getContext(), "입력정보를 확인해주세요.",Toast.LENGTH_SHORT).show();
+                            public void onClick(DialogInterface dialog, int which) {//추가 버튼 클릭시 라이브러리 추가 생성
+                                if (flag) { //입력받은 lib 이름이 규칙에 맞으면 생성 아니면 메시지 출력
+                                    try {
+                                        dbHelper.insert("Library", "'" + Login.getInstance().getId() + "', '" + dlg_fa_tit_lib.getText().toString() + "'");
+                                        Toast.makeText(getContext(), "라이브러리가 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                                        setSpinnerData();
+                                    } catch (SQLException sqle) {
+                                        dbHelper.getError(sqle);
+                                    }
+                                } else
+                                    Toast.makeText(getContext(), "입력정보를 확인해주세요.", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setView(dialog_newLibrary)
@@ -131,27 +128,23 @@ public class LibraryFragment extends Fragment {
         return lib;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setSpinnerData();
-        setRecyclerData("기본 라이브러리");
-
-    }
-
-    void setSpinnerData() {
-        ArrayList[] libResult = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'");
-        ArrayList<String> spItems = new ArrayList<>();
-        for (ArrayList r : libResult) {
-            spItems.add(r.get(1).toString());
+    void setSpinnerData() { //라이브러리를 표시할 스피너를 갱신하는 메소드
+        try {
+            ArrayList[] libResult = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'");
+            ArrayList<String> spItems = new ArrayList<>();
+            for (ArrayList r : libResult) {
+                spItems.add(r.get(1).toString());
+            }
+            ArrayAdapter spinnerAdpater = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spItems);
+            spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            lib_sp_lib.setAdapter(spinnerAdpater);
+            lib_sp_lib.setSelection(spItems.size() - 1);
+        } catch (SQLException sqle) {
+            dbHelper.getError(sqle);
         }
-        ArrayAdapter spinnerAdpater = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spItems);
-        spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        lib_sp_lib.setAdapter(spinnerAdpater);
-        lib_sp_lib.setSelection(spItems.size()-1);
     }
 
-    void setRecyclerData(String lib) {
+    void setRecyclerData(String lib) { //라이브러리가 가진 리스트를 출력하는 메소드
         try {
             ArrayList<RecyclerViewItems> items = new ArrayList<>();
             ArrayList[] result = dbHelper.select("Theme", "library = '" + lib + "' and id = '" + Login.getInstance().getId() + "'");
@@ -166,7 +159,6 @@ public class LibraryFragment extends Fragment {
 
             lib_rv_themeList.setAdapter(recyclerViewAdapter);
             recyclerViewAdapter.notifyDataSetChanged();
-
 
         } catch (SQLException sqle) {
             dbHelper.getError(sqle);

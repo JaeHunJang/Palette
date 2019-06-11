@@ -1,10 +1,10 @@
 package jjh.com.palette;
 
 import android.content.DialogInterface;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -23,9 +23,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+//회원가입하는 화면
 public class SignUpActivity extends AppCompatActivity {
     DBHelper dbhelper;
     View dlg_userInfo;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
         final Button signUp_btn_signUp;
         final StringChecker strChk = new StringChecker();
 
-        final boolean[] flags = {false,false,false,false};
+        final boolean[] flags = {false, false, false, false};
 
         signUp_til_id = findViewById(R.id.signUp_til_id);
         signUp_til_pw = findViewById(R.id.signUp_til_pw);
@@ -65,7 +67,6 @@ public class SignUpActivity extends AppCompatActivity {
         /***************선언 및 초기화 ****************/
 
 
-
         //영문, 숫자만 입력받기 참고 - https://hydok.tistory.com/17
         /*********ID 입력 필터 시작*************/
         signUp_tit_id.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});//최대 길이 20
@@ -75,28 +76,34 @@ public class SignUpActivity extends AppCompatActivity {
             //문자가 입력될때마다 ID를 DB에서 검사하여 비교
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.d("dd",s+" "+flags[0]);
-                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                Log.d("dd", s + " " + flags[0]);
+                if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signUp_til_id.setError(null);
                     flags[0] = true;
-                }
-                else{
+                } else {
                     flags[0] = false;
                     signUp_til_id.setError("ID는 영어와 숫자만 가능합니다.");
                 }
             }
+
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
-                if ( strChk.strPatternCheck(s)) {
-                    ArrayList[] result = dbhelper.select("Account", " id like ('" + signUp_tit_id.getText().toString()+"') ");
-                    if (result.length == 0 ) { //result 의 length 가 0이라면 검색결과가 없는 것으로 ID가 중복되지 않았음을 알 수 있다
-                        signUp_til_id.setError(null);
-                        flags[0] = true;
-                    } else {
-                        flags[0] = false;
-                        signUp_til_id.setError("ID가 중복됩니다.");
+                if (strChk.strPatternCheck(s)) {
+                    try {
+                        ArrayList[] result = dbhelper.select("Account", " id like ('" + signUp_tit_id.getText().toString() + "') ");
+                        if (result.length == 0) { //result 의 length 가 0이라면 검색결과가 없는 것으로 ID가 중복되지 않았음을 알 수 있다
+                            signUp_til_id.setError(null);
+                            flags[0] = true;
+                        } else {
+                            flags[0] = false;
+                            signUp_til_id.setError("ID가 중복됩니다.");
+                        }
+                    } catch (SQLException sqle) {
+                        dbhelper.getError(sqle);
                     }
                 }
             }
@@ -111,21 +118,22 @@ public class SignUpActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!signUp_tit_pwChk.getText().toString().isEmpty()) { //비밀번호 입력이 새로 들어오면 비밀번호 확인란 초기화
                     signUp_tit_pwChk.setText(null);
-                }
-                else if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                } else if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signUp_til_pw.setError(null);
                     flags[1] = true;
-                }
-                else{
+                } else {
                     flags[1] = false;
                     signUp_til_pw.setError("PW는 영어와 숫자만 가능합니다.");
                 }
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         /*********PW 입력 필터 끝*************/
@@ -139,16 +147,19 @@ public class SignUpActivity extends AppCompatActivity {
                 if (signUp_tit_pw.getText().toString().equals(signUp_tit_pwChk.getText().toString())) {
                     signUp_til_pwChk.setError(null);
                     flags[2] = true;
-                }
-                else {
+                } else {
                     flags[2] = false;
                     signUp_til_pwChk.setError("PW가 다릅니다.");
                 }
             }
+
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         /*********PW CHECK 입력 필터 끝*************/
 
@@ -159,15 +170,15 @@ public class SignUpActivity extends AppCompatActivity {
         signUp_tit_hint.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (strChk.strPatternCheck(s)){ //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
+                if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     signUp_til_hint.setError(null);
                     flags[3] = true;
-                }
-                else{
+                } else {
                     flags[3] = false;
                     signUp_til_hint.setError("Hint는 영어와 숫자만 가능합니다.");
                 }
             }
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -189,16 +200,16 @@ public class SignUpActivity extends AppCompatActivity {
                 final String hint = signUp_tit_hint.getText().toString(); //입력받은 hint
 
                 //날짜를 받아서 현재보다 이전 날짜인지 확인
-                final String birth = String.format("%4d-%02d-%02d", signUp_dp_birth.getYear(), signUp_dp_birth.getMonth()+1, signUp_dp_birth.getDayOfMonth()); //입력받은 생일
+                final String birth = String.format("%4d-%02d-%02d", signUp_dp_birth.getYear(), signUp_dp_birth.getMonth() + 1, signUp_dp_birth.getDayOfMonth()); //입력받은 생일
                 Date current = new Date(); //오늘 날짜
-                String today = String.format("%4d-%02d-%02d",current.getYear()+1900, current.getMonth()+1,current.getDate());
+                String today = String.format("%4d-%02d-%02d", current.getYear() + 1900, current.getMonth() + 1, current.getDate());
                 if (birth.compareTo(today) >= 0) { //오늘 이전 날짜인지 비교
-                    Toast.makeText(getApplicationContext(), today +" 이전 날짜를 지정해야합니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), today + " 이전 날짜를 지정해야합니다.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                for (int i = 0; i < flags.length; i++){ //모든 조건이 만족할때까지 입력 확인
-                    if (!flags[i]){
+                for (int i = 0; i < flags.length; i++) { //모든 조건이 만족할때까지 입력 확인
+                    if (!flags[i]) {
                         Toast.makeText(getApplicationContext(), "입력을 확인해주세요.", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -218,10 +229,10 @@ public class SignUpActivity extends AppCompatActivity {
                 dlg_ui_tit_pw = dlg_userInfo.findViewById(R.id.ui_tit_pw);
                 dlg_ui_til_pw = dlg_userInfo.findViewById(R.id.ui_til_pw);
 
-                dlg_ui_tv_id.setText("ID : "+id);
+                dlg_ui_tv_id.setText("ID : " + id);
                 dlg_ui_tit_pw.setText(pw);
-                dlg_ui_tv_birth.setText("BirthDay : "+birth);
-                dlg_ui_tv_hint.setText("Hint : "+hint);
+                dlg_ui_tv_birth.setText("BirthDay : " + birth);
+                dlg_ui_tv_hint.setText("Hint : " + hint);
                 dlg_ui_til_pw.setPasswordVisibilityToggleEnabled(true);
                 /***************AlertDialog 선언 및 초기화 ******************/
 
@@ -230,12 +241,16 @@ public class SignUpActivity extends AppCompatActivity {
                         .setPositiveButton("가입하기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                dbhelper.insert("Account","'" + id +"','" + pw + "','" + birth + "','" + hint+"'"); //테이블에 데이터 삽입
-                                dbhelper.insert("Library", "'" + id +"','" + "기본 라이브러리'"); //기본 라이브러리 제공
+                                try {
+                                    dbhelper.insert("Account", "'" + id + "','" + pw + "','" + birth + "','" + hint + "'"); //테이블에 데이터 삽입
+                                    dbhelper.insert("Library", "'" + id + "','" + "기본 라이브러리'"); //기본 라이브러리 제공
+                                } catch (SQLException sqle) {
+                                    dbhelper.getError(sqle);
+                                }
                                 finish();
                             }
                         })
-                        .setNegativeButton("취소",null)
+                        .setNegativeButton("취소", null)
                         .show();
             }
         });

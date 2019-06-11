@@ -5,8 +5,8 @@ package jjh.com.palette;
 public final class Login {
 
     private static Login login = new Login();
-    private String id;
-    private boolean loginState;
+    private String id; //로그인된 아이디
+    private boolean loginState; //현재 로그인 상태
 
     private Login() {
         id = null;
