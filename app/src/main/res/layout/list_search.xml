@@ -65,39 +65,50 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#00ffffff"
+            android:gravity="center"
             android:orientation="horizontal"
-            android:background="#00ffffff" />
+            android:textSize="@dimen/list_text_size"
+            tools:text="FFFFFFFF" />
 
         <TextView
             android:id="@+id/color2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#00ffffff"
+            android:gravity="center"
             android:orientation="horizontal"
-            android:background="#00ffffff" />
+            android:textSize="@dimen/list_text_size" />
 
         <TextView
             android:id="@+id/color3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:layout_weight="1"
-            android:background="#00ffffff" />
+            android:background="#00ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:textSize="@dimen/list_text_size" />
 
         <TextView
             android:id="@+id/color4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#00ffffff"
+            android:gravity="center"
             android:orientation="horizontal"
-            android:background="#00ffffff" />
+            android:textSize="@dimen/list_text_size" />
 
         <TextView
             android:id="@+id/color5"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#00ffffff"
+            android:gravity="center"
             android:orientation="horizontal"
-            android:background="#00ffffff" />
+            android:textSize="@dimen/list_text_size" />
     </LinearLayout>
 </LinearLayout>

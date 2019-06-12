@@ -1,51 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:layout_height="match_parent">
+    android:padding="10dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/search_edt_keyword"
-            android:layout_weight="1"
-            android:singleLine="true"
-            android:hint="테마 이름 검색"
-            android:drawableStart="@drawable/ic_search_black_24dp"/>
-        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_search_black_24dp"
+            android:hint="테마 이름 검색"
+            android:singleLine="true" />
+
+        <Button
             android:id="@+id/search_btn_keyword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:text="검색"
-            />
+            android:text="검색" />
     </LinearLayout>
+
     <LinearLayout
-        android:layout_gravity="right"
         android:layout_width="wrap_content"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:orientation="horizontal">
+
         <CheckBox
+            android:id="@+id/search_chk_lib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/search_chk_lib"
-            android:text="Only My Library"/>
+            android:text="Only My Library" />
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_gravity="right"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="right">
+
             <Spinner
+                android:id="@+id/search_sp_sort"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/sort_mode"
-                android:id="@+id/search_sp_sort"
                 android:background="@android:drawable/spinner_dropdown_background"
-                android:spinnerMode="dropdown"
-                />
+                android:entries="@array/sort_mode"
+                android:spinnerMode="dropdown" />
         </LinearLayout>
 
     </LinearLayout>

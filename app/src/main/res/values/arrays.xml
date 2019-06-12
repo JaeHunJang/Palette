@@ -8,23 +8,23 @@
 
     <string-array name="theme_tags">
         <item> </item>
-        <item>따뜻함</item>
-        <item>차가움</item>
-        <item>산뜻함</item>
-        <item>어두운</item>
-        <item>밝은</item>
-        <item>무더운</item>
-        <item>추운</item>
-        <item>붉은</item>
-        <item>푸른</item>
-        <item>노란</item>
-        <item>초록</item>
-        <item>청록</item>
-        <item>자홍</item>
-        <item>봄</item>
-        <item>여름</item>
-        <item>가을</item>
-        <item>겨울</item>
+        <item>Warm</item>
+        <item>Cool</item>
+        <item>Fresh</item>
+        <item>Dark</item>
+        <item>Bright</item>
+        <item>Humid</item>
+        <item>Cold</item>
+        <item>Red</item>
+        <item>Blue</item>
+        <item>Yello</item>
+        <item>Green</item>
+        <item>Cyan</item>
+        <item>Magenta</item>
+        <item>Spring</item>
+        <item>Summer</item>
+        <item>Fall</item>
+        <item>Winter</item>
     </string-array>
 
     <string-array name="sort_mode">

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
     SQLiteDatabase db;
     public DBHelper(Context context){
-        super(context,"groupDB",null,1);
+        super(context,"palette",null,1);
         //factory > customizing cursor 를 사용할 때 사용
         //version > DB의 version
     }

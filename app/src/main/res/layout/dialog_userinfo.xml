@@ -1,70 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
         android:id="@+id/ui_tv_id"
-        android:textColor="#000000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:text="ID : "
-        android:textSize="20sp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    />
-    <TextView
-        app:layout_constraintLeft_toLeftOf="@id/ui_tv_id"
-        app:layout_constraintTop_toBottomOf="@+id/ui_tv_id"
-        android:layout_marginTop="20dp"
-        android:id="@+id/ui_tv_pw"
         android:textColor="#000000"
-        android:text="PW : "
         android:textSize="20sp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/ui_tv_pw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="PW : "
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="@id/ui_tv_id"
+        app:layout_constraintTop_toBottomOf="@+id/ui_tv_id" />
 
     <com.google.android.material.textfield.TextInputLayout
-        app:layout_constraintLeft_toRightOf="@id/ui_tv_pw"
-        app:layout_constraintTop_toBottomOf="@id/ui_tv_id"
-        android:layout_marginStart="10dp"
         android:id="@+id/ui_til_pw"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintLeft_toRightOf="@id/ui_tv_pw"
+        app:layout_constraintTop_toBottomOf="@id/ui_tv_id">
+
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ui_tit_pw"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:id="@+id/ui_tit_pw"
-            android:inputType="textPassword"
             android:enabled="false"
-            />
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        app:layout_constraintLeft_toLeftOf="@id/ui_tv_pw"
-        app:layout_constraintTop_toBottomOf="@id/ui_tv_pw"
-        android:layout_marginTop="20dp"
         android:id="@+id/ui_tv_birth"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:text="BirthDay : "
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    />
-    <TextView
-        app:layout_constraintLeft_toLeftOf="@id/ui_tv_birth"
-        app:layout_constraintTop_toBottomOf="@id/ui_tv_birth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:id="@+id/ui_tv_hint"
+        android:text="BirthDay : "
         android:textColor="#000000"
         android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="@id/ui_tv_pw"
+        app:layout_constraintTop_toBottomOf="@id/ui_tv_pw" />
+
+    <TextView
+        android:id="@+id/ui_tv_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="Hint : "
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    />
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="@id/ui_tv_birth"
+        app:layout_constraintTop_toBottomOf="@id/ui_tv_birth" />
 </androidx.constraintlayout.widget.ConstraintLayout>

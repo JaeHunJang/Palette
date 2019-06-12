@@ -1,148 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="C "
-            android:textSize="@dimen/mode_text_size"
-            app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_cyan"
-            app:layout_constraintRight_toLeftOf="@id/new_sb_cmyk_cyan"
-            app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_cyan" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:text="C "
+        android:textSize="@dimen/mode_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_cyan"
+        app:layout_constraintRight_toLeftOf="@id/new_sb_cmyk_cyan"
+        app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_cyan" />
 
-        <SeekBar
-            android:id="@+id/new_sb_cmyk_cyan"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:max="@integer/cmyk_max"
-            android:progress="@integer/new_sb_cmyk_init"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-        <EditText
-            android:id="@+id/new_edt_cmyk_cyan"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:text="@integer/new_edt_cmyk_init"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_cyan"
-            app:layout_constraintLeft_toRightOf="@id/new_sb_cmyk_cyan"
-            app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_cyan"
-            tools:targetApi="P" />
+    <SeekBar
+        android:id="@+id/new_sb_cmyk_cyan"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:max="@integer/cmyk_max"
+        android:progress="@integer/new_sb_cmyk_init"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="M "
-            android:textSize="@dimen/mode_text_size"
-            app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_magenta"
-            app:layout_constraintRight_toLeftOf="@id/new_sb_cmyk_magenta"
-            app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_magenta" />
+    <EditText
+        android:id="@+id/new_edt_cmyk_cyan"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:text="@integer/new_edt_cmyk_init"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_cyan"
+        app:layout_constraintLeft_toRightOf="@id/new_sb_cmyk_cyan"
+        app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_cyan"
+        tools:targetApi="P" />
 
-
-        <SeekBar
-            android:id="@+id/new_sb_cmyk_magenta"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mode_margin_top"
-            android:max="@integer/cmyk_max"
-            android:progress="@integer/new_sb_cmyk_init"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/new_sb_cmyk_cyan" />
-
-        <EditText
-            android:id="@+id/new_edt_cmyk_magenta"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:text="@integer/new_edt_cmyk_init"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_magenta"
-            app:layout_constraintLeft_toRightOf="@id/new_sb_cmyk_magenta"
-            app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_magenta"
-            tools:targetApi="P" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="Y "
-            android:textSize="@dimen/mode_text_size"
-            app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_yello"
-            app:layout_constraintRight_toLeftOf="@id/new_sb_cmyk_yello"
-            app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_yello" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:text="M "
+        android:textSize="@dimen/mode_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_magenta"
+        app:layout_constraintRight_toLeftOf="@id/new_sb_cmyk_magenta"
+        app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_magenta" />
 
 
-        <SeekBar
-            android:id="@+id/new_sb_cmyk_yello"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mode_margin_top"
-            android:max="@integer/cmyk_max"
-            android:progress="@integer/new_sb_cmyk_init"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/new_sb_cmyk_magenta" />
+    <SeekBar
+        android:id="@+id/new_sb_cmyk_magenta"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mode_margin_top"
+        android:max="@integer/cmyk_max"
+        android:progress="@integer/new_sb_cmyk_init"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_sb_cmyk_cyan" />
 
-        <EditText
-            android:id="@+id/new_edt_cmyk_yello"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:text="@integer/new_edt_cmyk_init"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_yello"
-            app:layout_constraintLeft_toRightOf="@id/new_sb_cmyk_yello"
-            app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_yello"
-            tools:targetApi="P" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="K "
-            android:textSize="@dimen/mode_text_size"
-            app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_key"
-            app:layout_constraintRight_toLeftOf="@id/new_sb_cmyk_key"
-            app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_key" />
+    <EditText
+        android:id="@+id/new_edt_cmyk_magenta"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:text="@integer/new_edt_cmyk_init"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_magenta"
+        app:layout_constraintLeft_toRightOf="@id/new_sb_cmyk_magenta"
+        app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_magenta"
+        tools:targetApi="P" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:text="Y "
+        android:textSize="@dimen/mode_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_yello"
+        app:layout_constraintRight_toLeftOf="@id/new_sb_cmyk_yello"
+        app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_yello" />
 
 
-        <SeekBar
-            android:id="@+id/new_sb_cmyk_key"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mode_margin_top"
-            android:max="@integer/cmyk_max"
-            android:progress="@integer/new_sb_cmyk_init"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/new_sb_cmyk_yello" />
+    <SeekBar
+        android:id="@+id/new_sb_cmyk_yello"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mode_margin_top"
+        android:max="@integer/cmyk_max"
+        android:progress="@integer/new_sb_cmyk_init"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_sb_cmyk_magenta" />
 
-        <EditText
-            android:id="@+id/new_edt_cmyk_key"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:text="@integer/new_edt_cmyk_init"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_key"
-            app:layout_constraintLeft_toRightOf="@id/new_sb_cmyk_key"
-            app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_key"
-            tools:targetApi="P" />
+    <EditText
+        android:id="@+id/new_edt_cmyk_yello"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:text="@integer/new_edt_cmyk_init"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_yello"
+        app:layout_constraintLeft_toRightOf="@id/new_sb_cmyk_yello"
+        app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_yello"
+        tools:targetApi="P" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:text="K "
+        android:textSize="@dimen/mode_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_key"
+        app:layout_constraintRight_toLeftOf="@id/new_sb_cmyk_key"
+        app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_key" />
+
+
+    <SeekBar
+        android:id="@+id/new_sb_cmyk_key"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mode_margin_top"
+        android:max="@integer/cmyk_max"
+        android:progress="@integer/new_sb_cmyk_init"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_sb_cmyk_yello" />
+
+    <EditText
+        android:id="@+id/new_edt_cmyk_key"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:text="@integer/new_edt_cmyk_init"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/new_sb_cmyk_key"
+        app:layout_constraintLeft_toRightOf="@id/new_sb_cmyk_key"
+        app:layout_constraintTop_toTopOf="@id/new_sb_cmyk_key"
+        tools:targetApi="P" />
 </androidx.constraintlayout.widget.ConstraintLayout>

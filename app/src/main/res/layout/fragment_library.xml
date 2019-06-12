@@ -2,25 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:orientation="vertical">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <Spinner
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:id="@+id/lib_sp_lib"/>
-<Button
-    android:layout_width="match_parent"
-    android:layout_weight="4"
-    android:text="추가"
-    android:id="@+id/lib_btn_addLib"
-    android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/lib_sp_lib"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/lib_btn_addLib"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="추가" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lib_rv_themeList"
         android:layout_width="match_parent"

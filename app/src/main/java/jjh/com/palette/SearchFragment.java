@@ -84,17 +84,17 @@ public class SearchFragment extends Fragment {
         switch (search_sp_sort.getSelectedItemPosition()) {
             case 0:
                 if (search_chk_lib.isChecked()) {
-                    setRecyclerData("name like '%" + keyword + "%' and id = '" + Login.getInstance().getId() + "' order by date desc");
+                    setRecyclerData("name like '%" + keyword + "%' and id = '" + Login.getInstance().getId() + "' or tags like '%"+ keyword+"%'order by date desc");
                     break;
                 }
-                setRecyclerData("name like '%" + keyword + "%' and id like '%%' order by date desc");
+                setRecyclerData("name like '%" + keyword + "%' and id like '%%' or tags like '%"+ keyword+"%' order by date desc");
                 break;
             case 1:
                 if (search_chk_lib.isChecked()) {
-                    setRecyclerData("name like '%" + keyword + "%' and id = '" + Login.getInstance().getId() + "'");
+                    setRecyclerData("name like '%" + keyword + "%' and id = '" + Login.getInstance().getId() + "' or tags like '%"+ keyword+"%'");
                     break;
                 }
-                setRecyclerData("name like '%" + keyword + "%' and id like '%%'");
+                setRecyclerData("name like '%" + keyword + "%' and id like '%%' or tags like '%"+ keyword+"%'");
                 break;
         }
     }

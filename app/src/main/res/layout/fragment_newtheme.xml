@@ -14,9 +14,9 @@
         android:id="@+id/ll_color"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@drawable/background_horizontal"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/background_horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
@@ -24,137 +24,140 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#00ffffff"
-            />
+            android:background="#00ffffff" />
 
         <Button
             android:id="@+id/new_btn_color2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00ffffff"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="#00ffffff" />
 
         <Button
             android:id="@+id/new_btn_color3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:background="#00ffffff"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="#00ffffff" />
 
         <Button
             android:id="@+id/new_btn_color4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00ffffff"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="#00ffffff" />
 
         <Button
             android:id="@+id/new_btn_color5"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00ffffff"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="#00ffffff" />
     </LinearLayout>
 
     <com.skydoves.colorpickerview.ColorPickerView
-android:layout_marginTop="15dp"
         android:id="@+id/colorPickerView"
         android:layout_width="270dp"
         android:layout_height="270dp"
+        android:layout_marginTop="15dp"
         app:actionMode="always"
         app:alpha_flag="0.8"
         app:alpha_selector="0.8"
-        app:preferenceName="MyColor"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_color"
         app:palette="@drawable/palette"
-        tools:targetApi="P"
-        app:selector="@drawable/wheel">
+        app:preferenceName="MyColor"
+        app:selector="@drawable/wheel"
+        tools:targetApi="P">
 
     </com.skydoves.colorpickerview.ColorPickerView>
 
-        <com.skydoves.colorpickerview.sliders.AlphaSlideBar
-            android:layout_marginTop="10dp"
-            app:layout_constraintLeft_toLeftOf="@+id/colorPickerView"
-            app:layout_constraintTop_toBottomOf="@+id/colorPickerView"
-            android:id="@+id/alphaSlideBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:selector_AlphaSlideBar="@drawable/wheel"
-            app:borderColor_AlphaSlideBar="@android:color/darker_gray"
-            app:borderSize_AlphaSlideBar="5"/>
+    <com.skydoves.colorpickerview.sliders.AlphaSlideBar
+        android:id="@+id/alphaSlideBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:borderColor_AlphaSlideBar="@android:color/darker_gray"
+        app:borderSize_AlphaSlideBar="5"
+        app:layout_constraintLeft_toLeftOf="@+id/colorPickerView"
+        app:layout_constraintTop_toBottomOf="@+id/colorPickerView"
+        app:selector_AlphaSlideBar="@drawable/wheel" />
 
     <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
-        android:layout_marginTop="5dp"
         android:id="@+id/brightnessSlide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
 
         app:borderColor_BrightnessSlider="@android:color/darker_gray"
         app:layout_constraintLeft_toLeftOf="@+id/alphaSlideBar"
         app:layout_constraintTop_toBottomOf="@+id/alphaSlideBar"
         app:selector_BrightnessSlider="@drawable/wheel" />
 
-    <include layout="@layout/fragment_newtheme_rgb"
-        android:layout_width="wrap_content"
-        android:layout_height="120dp"
+    <include
         android:id="@+id/container_rgb"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/brightnessSlide"/>
-
-    <include layout="@layout/fragment_newtheme_cmyk"
+        layout="@layout/fragment_newtheme_rgb"
         android:layout_width="wrap_content"
         android:layout_height="120dp"
-        android:visibility="invisible"
-        android:id="@+id/container_cmyk"
         android:layout_marginTop="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/brightnessSlide"/>
+        app:layout_constraintTop_toBottomOf="@+id/brightnessSlide" />
+
+    <include
+        android:id="@+id/container_cmyk"
+        layout="@layout/fragment_newtheme_cmyk"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/brightnessSlide" />
 
     <Button
+        android:id="@+id/new_btn_prev"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="이전"
-        android:id="@+id/new_btn_prev"
         app:layout_constraintRight_toLeftOf="@+id/new_btn_reset"
         app:layout_constraintTop_toBottomOf="@+id/container_rgb" />
+
     <Button
+        android:id="@+id/new_btn_reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="색상취소"
-        android:id="@+id/new_btn_reset"
         app:layout_constraintRight_toLeftOf="@+id/new_btn_save"
         app:layout_constraintTop_toBottomOf="@+id/container_rgb" />
+
     <Button
+        android:id="@+id/new_btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="저장"
-        android:id="@+id/new_btn_save"
         app:layout_constraintRight_toLeftOf="@+id/new_btn_next"
         app:layout_constraintTop_toBottomOf="@+id/container_rgb" />
 
     <Button
+        android:id="@+id/new_btn_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="다음"
-        android:id="@+id/new_btn_next"
         app:layout_constraintRight_toRightOf="@+id/container_rgb"
         app:layout_constraintTop_toBottomOf="@+id/container_rgb" />
 
     <Spinner
-        android:layout_width="wrap_content"
-        android:layout_marginTop="10dp"
         android:id="@+id/new_sp_menu"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@android:drawable/spinner_dropdown_background"
         android:spinnerMode="dropdown"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_color" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

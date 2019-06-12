@@ -57,7 +57,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="270dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="5dp"
         android:background="#00ffffff"
         android:orientation="vertical"
         app:layout_constraintLeft_toRightOf="@+id/look_layout_palette"
@@ -142,8 +142,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:textSize="15sp"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/look_tv_userId"
+        app:layout_constraintRight_toRightOf="parent"
         tools:text="날짜" />
 
     <TextView
@@ -215,10 +215,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:orientation="horizontal"
-        android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/look_tv_tags">
 
         <Button
@@ -236,6 +236,7 @@
 
             android:text="수정"
             android:textSize="20sp" />
+
         <Button
             android:id="@+id/look_btn_copy"
             android:layout_width="wrap_content"
@@ -258,28 +259,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Color Mode"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <Switch
             android:id="@+id/look_sw_hex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="HEXA "
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <Switch
             android:id="@+id/look_sw_argb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ARGB "
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <Switch
             android:id="@+id/look_sw_cmyk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CMYK "
-            android:textSize="20sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 

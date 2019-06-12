@@ -1,5 +1,7 @@
 package jjh.com.palette;
 
+import android.view.ViewGroup;
+
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,11 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     FragmentAdapter(FragmentManager fm) {
         super(fm);
+    }
+
+    @Override
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        //super.destroyItem(container, position, object);
     }
 
     @NonNull

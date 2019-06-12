@@ -81,6 +81,10 @@ public class SaveThemeActivity extends AppCompatActivity {
                 continue;
             colors[j++] = t;
         }
+        boolean request = intent.getBooleanExtra("request",false); //수정 버튼을 통해서 왔을때
+        if (request) {
+            flag = true;
+        }
         ArrayList<String> items = new ArrayList<>();
         try {
             ArrayList[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인한 아이디의 라이브러리를 불러옴
