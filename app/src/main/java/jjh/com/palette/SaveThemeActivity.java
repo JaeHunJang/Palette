@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -85,10 +86,10 @@ public class SaveThemeActivity extends AppCompatActivity {
         if (request) {
             flag = true;
         }
-        ArrayList<String> items = new ArrayList<>();
+        Vector<String> items = new Vector<>();
         try {
-            ArrayList[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인한 아이디의 라이브러리를 불러옴
-            for (ArrayList r : result) {
+            Vector[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인한 아이디의 라이브러리를 불러옴
+            for (Vector r : result) {
                 items.add(r.get(1).toString());
             }
             ArrayAdapter<String> spinnerAdpater = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, items);
@@ -101,8 +102,8 @@ public class SaveThemeActivity extends AppCompatActivity {
 
         if(intent.getBooleanExtra("request",false)){ //수정버튼을 통해 왔을때
             final String[] data = intent.getStringArrayExtra("selectedItem"); //기존 데이터를 가져옴
-            save_edt_themeName.setText(data[0]); //기존 이름 적용
-            String[] tags = data[3].split("#"); //사용할 형태로 변환
+            save_edt_themeName.setText(data[3]); //기존 이름 적용
+            String[] tags = data[6].split("#"); //기존 태그를 사용할 형태로 변환
             String[] themeTags = getResources().getStringArray(R.array.theme_tags);
             j = 0;
             for (int i = 0; i < tags.length; i++) { //기존 태그들을 선택
@@ -115,7 +116,7 @@ public class SaveThemeActivity extends AppCompatActivity {
                 }
             }
             for (int i = 0; i< items.size(); i++){ //기존 라이브러리 선택
-                if (items.get(i).equals(data[5])){
+                if (items.get(i).equals(data[2])){
                     save_sp_LibraryName.setSelection(i);
                 }
             }
@@ -224,16 +225,16 @@ public class SaveThemeActivity extends AppCompatActivity {
                     boolean request = getIntent.getBooleanExtra("request",false); //수정 버튼을 통해서 왔을때
                     if (request) {
                         final String[] data = getIntent.getStringArrayExtra("selectedItem"); //기존 데이터를 가져옴
-                        String where = "id = '"+data[4] +"' and library ='" + data[5] +"' and name = '"+data[0]+"'"; //기존 데이터를 update 의 where 절로 활용
+                        String where = "num="+data[0]; //기존 데이터를 update 의 where 절로 활용
                         dbHelper.update("Theme", "id ='" + Login.getInstance().getId() + "', library ='" + lib + "', name ='" + themeName + "', color = '" + color + "', date= '" + today + "',tags= '" + tag + "'", where);
                     }
                     else {
-                        ArrayList[] temp = dbHelper.select("Theme","id ='" + Login.getInstance().getId() + "' and library ='" + lib + "' and name = '" + themeName + "'");
+                        /*Vector[] temp = dbHelper.select("Theme","id ='" + Login.getInstance().getId() + "' and library ='" + lib + "' and name = '" + themeName + "'");
                         if (temp.length > 0){
                         Toast.makeText(getApplicationContext(),"같은 이름의 Theme가 존재합니다.\n이름을 변경해주세요.",Toast.LENGTH_LONG).show();
                         return;
-                    }
-                        dbHelper.insert("Theme", "'" + Login.getInstance().getId() + "','" + lib + "', '" + themeName + "', '" + color + "', '" + today + "', '" + tag + "'");
+                    }*/
+                        dbHelper.insert("Theme(id,library,name,color,date,tags)", "'" + Login.getInstance().getId() + "','" + lib + "', '" + themeName + "', '" + color + "', '" + today + "', '" + tag + "'");
                     }
                 } catch (SQLException sqle) {
                     dbHelper.getError(sqle);

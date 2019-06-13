@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -93,7 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (strChk.strPatternCheck(s)) {
                     try {
-                        ArrayList[] result = dbhelper.select("Account", " id like ('" + signUp_tit_id.getText().toString() + "') ");
+                        Vector[] result = dbhelper.select("Account", " id like ('" + signUp_tit_id.getText().toString() + "') ");
                         if (result.length == 0) { //result 의 length 가 0이라면 검색결과가 없는 것으로 ID가 중복되지 않았음을 알 수 있다
                             signUp_til_id.setError(null);
                             flags[0] = true;

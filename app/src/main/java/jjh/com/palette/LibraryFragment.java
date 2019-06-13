@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -130,9 +131,9 @@ public class LibraryFragment extends Fragment {
 
     void setSpinnerData() { //라이브러리를 표시할 스피너를 갱신하는 메소드
         try {
-            ArrayList[] libResult = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'");
-            ArrayList<String> spItems = new ArrayList<>();
-            for (ArrayList r : libResult) {
+            Vector[] libResult = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'");
+            Vector<String> spItems = new Vector<>();
+            for (Vector r : libResult) {
                 spItems.add(r.get(1).toString());
             }
             ArrayAdapter spinnerAdpater = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spItems);
@@ -146,14 +147,15 @@ public class LibraryFragment extends Fragment {
 
     void setRecyclerData(String lib) { //라이브러리가 가진 리스트를 출력하는 메소드
         try {
-            ArrayList<RecyclerViewItems> items = new ArrayList<>();
-            ArrayList[] result = dbHelper.select("Theme", "library = '" + lib + "' and id = '" + Login.getInstance().getId() + "'");
+            Vector<RecyclerViewItems> items = new Vector<>();
+            Vector[] result = dbHelper.select("Theme", "library = '" + lib + "' and id = '" + Login.getInstance().getId() + "'");
 
             recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
             for (int i = 0; i < result.length; i++) {
                 if (result.length == 0)
                     break;
-                items.add(new RecyclerViewItems(result[i].get(2).toString(), result[i].get(3).toString(), result[i].get(4).toString(), result[i].get(5).toString(), result[i].get(0).toString(), result[i].get(1).toString()));
+                items.add(new RecyclerViewItems(result[i].get(0).toString(), result[i].get(1).toString(),result[i].get(2).toString(),
+                        result[i].get(3).toString(), result[i].get(4).toString(), result[i].get(5).toString(), result[i].get(6).toString()));
             }
             lib_rv_themeList.setLayoutManager(new LinearLayoutManager(getContext()));
 

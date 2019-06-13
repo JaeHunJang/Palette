@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
@@ -237,7 +238,7 @@ public class SignInActivity extends AppCompatActivity {
                         String id = dlg_fa_tit_id.getText().toString(); //입력된 id
                         String hint = dlg_fa_tit_hint.getText().toString(); //입력된 hint
                         try {
-                            ArrayList[] result = dbhelper.select("Account", " id='" + id + "' and birth='" + birth + "' and hint='" + hint + "'"); //테이블에서 데이터 조회
+                            Vector[] result = dbhelper.select("Account", " id='" + id + "' and birth='" + birth + "' and hint='" + hint + "'"); //테이블에서 데이터 조회
                             if (result.length == 0) { //검색결과가 없으면 다시 입력
                                 Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
                             } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
@@ -277,7 +278,7 @@ public class SignInActivity extends AppCompatActivity {
         signIn_btn_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList[] result;
+                Vector[] result;
                 for (boolean f : flags) {
                     if (!f) {
                         Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
@@ -294,7 +295,7 @@ public class SignInActivity extends AppCompatActivity {
                     }
                     if (result[0].get(0).equals(id) && result[0].get(1).equals(pw)) { //id와 pw 일치시 MainActivity 실행
                         Login login = Login.getInstance();
-                        login.setId(id);
+                        login.setId(id+"");
                         login.setLoginState(true);
                         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                         startActivity(intent);

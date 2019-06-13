@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -69,7 +70,12 @@ public class LookThemeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final String[] data = intent.getStringArrayExtra("selectedItem"); //전달받은 테마의 정보
 
-        String[] temp = data[1].split("#"); //사용할 형태로 변환
+        String userId = data[1];
+        String userLib = data[2];
+        String themeName = data[3];
+        String date = data[5];
+
+        String[] temp = data[4].split("#"); //사용할 형태로 변환
         int j = 0;
         for (String t : temp) {
             if (t == null)
@@ -77,7 +83,7 @@ public class LookThemeActivity extends AppCompatActivity {
             colors[j++] = t;
         }
 
-        String[] tags = data[3].split("#"); //사용할 형태로 변환
+        String[] tags = data[6].split("#"); //사용할 형태로 변환
         String tag = "";
         for (int i = 0; i < tags.length; i++) {
             if (!tags[i].equals("")) {
@@ -85,10 +91,6 @@ public class LookThemeActivity extends AppCompatActivity {
             }
         }
 
-        final String themeName = data[0];
-        String date = data[2];
-        String userId = data[4];
-        String userLib = data[5];
 
         look_tv_themeName.setText(themeName);//뷰에 데이터 출력
         look_tv_date.setText(date);
@@ -120,7 +122,7 @@ public class LookThemeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    ArrayList[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인된 아이디의 라이브러리를 가져옴
+                    Vector[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인된 아이디의 라이브러리를 가져옴
                     items = new String[result.length];
                     for (int i = 0; i < result.length; i++) {
                         items[i] = result[i].get(1).toString();
@@ -137,13 +139,13 @@ public class LookThemeActivity extends AppCompatActivity {
                             .setNegativeButton("닫기", null)
                             .setPositiveButton("추가", new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    ArrayList[] temp = dbHelper.select("Theme","id ='" + Login.getInstance().getId() + "' and library ='" + items[selected] + "' and name = '" + data[0] + "'");
+                                public void onClick(DialogInterface dialog, int which) {/*
+                                    Vector[] temp = dbHelper.select("Theme","id ='" + Login.getInstance().getId() + "' and library ='" + items[selected] + "' and name = '" + data[3] + "'");
                                     if (temp.length > 0){
                                         Toast.makeText(getApplicationContext(),"같은 이름의 Theme가 존재합니다.\n이름을 변경해주세요.",Toast.LENGTH_LONG).show();
                                         return;
-                                    }
-                                    dbHelper.insert("Theme", "'" + Login.getInstance().getId() + "','" + items[selected] + "', '" + data[0] + "', '" + data[1] + "', '" + data[2] + "', '" + data[3] + "'");
+                                    }*/
+                                    dbHelper.insert("Theme(id,library,name,color,date,tags)", "'" + Login.getInstance().getId() + "','" + items[selected] + "', '" + data[3] + "', '" + data[4] + "', '" + data[5] + "', '" + data[6] + "'");
                                     Toast.makeText(getApplicationContext(), "복사되었습니다.", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
                                     startActivity(intent);
@@ -162,7 +164,7 @@ public class LookThemeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    dbHelper.delete("Theme", "id = '" + Login.getInstance().getId() + "' and library = '" + data[5] + "' and name = '" + data[0] + "'");
+                    dbHelper.delete("Theme", "num = "+data[0]+" and id = '" + Login.getInstance().getId() + "' and library = '" + data[2] + "' and name = '" + data[3] + "'");
                     Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
                     startActivity(intent);

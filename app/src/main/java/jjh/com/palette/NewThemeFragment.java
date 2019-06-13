@@ -116,7 +116,7 @@ public class NewThemeFragment extends Fragment {
         boolean request = intent.getBooleanExtra("request", false); //수정버튼을 통해 fragment 가 Call 되었을때
         if (request) {
             final String[] data = intent.getStringArrayExtra("selectedItem"); //기존 데이터를 가져옴
-            String[] temp = data[1].split("#"); //사용할 형태로 변환
+            String[] temp = data[4].split("#"); //사용할 형태로 변환
             int j = 0;
             for (String t : temp) { //기존 색상을 적용
                 if (t == null)

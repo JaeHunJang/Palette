@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +30,7 @@ public class SearchFragment extends Fragment {
     private DBHelper dbHelper;
     private Button search_btn_keyword;
     RecyclerViewAdapter recyclerViewAdapter;
-    ArrayList[] result;
+    Vector[] result;
 
     @Nullable
     @Override
@@ -102,14 +103,15 @@ public class SearchFragment extends Fragment {
 
     void setRecyclerData(String where) { //DB 검색 결과를 리사이클러뷰에 새롭게 적용하는 메소드
         try {
-            ArrayList<RecyclerViewItems> items = new ArrayList<>();
+            Vector<RecyclerViewItems> items = new Vector<>();
             result = dbHelper.select("Theme", where);
 
             recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
             for (int i = 0; i < result.length; i++) {
                 if (result.length == 0)
                     break;
-                items.add(new RecyclerViewItems(result[i].get(2).toString(), result[i].get(3).toString(), result[i].get(4).toString(), result[i].get(5).toString(), result[i].get(0).toString(), result[i].get(1).toString()));
+                items.add(new RecyclerViewItems(result[i].get(0).toString(),result[i].get(1).toString(), result[i].get(2).toString(),
+                        result[i].get(3).toString(), result[i].get(4).toString(), result[i].get(5).toString(), result[i].get(6).toString()));
             }
             search_rv_themeList.setLayoutManager(new LinearLayoutManager(getContext()));
 

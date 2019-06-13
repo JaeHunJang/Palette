@@ -2,6 +2,7 @@ package jjh.com.palette;
 
 //리사이클러뷰를 구성할 아이템의 데이터를 가질 객체 클래스
 public class RecyclerViewItems {
+    private String num;
     private String name;
     private String color;
     private String date;
@@ -9,13 +10,22 @@ public class RecyclerViewItems {
     private String id;
     private String lib;
 
-    public RecyclerViewItems(String name, String color, String date, String tags, String id, String lib) {
+    public RecyclerViewItems(String num, String id, String lib,String name, String color, String date, String tags) {
+        this.num = num;
         this.name = name;
         this.color = color;
         this.date = date;
         this.tags = tags;
         this.id = id;
         this.lib = lib;
+    }
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
     }
 
     public String getLib() {

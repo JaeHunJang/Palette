@@ -3,6 +3,7 @@ package jjh.com.palette;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,7 +13,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 //https://stackoverflow.com/questions/47714606/viewpager-using-bottom-navigation-view-is-not-swiping-the-fragments
 //BottomNavigationView 사용법 인용
 public class FragmentAdapter extends FragmentPagerAdapter {
-    private ArrayList<Fragment> fragments = new ArrayList<>();
+    private Vector<Fragment> fragments = new Vector<>();
 
     FragmentAdapter(FragmentManager fm) {
         super(fm);

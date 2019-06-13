@@ -20,6 +20,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,7 +48,10 @@ public class UserInfoFragment extends Fragment {
 
         dbhelper = new DBHelper(getContext());
         try {
-            ArrayList[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
+            Vector[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
+            if (result.length == 0){
+                Log.d("data",Login.getInstance().getId()+"");
+            }
             Log.d("data",Login.getInstance().getId()+"");
             id = result[0].get(0).toString();
             pw = result[0].get(1).toString();
@@ -88,25 +92,28 @@ public class UserInfoFragment extends Fragment {
         /****************PW 입력 필터 시작 *******************/
         //PW 입력 처리
         ui_tit_pw.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)}); //최대 길이 20
-
         ui_tit_pw.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (strChk.strPatternCheck(s)) { //TextInputEditText 가 비어있거나, 패턴에 맞으면 Error 메시지를 없앰
                     ui_til_pw.setError(null);
                     flags[0] = true;
+
                 } else {
                     ui_til_pw.setError("PW는 영어와 숫자만 가능합니다.");
                     flags[0] = false;
+
                 }
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+
             }
         });
         /****************PW 입력 필터 끝 *******************/

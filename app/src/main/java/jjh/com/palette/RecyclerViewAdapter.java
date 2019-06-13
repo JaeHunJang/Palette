@@ -4,21 +4,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Vector;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 //리사이클러뷰에 탑재될 어댑터 클래스
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
-    private ArrayList<RecyclerViewItems> itemList; //리사이클러뷰홀더에 탑재될 데이터를 받아옴
+    private Vector<RecyclerViewItems> itemList; //리사이클러뷰홀더에 탑재될 데이터를 받아옴
     private Activity activity; //대화상자를 표시할 컨택스트를 받아옴
 
-    RecyclerViewAdapter(ArrayList list, Activity activity) {
+    RecyclerViewAdapter(Vector list, Activity activity) {
         this.itemList = list;
         this.activity = activity;
     }
@@ -34,6 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerViewItems item = itemList.get(position);
+        String num = item.getNum();
         String name = item.getName();
         String color = item.getColor();
         String date = item.getDate();
@@ -42,7 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         String lib = item.getLib();
         String[] colors = color.split("#");
         String[] tags = tag.split("#");
-        final String[] selectedItem = {name, color, date, tag, id, lib};
+        final String[] selectedItem = {num, id, lib,name, color, date, tag};
         holder.themeName.setText(name);
         holder.date.setText(date);
         holder.id.setText(id);
@@ -57,6 +61,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         });
         for (int i = 0; i < colors.length; i++) {
             if (colors[i] != null) {
+                Log.d("data", Arrays.toString(colors));
                 holder.colors[i].setBackgroundColor(Color.parseColor("#" + colors[i]));
                 holder.colors[i].setText(colors[i]);
             }
