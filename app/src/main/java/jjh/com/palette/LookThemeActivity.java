@@ -85,7 +85,7 @@ public class LookThemeActivity extends AppCompatActivity {
             }
         }
 
-        String themeName = data[0];
+        final String themeName = data[0];
         String date = data[2];
         String userId = data[4];
         String userLib = data[5];
@@ -125,6 +125,7 @@ public class LookThemeActivity extends AppCompatActivity {
                     for (int i = 0; i < result.length; i++) {
                         items[i] = result[i].get(1).toString();
                     }
+                    selected = items.length-1;
                     AlertDialog.Builder dlg = new AlertDialog.Builder(LookThemeActivity.this); //라이브러리 선택 대화상자 출력
                     dlg.setTitle("라이브러리 선택")
                             .setSingleChoiceItems(items, items.length - 1, new DialogInterface.OnClickListener() {
@@ -137,6 +138,11 @@ public class LookThemeActivity extends AppCompatActivity {
                             .setPositiveButton("추가", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    ArrayList[] temp = dbHelper.select("Theme","id ='" + Login.getInstance().getId() + "' and library ='" + items[selected] + "' and name = '" + data[0] + "'");
+                                    if (temp.length > 0){
+                                        Toast.makeText(getApplicationContext(),"같은 이름의 Theme가 존재합니다.\n이름을 변경해주세요.",Toast.LENGTH_LONG).show();
+                                        return;
+                                    }
                                     dbHelper.insert("Theme", "'" + Login.getInstance().getId() + "','" + items[selected] + "', '" + data[0] + "', '" + data[1] + "', '" + data[2] + "', '" + data[3] + "'");
                                     Toast.makeText(getApplicationContext(), "복사되었습니다.", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);

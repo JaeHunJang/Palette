@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class UserInfoFragment extends Fragment {
         dbhelper = new DBHelper(getContext());
         try {
             ArrayList[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
+            Log.d("data",Login.getInstance().getId()+"");
             id = result[0].get(0).toString();
             pw = result[0].get(1).toString();
             birth = result[0].get(2).toString();

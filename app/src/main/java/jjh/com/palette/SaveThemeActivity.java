@@ -227,8 +227,14 @@ public class SaveThemeActivity extends AppCompatActivity {
                         String where = "id = '"+data[4] +"' and library ='" + data[5] +"' and name = '"+data[0]+"'"; //기존 데이터를 update 의 where 절로 활용
                         dbHelper.update("Theme", "id ='" + Login.getInstance().getId() + "', library ='" + lib + "', name ='" + themeName + "', color = '" + color + "', date= '" + today + "',tags= '" + tag + "'", where);
                     }
-                    else
+                    else {
+                        ArrayList[] temp = dbHelper.select("Theme","id ='" + Login.getInstance().getId() + "' and library ='" + lib + "' and name = '" + themeName + "'");
+                        if (temp.length > 0){
+                        Toast.makeText(getApplicationContext(),"같은 이름의 Theme가 존재합니다.\n이름을 변경해주세요.",Toast.LENGTH_LONG).show();
+                        return;
+                    }
                         dbHelper.insert("Theme", "'" + Login.getInstance().getId() + "','" + lib + "', '" + themeName + "', '" + color + "', '" + today + "', '" + tag + "'");
+                    }
                 } catch (SQLException sqle) {
                     dbHelper.getError(sqle);
                 }
