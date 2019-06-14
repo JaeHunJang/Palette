@@ -6,7 +6,6 @@ import android.database.SQLException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,9 +16,7 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
 import java.util.Vector;
-import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -149,7 +146,7 @@ public class SignInActivity extends AppCompatActivity {
                 final AlertDialog.Builder dlg = new AlertDialog.Builder(SignInActivity.this);
                 dialog_findaccount = View.inflate(SignInActivity.this, R.layout.dialog_findaccount, null);
                 final TextInputEditText dlg_fa_tit_id, dlg_fa_tit_hint; //Id, hint
-                final TextInputLayout dlg_fa_til_id, dlg_fa_til_hint; //id, hint 를 둘러싼 list_search
+                final TextInputLayout dlg_fa_til_id, dlg_fa_til_hint; //id, hint 를 둘러싼 list_theme
                 final DatePicker dlg_fa_dp_birth; //birth
                 final Button dlg_fa_btn_find, dlg_fa_btn_cancel; //취소, 찾기 버튼
 
@@ -298,6 +295,7 @@ public class SignInActivity extends AppCompatActivity {
                         login.setId(id+"");
                         login.setLoginState(true);
                         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
                         startActivity(intent);
                     } else {
                         Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();

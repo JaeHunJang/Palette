@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +22,6 @@ import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
-
-import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

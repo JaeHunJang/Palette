@@ -16,7 +16,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
@@ -229,17 +228,13 @@ public class SaveThemeActivity extends AppCompatActivity {
                         dbHelper.update("Theme", "id ='" + Login.getInstance().getId() + "', library ='" + lib + "', name ='" + themeName + "', color = '" + color + "', date= '" + today + "',tags= '" + tag + "'", where);
                     }
                     else {
-                        /*Vector[] temp = dbHelper.select("Theme","id ='" + Login.getInstance().getId() + "' and library ='" + lib + "' and name = '" + themeName + "'");
-                        if (temp.length > 0){
-                        Toast.makeText(getApplicationContext(),"같은 이름의 Theme가 존재합니다.\n이름을 변경해주세요.",Toast.LENGTH_LONG).show();
-                        return;
-                    }*/
                         dbHelper.insert("Theme(id,library,name,color,date,tags)", "'" + Login.getInstance().getId() + "','" + lib + "', '" + themeName + "', '" + color + "', '" + today + "', '" + tag + "'");
                     }
                 } catch (SQLException sqle) {
                     dbHelper.getError(sqle);
                 }
                 Intent intent = new Intent(SaveThemeActivity.this, MainActivity.class); //저장이 되면 메인화면으로 돌아감
+                intent.putExtra("page",1);
                 startActivity(intent);
                 finish();
             }

@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 import androidx.annotation.NonNull;
@@ -26,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 //라이브러리에 저장된 테마들을 보는 화면
 public class LibraryFragment extends Fragment {
     private RecyclerView lib_rv_themeList; //테마를 출력할 리사이클러뷰

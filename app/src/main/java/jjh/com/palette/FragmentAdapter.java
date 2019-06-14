@@ -2,7 +2,6 @@ package jjh.com.palette;
 
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 import androidx.annotation.NonNull;

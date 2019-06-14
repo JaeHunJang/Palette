@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -13,12 +12,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 //테마 정보를 보는 화면
 public class LookThemeActivity extends AppCompatActivity {
     DBHelper dbHelper;
@@ -107,18 +106,21 @@ public class LookThemeActivity extends AppCompatActivity {
         colorUpdate(colors, colors);
         look_sw_ColorMode[0].setChecked(true);
         /*************** 선언 및 초기화 ******************/
+        //수정버튼 이벤트
         look_btn_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent outIntent = new Intent(LookThemeActivity.this, MainActivity.class);
-                outIntent.putExtra("selectedItem",data);
-                outIntent.putExtra("fragment",2);
-                outIntent.putExtra("request",true);
-                startActivity(outIntent);
+                Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
+                intent.putExtra("selectedItem", data);
+                intent.putExtra("page", 2);//테마생성화면으로 이동
+                intent.putExtra("request", true);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
+                startActivity(intent);
                 finish();
             }
         });
-        look_btn_copy.setOnClickListener(new View.OnClickListener() { //복사 버튼 이벤트
+        //복사버튼 이벤트
+        look_btn_copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -127,7 +129,7 @@ public class LookThemeActivity extends AppCompatActivity {
                     for (int i = 0; i < result.length; i++) {
                         items[i] = result[i].get(1).toString();
                     }
-                    selected = items.length-1;
+                    selected = items.length - 1;
                     AlertDialog.Builder dlg = new AlertDialog.Builder(LookThemeActivity.this); //라이브러리 선택 대화상자 출력
                     dlg.setTitle("라이브러리 선택")
                             .setSingleChoiceItems(items, items.length - 1, new DialogInterface.OnClickListener() {
@@ -139,15 +141,12 @@ public class LookThemeActivity extends AppCompatActivity {
                             .setNegativeButton("닫기", null)
                             .setPositiveButton("추가", new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {/*
-                                    Vector[] temp = dbHelper.select("Theme","id ='" + Login.getInstance().getId() + "' and library ='" + items[selected] + "' and name = '" + data[3] + "'");
-                                    if (temp.length > 0){
-                                        Toast.makeText(getApplicationContext(),"같은 이름의 Theme가 존재합니다.\n이름을 변경해주세요.",Toast.LENGTH_LONG).show();
-                                        return;
-                                    }*/
+                                public void onClick(DialogInterface dialog, int which) {
                                     dbHelper.insert("Theme(id,library,name,color,date,tags)", "'" + Login.getInstance().getId() + "','" + items[selected] + "', '" + data[3] + "', '" + data[4] + "', '" + data[5] + "', '" + data[6] + "'");
                                     Toast.makeText(getApplicationContext(), "복사되었습니다.", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
+                                    intent.putExtra("page",1);//라이브러리화면으로 이동
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
                                     startActivity(intent);
                                     finish();
                                 }
@@ -159,24 +158,25 @@ public class LookThemeActivity extends AppCompatActivity {
                 }
             }
         });
-
-        look_btn_delete.setOnClickListener(new View.OnClickListener() { //삭제 버튼 이벤트
+        //삭제버튼 이벤트
+        look_btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    dbHelper.delete("Theme", "num = "+data[0]+" and id = '" + Login.getInstance().getId() + "' and library = '" + data[2] + "' and name = '" + data[3] + "'");
+                    dbHelper.delete("Theme", "num = " + data[0] + " and id = '" + Login.getInstance().getId() + "' and library = '" + data[2] + "' and name = '" + data[3] + "'");
                     Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
+                    intent.putExtra("page",1); //라이브러리화면으로 이동
                     startActivity(intent);
                     finish();
-
                 } catch (SQLException sqle) {
                     dbHelper.getError(sqle);
                 }
             }
         });
-
-        look_sw_ColorMode[0].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { //색상모드 HEX Code
+        //색상모드 HEX Code
+        look_sw_ColorMode[0].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -186,7 +186,8 @@ public class LookThemeActivity extends AppCompatActivity {
                 }
             }
         });
-        look_sw_ColorMode[1].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { //색상모드 ARGB
+        //색상모드 ARGB
+        look_sw_ColorMode[1].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -205,7 +206,8 @@ public class LookThemeActivity extends AppCompatActivity {
                 }
             }
         });
-        look_sw_ColorMode[2].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { //색상모드 CMYK
+        //색상모드 CMYK
+        look_sw_ColorMode[2].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -229,7 +231,8 @@ public class LookThemeActivity extends AppCompatActivity {
 
     }
 
-    void colorUpdate(String[] hex, String[] values) { //변경된 색상모드에 맞게 글자를 변경
+    //변경된 색상모드에 맞게 글자를 변경
+    void colorUpdate(String[] hex, String[] values) {
         int j = 0;
         for (int i = 0; i < values.length; i++) {
             if (values[i] != null && hex[i] != null) {

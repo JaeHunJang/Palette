@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,6 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Vector;
 
 import androidx.annotation.NonNull;
@@ -49,10 +46,6 @@ public class UserInfoFragment extends Fragment {
         dbhelper = new DBHelper(getContext());
         try {
             Vector[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
-            if (result.length == 0){
-                Log.d("data",Login.getInstance().getId()+"");
-            }
-            Log.d("data",Login.getInstance().getId()+"");
             id = result[0].get(0).toString();
             pw = result[0].get(1).toString();
             birth = result[0].get(2).toString();
@@ -236,6 +229,7 @@ public class UserInfoFragment extends Fragment {
                                 } catch (SQLException sqle) {
                                     dbhelper.getError(sqle);
                                 }
+                                Toast.makeText(getContext(),"다시 로그인 해주세요.",Toast.LENGTH_LONG).show();
                                 ui_btn_logout.callOnClick(); //회원정보가 수정되었으니 다시 로그인을 해야함
                             }
                         })

@@ -15,36 +15,36 @@ import androidx.viewpager.widget.ViewPager;
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView main_bnv_menu;
     ViewPager viewPager;
-    FragmentAdapter adapter;
+    FragmentAdapter fragmentAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final int[] pages = {R.id.action_acc, R.id.action_library, R.id.action_new, R.id.action_search}; //띄어줄 화면 메뉴(바텀네비게이션뷰) 목록
 
         main_bnv_menu = findViewById(R.id.main_bnv_menu);
         main_bnv_menu.inflateMenu(R.menu.menu_main_bnv);
 
         viewPager = findViewById(R.id.main_container);
-        adapter = new FragmentAdapter(getSupportFragmentManager());
+        fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
 
-        adapter.addItem(new UserInfoFragment());
-        adapter.addItem(new LibraryFragment());
-        adapter.addItem(new NewThemeFragment());
-        adapter.addItem(new SearchFragment());
-        adapter.notifyDataSetChanged();
+        fragmentAdapter.addItem(new UserInfoFragment());
+        fragmentAdapter.addItem(new LibraryFragment());
+        fragmentAdapter.addItem(new NewThemeFragment());
+        fragmentAdapter.addItem(new SearchFragment());
+        fragmentAdapter.notifyDataSetChanged();
 
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(fragmentAdapter);
         viewPager.setCurrentItem(3); //시작화면을 검색화면으로 띄어줌
-        main_bnv_menu.setSelectedItemId(R.id.action_search);
-        if (Login.getInstance().getLoginState()){
-            viewPager.setEnabled(false);
-            main_bnv_menu.setEnabled(false);
+        main_bnv_menu.setSelectedItemId(pages[3]);
+        if (!Login.getInstance().getLoginState()){ //로그인이 되어있지 않으면 어플리케이션 종료
+            finish();
         }
         Intent intent = getIntent();
-        int fragment = intent.getIntExtra("fragment",-1);
-        if (fragment != -1){
-            viewPager.setCurrentItem(fragment);
-            main_bnv_menu.setSelectedItemId(R.id.action_new);
+        int page = intent.getIntExtra("page",-1); //시작할 화면 선택
+        if (page != -1){ //값이 있으면 해당 화면으로 이동
+            viewPager.setCurrentItem(page);
+            main_bnv_menu.setSelectedItemId(pages[page]);
         }
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Vector;
 
 import androidx.annotation.NonNull;
@@ -30,7 +27,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.list_search, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.list_theme, parent, false);
         return new RecyclerViewHolder(view);
     }
 
@@ -61,7 +58,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         });
         for (int i = 0; i < colors.length; i++) {
             if (colors[i] != null) {
-                Log.d("data", Arrays.toString(colors));
                 holder.colors[i].setBackgroundColor(Color.parseColor("#" + colors[i]));
                 holder.colors[i].setText(colors[i]);
             }

@@ -12,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 import androidx.annotation.NonNull;
@@ -80,22 +79,22 @@ public class SearchFragment extends Fragment {
         return search;
     }
 
-    void selectionQuery() { //선택된 각종 정보에 맞춰서 검색을 하는 메소드
+    private void selectionQuery() { //선택된 각종 정보에 맞춰서 검색을 하는 메소드
         String keyword = search_edt_keyword.getText().toString();
         switch (search_sp_sort.getSelectedItemPosition()) {
             case 0:
                 if (search_chk_lib.isChecked()) {
-                    setRecyclerData("name like '%" + keyword + "%' and id = '" + Login.getInstance().getId() + "' or tags like '%"+ keyword+"%'order by date desc");
+                    setRecyclerData("(name like '%" + keyword + "%'  or tags like '%"+ keyword+"%')and id = '" + Login.getInstance().getId() + "'order by date desc");
                     break;
                 }
-                setRecyclerData("name like '%" + keyword + "%' and id like '%%' or tags like '%"+ keyword+"%' order by date desc");
+                setRecyclerData("(name like '%" + keyword + "%' or tags like '%"+ keyword+"%') and id like '%%' order by date desc");
                 break;
             case 1:
                 if (search_chk_lib.isChecked()) {
-                    setRecyclerData("name like '%" + keyword + "%' and id = '" + Login.getInstance().getId() + "' or tags like '%"+ keyword+"%'");
+                    setRecyclerData("(name like '%" + keyword + "%'  or tags like '%"+ keyword+"%')and id = '" + Login.getInstance().getId() + "'");
                     break;
                 }
-                setRecyclerData("name like '%" + keyword + "%' and id like '%%' or tags like '%"+ keyword+"%'");
+                setRecyclerData("(name like '%" + keyword + "%' or tags like '%"+ keyword+"%') and id like '%%'");
                 break;
         }
     }

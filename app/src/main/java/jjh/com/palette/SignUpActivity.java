@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
@@ -28,7 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SignUpActivity extends AppCompatActivity {
     DBHelper dbhelper;
     View dlg_userInfo;
-
+    StringChecker strChk;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
         final TextInputEditText signUp_tit_id, signUp_tit_pw, signUp_tit_pwChk, signUp_tit_hint;
         final DatePicker signUp_dp_birth;
         final Button signUp_btn_signUp;
-        final StringChecker strChk = new StringChecker();
+        strChk = new StringChecker();
 
         final boolean[] flags = {false, false, false, false};
 
