@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.Vector;
 
@@ -30,6 +37,7 @@ public class UserInfoFragment extends Fragment {
     StringChecker strChk;
     View dlg_userInfo;
     String id, pw, birth, hint;
+    Vector[] result;
     boolean[] flags = {true, true};
 
     @Nullable
@@ -45,11 +53,39 @@ public class UserInfoFragment extends Fragment {
 
         dbhelper = new DBHelper(getContext());
         try {
-            Vector[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
-            id = result[0].get(0).toString();
-            pw = result[0].get(1).toString();
-            birth = result[0].get(2).toString();
-            hint = result[0].get(3).toString();
+            //Vector[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
+            Response.Listener rListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        JsonParser jsonParser = new JsonParser();
+                        JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
+                        //result = null;
+                        //result = new Vector[jsonArray.size()];
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            JsonObject jsonObject = (JsonObject) jsonArray.get(i);
+                            //result[i] = new Vector();
+                            id = (jsonObject.get("id").toString().replace("\"",""));
+                            pw = (jsonObject.get("pw").toString().replace("\"",""));
+                            birth = (jsonObject.get("birth").toString().replace("\"",""));
+                            hint = (jsonObject.get("hint").toString().replace("\"",""));
+                            Log.d("aaaa",jsonObject.toString());
+                            //Log.d("aaaaa",jsonObject.get("id").toString()+jsonObject.get("pw").toString());
+                        }
+                        /*id = result[0].get(0).toString();
+                        pw = result[0].get(1).toString();
+                        birth = result[0].get(2).toString();
+                        hint = result[0].get(3).toString();*/
+                    }
+                    catch (Exception e){
+                        Log.d("mytest",e.toString());
+                    }
+                }
+            };
+            ValidateRequest vRequest = new ValidateRequest(Login.getInstance().getId(),rListener);
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            queue.add(vRequest);
+
         } catch (SQLException sqle) {
             dbhelper.getError(sqle);
         }
@@ -164,9 +200,24 @@ public class UserInfoFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
-                                    dbhelper.delete("Account", "id = '" + Login.getInstance().getId() + "'");
+                                    Response.Listener rListener = new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try{
+
+                                            }
+                                            catch (Exception e){
+                                                Log.d("mytest",e.toString());
+                                            }
+                                        }
+                                    };
+                                    ValidateRequest vRequest = new ValidateRequest(true,Login.getInstance().getId(),rListener);
+                                    RequestQueue queue = Volley.newRequestQueue(getContext());
+                                    queue.add(vRequest);
+
+                                    /*dbhelper.delete("Account", "id = '" + Login.getInstance().getId() + "'");
                                     dbhelper.delete("Library", "id = '" + Login.getInstance().getId() + "'");
-                                    dbhelper.delete("Theme", "id = '" + Login.getInstance().getId() + "'");
+                                    dbhelper.delete("Theme", "id = '" + Login.getInstance().getId() + "'");*/
 
                                 } catch (SQLException sqle) {
                                     dbhelper.getError(sqle);

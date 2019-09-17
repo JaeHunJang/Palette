@@ -1,19 +1,28 @@
 package jjh.com.palette;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Date;
 import java.util.Vector;
@@ -27,6 +36,8 @@ public class SignUpActivity extends AppCompatActivity {
     DBHelper dbhelper;
     View dlg_userInfo;
     StringChecker strChk;
+    Vector[] result;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,20 +101,6 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (strChk.strPatternCheck(s)) {
-                    try {
-                        Vector[] result = dbhelper.select("Account", " id like ('" + signUp_tit_id.getText().toString() + "') ");
-                        if (result.length == 0) { //result 의 length 가 0이라면 검색결과가 없는 것으로 ID가 중복되지 않았음을 알 수 있다
-                            signUp_til_id.setError(null);
-                            flags[0] = true;
-                        } else {
-                            flags[0] = false;
-                            signUp_til_id.setError("ID가 중복됩니다.");
-                        }
-                    } catch (SQLException sqle) {
-                        dbhelper.getError(sqle);
-                    }
-                }
             }
         });
         /*********ID 입력 필터 끝*************/
@@ -240,12 +237,42 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
-                                    dbhelper.insert("Account", "'" + id + "','" + pw + "','" + birth + "','" + hint + "'"); //테이블에 데이터 삽입
-                                    dbhelper.insert("Library", "'" + id + "','" + "기본 라이브러리'"); //기본 라이브러리 제공
+                                    Response.Listener rListener = new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try{
+                                                JsonParser jsonParser = new JsonParser();
+                                                JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
+                                                //Log.d("aaaa",jsonObject.toString().replace("\"","")+"/"+jsonObject.toString().replace("\"","").equals("false"));
+                                                if (jsonObject.toString().replace("\"","").equals("false")) { //검색결과가 없으면 다시 입력
+                                                    Toast.makeText(SignUpActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+                                                } else if(jsonObject.toString().replace("\"","").equals("overlap")) { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                                    Toast.makeText(SignUpActivity.this, "중복되는 ID가 있습니다.", Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    finish();
+                                                }
+                                                //result = dbhelper.select("Account", " id= '" + id + "'"); //테이블에서 id 조회
+                                                /*if (result.length != 0) { //id가 존재하는 지 확인
+                                                    Toast.makeText(getApplicationContext(), "중복되는 ID가 있습니다.", Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }*/
+
+
+                                            }
+                                            catch (Exception e){
+                                                Log.d("mytest",e.toString());
+                                            }
+                                        }
+                                    };
+                                    ValidateRequest vRequest = new ValidateRequest(id,pw,birth,hint,rListener);
+                                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                                    queue.add(vRequest);
+
+                                    //dbhelper.insert("Account", "'" + id + "','" + pw + "','" + birth + "','" + hint + "'"); //테이블에 데이터 삽입
+                                    //dbhelper.insert("Library", "'" + id + "','" + "기본 라이브러리'"); //기본 라이브러리 제공
                                 } catch (SQLException sqle) {
                                     dbhelper.getError(sqle);
                                 }
-                                finish();
                             }
                         })
                         .setNegativeButton("취소", null)

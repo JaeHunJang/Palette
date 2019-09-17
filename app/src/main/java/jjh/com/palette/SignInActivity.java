@@ -7,14 +7,22 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Vector;
 
@@ -29,6 +37,7 @@ public class SignInActivity extends AppCompatActivity {
     View dialog_findaccount;
     StringChecker strChk;
     boolean[] flags = {false, false};
+    Vector[] result;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -220,7 +229,6 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
                 /****************대화상자 HINT 입력 필터 끝 *******************/
-
                 /****************대화상자 아이디찾기 버튼 이벤트 시작 *******************/
                 dlg_fa_btn_find.setOnClickListener(new View.OnClickListener() { //찾기 버튼의 클릭 이벤트
                     @Override
@@ -231,10 +239,46 @@ public class SignInActivity extends AppCompatActivity {
                                 return;
                             }
                         }
-                        String birth = String.format("%4d-%02d-%02d", dlg_fa_dp_birth.getYear(), dlg_fa_dp_birth.getMonth() + 1, dlg_fa_dp_birth.getDayOfMonth()); //format을 통해 문자열 형식에 맞춰 만듬
-                        String id = dlg_fa_tit_id.getText().toString(); //입력된 id
-                        String hint = dlg_fa_tit_hint.getText().toString(); //입력된 hint
+                        final String birth = String.format("%4d-%02d-%02d", dlg_fa_dp_birth.getYear(), dlg_fa_dp_birth.getMonth() + 1, dlg_fa_dp_birth.getDayOfMonth()); //format을 통해 문자열 형식에 맞춰 만듬
+                        final String id = dlg_fa_tit_id.getText().toString(); //입력된 id
+                        final String hint = dlg_fa_tit_hint.getText().toString(); //입력된 hint
                         try {
+                            Response.Listener rListener = new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try{
+                                        JsonParser jsonParser = new JsonParser();
+                                        //JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
+                                        result = null;
+                                        //result = new Vector[jsonArray.size()];
+                                        //for (int i = 0; i < jsonArray.size(); i++) {
+                                            JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
+                                            //result[i] = new Vector();
+                                            //result[i].add(jsonObject.get("flag").toString().replace("\"",""));
+                                            //Log.d("aaaaa",result[0].get(0).toString()+" 제발");
+                                        //}
+                                        //Vector[] result = dbhelper.select("Account", " id='" + id + "' and birth='" + birth + "' and hint='" + hint + "'"); //테이블에서 데이터
+                                        //Log.d("aaaaa",jsonObject.toString().replace("\"",""));
+                                        //Log.d("aaaaa",jsonObject.toString().replace("\'","").equals("false")+"");
+
+                                        if (jsonObject.toString().replace("\"","").equals("false")/*result[0].get(0).toString().equals("true")*/) { //검색결과가 없으면 다시 입력
+                                            Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+                                        } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                            //dbhelper.update("Account", " pw = '0000' ", " id = '" + id + "'"); //테이블의 비밀번호 수정
+                                            //signIn_tit_id.setText(result[0].get(0) + ""); //로그인화면의 아이디 자동 입력
+                                            Toast.makeText(SignInActivity.this, "비밀번호를 0000으로 초기화했습니다.", Toast.LENGTH_SHORT).show();
+                                            dlg_fa_btn_cancel.callOnClick(); //종료
+                                        }
+                                    }
+                                    catch (Exception e){
+                                        Log.d("mytest",e.toString());
+                                    }
+                                }
+                            };
+                            ValidateRequest vRequest = new ValidateRequest(id,birth,hint,rListener);
+                            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                            queue.add(vRequest);
+                            /*
                             Vector[] result = dbhelper.select("Account", " id='" + id + "' and birth='" + birth + "' and hint='" + hint + "'"); //테이블에서 데이터 조회
                             if (result.length == 0) { //검색결과가 없으면 다시 입력
                                 Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
@@ -243,15 +287,21 @@ public class SignInActivity extends AppCompatActivity {
                                 signIn_tit_id.setText(result[0].get(0) + ""); //로그인화면의 아이디 자동 입력
                                 Toast.makeText(SignInActivity.this, "비밀번호를 0000으로 초기화했습니다.", Toast.LENGTH_SHORT).show();
                                 dlg_fa_btn_cancel.callOnClick(); //종료
+                            }*/
+                            /*if (result[0].get(0).toString().equals("true")){
+                                signIn_tit_id.setText(id); //로그인화면의 아이디 자동 입력
+                                Toast.makeText(getApplicationContext(), "비밀번호를 0000으로 초기화했습니다.", Toast.LENGTH_SHORT).show();
+                                dlg_fa_btn_cancel.callOnClick(); //종료
                             }
-
-
+                            else{
+                                Toast.makeText(getApplicationContext(), "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+                            }*/
                         } catch (SQLException sqle) {
                             dbhelper.getError(sqle);
                         }
                     }
                 });
-                /****************대화상자 아이디찾기 버튼 이벤트 시작 *******************/
+                /****************대화상자 아이디찾기 버튼 이벤트 끝 *******************/
 
                 /****************대화상자 취소 버튼 이벤트 시작 *******************/
                 dlg_fa_btn_cancel.setOnClickListener(new View.OnClickListener() { //취소버튼의 클릭 이벤트
@@ -275,17 +325,56 @@ public class SignInActivity extends AppCompatActivity {
         signIn_btn_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Vector[] result;
                 for (boolean f : flags) {
                     if (!f) {
                         Toast.makeText(SignInActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
-                String id = signIn_tit_id.getText().toString(); //입력받은 id
-                String pw = signIn_tit_pw.getText().toString(); //입력받은 pw
+                final String id = signIn_tit_id.getText().toString(); //입력받은 id
+                final String pw = signIn_tit_pw.getText().toString(); //입력받은 pw
                 try {
-                    result = dbhelper.select("Account", " id= '" + id + "'"); //테이블에서 id 조회
+                    Response.Listener rListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try{
+                                JsonParser jsonParser = new JsonParser();
+                                JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
+                                result = null;
+                                result = new Vector[jsonArray.size()];
+                                for (int i = 0; i < jsonArray.size(); i++) {
+                                    JsonObject jsonObject = (JsonObject) jsonArray.get(i);
+                                    result[i] = new Vector();
+                                    result[i].add(jsonObject.get("id").toString().replace("\"",""));
+                                    result[i].add(jsonObject.get("pw").toString().replace("\"",""));
+                                    result[i].add(jsonObject.get("birth").toString().replace("\"",""));
+                                    result[i].add(jsonObject.get("hint").toString().replace("\"",""));
+                                }
+                                if (result.length == 0) { //id가 존재하는 지 확인
+                                    Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                                if (result[0].get(0).equals(id) && result[0].get(1).equals(pw)) { //id와 pw 일치시 MainActivity 실행
+                                    Login login = Login.getInstance();
+                                    login.setId(id+"");
+                                    login.setLoginState(true);
+                                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            catch (Exception e){
+                                Log.d("mytest",e.toString());
+                            }
+                        }
+                    };
+                    ValidateRequest vRequest = new ValidateRequest(id,rListener);
+                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                    queue.add(vRequest);
+
+                    /*result = dbhelper.select("Account", " id= '" + id + "'"); //테이블에서 id 조회
                     if (result.length == 0) { //id가 존재하는 지 확인
                         Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
                         return;
@@ -300,11 +389,10 @@ public class SignInActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(getApplicationContext(), "일치하는 ID와 PW가 없습니다.", Toast.LENGTH_SHORT).show();
                         return;
-                    }
+                    }*/
                 } catch (SQLException sqle) {
                     dbhelper.getError(sqle);
                 }
-                finish();
             }
         });
         /****************로그인 버튼 이벤트 끝 *******************/

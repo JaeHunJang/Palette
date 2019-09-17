@@ -1,7 +1,9 @@
 package jjh.com.palette;
 
+import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.util.Arrays;
 import java.util.Vector;
 
 import androidx.annotation.NonNull;
@@ -102,10 +113,50 @@ public class SearchFragment extends Fragment {
 
     void setRecyclerData(String where) { //DB 검색 결과를 리사이클러뷰에 새롭게 적용하는 메소드
         try {
-            Vector<RecyclerViewItems> items = new Vector<>();
-            result = dbHelper.select("Theme", where);
+            final Vector<RecyclerViewItems> items = new Vector<>();
+            Response.Listener rListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        JsonParser jsonParser = new JsonParser();
+                        //Log.d("aaaa",response);
+                        JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
+                        result = null;
+                        result = new Vector[jsonArray.size()];
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            JsonObject jsonObject = (JsonObject) jsonArray.get(i);
+                            result[i] = new Vector();
+                            result[i].add(jsonObject.get("num").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("id").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("library").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("name").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("color").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("date").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("tags").toString().replace("\"",""));
+                            //Log.d("aaaa", result[i].toString());
+                        }
+                        recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
+                        for (int i = 0; i < result.length; i++) {
+                            if (result.length == 0)
+                                break;
+                            items.add(new RecyclerViewItems(result[i].get(0).toString(),result[i].get(1).toString(), result[i].get(2).toString(),
+                                    result[i].get(3).toString(), result[i].get(4).toString(), result[i].get(5).toString(), result[i].get(6).toString()));
+                        }
+                        search_rv_themeList.setLayoutManager(new LinearLayoutManager(getContext().getApplicationContext()));
 
-            recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
+                        search_rv_themeList.setAdapter(recyclerViewAdapter);
+                        recyclerViewAdapter.notifyDataSetChanged();
+                    }
+                    catch (Exception e){
+                        Log.d("mytest",e.toString());
+                    }
+                }
+            };
+            ValidateRequest vRequest = new ValidateRequest(Login.getInstance().getId(),search_sp_sort.getSelectedItemPosition(),search_chk_lib.isChecked(),search_edt_keyword.getText().toString(),rListener);
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            queue.add(vRequest);
+            //result = dbHelper.select("Theme", where);
+            /*recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
             for (int i = 0; i < result.length; i++) {
                 if (result.length == 0)
                     break;
@@ -115,7 +166,7 @@ public class SearchFragment extends Fragment {
             search_rv_themeList.setLayoutManager(new LinearLayoutManager(getContext()));
 
             search_rv_themeList.setAdapter(recyclerViewAdapter);
-            recyclerViewAdapter.notifyDataSetChanged();
+            recyclerViewAdapter.notifyDataSetChanged();*/
 
 
         } catch (SQLException sqle) {

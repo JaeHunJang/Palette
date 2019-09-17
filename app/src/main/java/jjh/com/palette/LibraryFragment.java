@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Vector;
 
@@ -33,6 +41,7 @@ public class LibraryFragment extends Fragment {
     private DBHelper dbHelper;
     private RecyclerViewAdapter recyclerViewAdapter;
     private View dialog_newLibrary; //라이브러리 추가시 띄울 대화상자
+    Vector[] result;
 
     @Nullable
     @Override
@@ -45,7 +54,7 @@ public class LibraryFragment extends Fragment {
         dbHelper = new DBHelper(lib.getContext());
 
         setSpinnerData();//라이브러리를 표시할 스피너를 갱신하는 메소드
-        setRecyclerData("기본 라이브러리"); //처음엔 기본 라이브러리를 표시
+        setRecyclerData("Default"); //처음엔 기본 라이브러리를 표시
         lib_sp_lib.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -110,9 +119,38 @@ public class LibraryFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {//추가 버튼 클릭시 라이브러리 추가 생성
                                 if (flag) { //입력받은 lib 이름이 규칙에 맞으면 생성 아니면 메시지 출력
                                     try {
-                                        dbHelper.insert("Library", "'" + Login.getInstance().getId() + "', '" + dlg_fa_tit_lib.getText().toString() + "'");
-                                        Toast.makeText(getContext(), "라이브러리가 추가되었습니다.", Toast.LENGTH_SHORT).show();
-                                        setSpinnerData();
+                                        Response.Listener rListener = new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try{
+                                                    JsonParser jsonParser = new JsonParser();
+                                                    JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
+                                                    //Log.d("aaaa",jsonObject.toString().replace("\"","")+"/"+jsonObject.toString().replace("\"","").equals("false"));
+                                                    if (jsonObject.toString().replace("\"","").equals("overlap")) { //검색결과가 없으면 다시 입력
+                                                        Toast.makeText(getContext(), "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(getContext(), "라이브러리가 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                                                        setSpinnerData();
+                                                    }
+                                                    //result = dbhelper.select("Account", " id= '" + id + "'"); //테이블에서 id 조회
+                                                /*if (result.length != 0) { //id가 존재하는 지 확인
+                                                    Toast.makeText(getApplicationContext(), "중복되는 ID가 있습니다.", Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }*/
+
+
+                                                }
+                                                catch (Exception e){
+                                                    Log.d("mytest",e.toString());
+                                                }
+                                            }
+                                        };
+                                        ValidateRequest vRequest = new ValidateRequest(Login.getInstance().getId(),dlg_fa_tit_lib.getText().toString(),rListener);
+                                        RequestQueue queue = Volley.newRequestQueue(getContext());
+                                        queue.add(vRequest);
+                                        //dbHelper.insert("Library", "'" + Login.getInstance().getId() + "', '" + dlg_fa_tit_lib.getText().toString() + "'");
+                                        /*Toast.makeText(getContext(), "라이브러리가 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                                        setSpinnerData();*/
                                     } catch (SQLException sqle) {
                                         dbHelper.getError(sqle);
                                     }
@@ -131,22 +169,42 @@ public class LibraryFragment extends Fragment {
 
     void setSpinnerData() { //라이브러리를 표시할 스피너를 갱신하는 메소드
         try {
-            Vector[] libResult = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'");
-            Vector<String> spItems = new Vector<>();
-            for (Vector r : libResult) {
-                spItems.add(r.get(1).toString());
-            }
-            ArrayAdapter spinnerAdpater = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spItems);
-            spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            lib_sp_lib.setAdapter(spinnerAdpater);
-            lib_sp_lib.setSelection(spItems.size() - 1);
+            Response.Listener rListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        JsonParser jsonParser = new JsonParser();
+                        Log.d("aaaa",response);
+                        JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
+                        Vector<String> spItems = new Vector<>();
+
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            JsonObject jsonObject = (JsonObject) jsonArray.get(i);
+                            spItems.add(jsonObject.get("library").toString().replace("\"",""));
+                        }
+                        ArrayAdapter spinnerAdpater = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spItems);
+                        spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        lib_sp_lib.setAdapter(spinnerAdpater);
+                        lib_sp_lib.setSelection(0);
+                    }
+                    catch (Exception e){
+                        Log.d("mytest",e.toString());
+                    }
+                }
+            };
+            ValidateRequest vRequest = new ValidateRequest(0,Login.getInstance().getId(),rListener);
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            queue.add(vRequest);
+
+            //Vector[] libResult = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'");
+
         } catch (SQLException sqle) {
             dbHelper.getError(sqle);
         }
     }
 
     void setRecyclerData(String lib) { //라이브러리가 가진 리스트를 출력하는 메소드
-        try {
+        try {/*
             Vector<RecyclerViewItems> items = new Vector<>();
             Vector[] result = dbHelper.select("Theme", "library = '" + lib + "' and id = '" + Login.getInstance().getId() + "'");
 
@@ -161,7 +219,49 @@ public class LibraryFragment extends Fragment {
 
             lib_rv_themeList.setAdapter(recyclerViewAdapter);
             recyclerViewAdapter.notifyDataSetChanged();
+*/
+            final Vector<RecyclerViewItems> items = new Vector<>();
+            Response.Listener rListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        JsonParser jsonParser = new JsonParser();
+                        //Log.d("aaaa",response);
+                        JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
+                        result = null;
+                        result = new Vector[jsonArray.size()];
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            JsonObject jsonObject = (JsonObject) jsonArray.get(i);
+                            result[i] = new Vector();
+                            result[i].add(jsonObject.get("num").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("id").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("library").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("name").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("color").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("date").toString().replace("\"",""));
+                            result[i].add(jsonObject.get("tags").toString().replace("\"",""));
+                            //Log.d("aaaa", result[i].toString());
+                        }
+                        recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
+                        for (int i = 0; i < result.length; i++) {
+                            /*if (result.length == 0)
+                                break;*/
+                            items.add(new RecyclerViewItems(result[i].get(0).toString(), result[i].get(1).toString(),result[i].get(2).toString(),
+                                    result[i].get(3).toString(), result[i].get(4).toString(), result[i].get(5).toString(), result[i].get(6).toString()));
+                        }
+                        lib_rv_themeList.setLayoutManager(new LinearLayoutManager(getContext()));
 
+                        lib_rv_themeList.setAdapter(recyclerViewAdapter);
+                        recyclerViewAdapter.notifyDataSetChanged();
+                    }
+                    catch (Exception e){
+                        Log.d("mytest",e.toString());
+                    }
+                }
+            };
+            ValidateRequest vRequest = new ValidateRequest(Login.getInstance().getId(),2,true,lib,rListener);
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            queue.add(vRequest);
         } catch (SQLException sqle) {
             dbHelper.getError(sqle);
         }
