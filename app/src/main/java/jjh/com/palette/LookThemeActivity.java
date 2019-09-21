@@ -5,12 +5,22 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Vector;
 
@@ -124,34 +134,76 @@ public class LookThemeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    Vector[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인된 아이디의 라이브러리를 가져옴
-                    items = new String[result.length];
+                    //Vector[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인된 아이디의 라이브러리를 가져옴
+                    /*items = new String[result.length];
                     for (int i = 0; i < result.length; i++) {
                         items[i] = result[i].get(1).toString();
-                    }
-                    selected = items.length - 1;
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(LookThemeActivity.this); //라이브러리 선택 대화상자 출력
-                    dlg.setTitle("라이브러리 선택")
-                            .setSingleChoiceItems(items, items.length - 1, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    selected = which;
+                    }*/
+                    Response.Listener rListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try{
+                                JsonParser jsonParser = new JsonParser();
+                                JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
+                                items = new String[jsonArray.size()];
+                                for (int i = 0; i < items.length; i++) {
+                                    JsonObject jsonObject = (JsonObject) jsonArray.get(i);
+                                    items[i] = jsonObject.get("library").toString().replace("\"","");
                                 }
-                            })
-                            .setNegativeButton("닫기", null)
-                            .setPositiveButton("추가", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dbHelper.insert("Theme(id,library,name,color,date,tags)", "'" + Login.getInstance().getId() + "','" + items[selected] + "', '" + data[3] + "', '" + data[4] + "', '" + data[5] + "', '" + data[6] + "'");
-                                    Toast.makeText(getApplicationContext(), "복사되었습니다.", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
-                                    intent.putExtra("page",1);//라이브러리화면으로 이동
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            })
-                            .show();
+                                selected = 0;
+                                AlertDialog.Builder dlg = new AlertDialog.Builder(LookThemeActivity.this); //라이브러리 선택 대화상자 출력
+                                dlg.setTitle("라이브러리 선택")
+                                        .setSingleChoiceItems(items, items.length - 1, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                selected = which;
+                                            }
+                                        })
+                                        .setNegativeButton("닫기", null)
+                                        .setPositiveButton("추가", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //dbHelper.insert("Theme(id,library,name,color,date,tags)", "'" + Login.getInstance().getId() + "','" + items[selected] + "', '" + data[3] + "', '" + data[4] + "', '" + data[5] + "', '" + data[6] + "'");
+                                                Response.Listener rListener = new Response.Listener<String>() {
+                                                    @Override
+                                                    public void onResponse(String response) {
+                                                        try{
+                                                            JsonParser jsonParser = new JsonParser();
+                                                            JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
+                                                            if (jsonObject.toString().replace("\"","").equals("false")/*result[0].get(0).toString().equals("true")*/) { //검색결과가 없으면 다시 입력
+                                                                Toast.makeText(getApplicationContext(), "저장에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                                            } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                                                Toast.makeText(getApplicationContext(), "복사되었습니다.", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                        catch (Exception e){
+                                                            Log.d("mytest",e.toString());
+                                                        }
+                                                    }
+                                                };
+                                                ValidateRequest vRequest = new ValidateRequest(Login.getInstance().getId(),items[selected],data[3],data[4],data[5],data[6],rListener);
+                                                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                                                queue.add(vRequest);
+
+                                                //Toast.makeText(getApplicationContext(), "복사되었습니다.", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
+                                                intent.putExtra("page",1);//라이브러리화면으로 이동
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        })
+                                        .show();
+
+                            }
+                            catch (Exception e){
+                                Log.d("mytest",e.toString());
+                            }
+                        }
+                    };
+                    ValidateRequest vRequest = new ValidateRequest(0,Login.getInstance().getId(),rListener);
+                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                    queue.add(vRequest);
 
                 } catch (SQLException sqle) {
                     dbHelper.getError(sqle);
@@ -163,8 +215,28 @@ public class LookThemeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    dbHelper.delete("Theme", "num = " + data[0] + " and id = '" + Login.getInstance().getId() + "' and library = '" + data[2] + "' and name = '" + data[3] + "'");
-                    Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    //dbHelper.delete("Theme", "num = " + data[0] + " and id = '" + Login.getInstance().getId() + "' and library = '" + data[2] + "' and name = '" + data[3] + "'");
+                    Response.Listener rListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try{
+                                JsonParser jsonParser = new JsonParser();
+                                JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
+                                if (jsonObject.toString().replace("\"","").equals("false")/*result[0].get(0).toString().equals("true")*/) { //검색결과가 없으면 다시 입력
+                                    Toast.makeText(getApplicationContext(), "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                    Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            catch (Exception e){
+                                Log.d("mytest",e.toString());
+                            }
+                        }
+                    };
+                    ValidateRequest vRequest = new ValidateRequest(true,Login.getInstance().getId(),data[2],data[3],data[0],rListener);
+                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                    queue.add(vRequest);
+                    //Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
                     intent.putExtra("page",1); //라이브러리화면으로 이동

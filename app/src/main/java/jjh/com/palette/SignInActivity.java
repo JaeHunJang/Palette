@@ -249,7 +249,6 @@ public class SignInActivity extends AppCompatActivity {
                                     try{
                                         JsonParser jsonParser = new JsonParser();
                                         //JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
-                                        result = null;
                                         //result = new Vector[jsonArray.size()];
                                         //for (int i = 0; i < jsonArray.size(); i++) {
                                             JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
@@ -356,6 +355,9 @@ public class SignInActivity extends AppCompatActivity {
                                 if (result[0].get(0).equals(id) && result[0].get(1).equals(pw)) { //id와 pw 일치시 MainActivity 실행
                                     Login login = Login.getInstance();
                                     login.setId(id+"");
+                                    login.setPw(result[0].get(1).toString());
+                                    login.setBirth(result[0].get(2).toString());
+                                    login.setHint(result[0].get(3).toString());
                                     login.setLoginState(true);
                                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함

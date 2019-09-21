@@ -22,17 +22,49 @@ public class ValidateRequest extends StringRequest {
         super(Method.POST, URL+"deleteAll.php", listener, null);
         parameters.put("id",id);
     }
+    public ValidateRequest(boolean delete, String id,String library,String name,String num, Response.Listener<String> listener) {
+        super(Method.POST, URL+"deleteTheme.php", listener, null);
+        parameters.put("id",id);
+        parameters.put("library",library);
+        parameters.put("name",name);
+        parameters.put("num",num);
+    }
+    public ValidateRequest(boolean accountUpdate, String id,String pw,String hint, Response.Listener<String> listener) {
+        super(Method.POST, URL+"updateAccount.php", listener, null);
+        parameters.put("id",id);
+        parameters.put("pw",pw);
+        parameters.put("hint",hint);
+    }
     public ValidateRequest(int library,String id, Response.Listener<String> listener) {
         super(Method.POST, URL+"selectLibrary.php", listener, null);
         parameters.put("id",id);
-    }public ValidateRequest(String id,String library, Response.Listener<String> listener) {
+    }
+    public ValidateRequest(String id,String library, Response.Listener<String> listener) {
         super(Method.POST, URL+"insertLibrary.php", listener, null);
         parameters.put("id",id);
         parameters.put("library",library);
     }
+    public ValidateRequest(String id,String library,String name,String color,String date,String tags, Response.Listener<String> listener) {
+        super(Method.POST, URL+"insertTheme.php", listener, null);
+        parameters.put("id",id);
+        parameters.put("library",library);
+        parameters.put("name",name);
+        parameters.put("color",color);
+        parameters.put("date",date);
+        parameters.put("tags",tags);
+    }
+    public ValidateRequest(String id,String library,String name,String color,String date,String tags,String num, Response.Listener<String> listener) {
+        super(Method.POST, URL+"updateTheme.php", listener, null);
+        parameters.put("id",id);
+        parameters.put("library",library);
+        parameters.put("name",name);
+        parameters.put("color",color);
+        parameters.put("date",date);
+        parameters.put("tags",tags);
+        parameters.put("num",num);
+    }
     public ValidateRequest(String id, int num, boolean checked, String keyword, Response.Listener<String> listener) {
         super(Method.POST, URL+"selectTheme.php", listener, null);
-        //Log.d("aaaa",id+num+checked+keyword);
         parameters.put("id",id);
         if (num == 0)
             parameters.put("num","0");

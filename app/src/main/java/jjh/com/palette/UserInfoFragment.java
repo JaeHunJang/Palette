@@ -23,6 +23,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Vector;
 
@@ -36,7 +37,7 @@ public class UserInfoFragment extends Fragment {
     DBHelper dbhelper;
     StringChecker strChk;
     View dlg_userInfo;
-    String id, pw, birth, hint;
+    private String id, pw, birth, hint;
     Vector[] result;
     boolean[] flags = {true, true};
 
@@ -51,7 +52,37 @@ public class UserInfoFragment extends Fragment {
         final TextInputLayout ui_til_pw, ui_til_hint;
         final TextInputEditText ui_tit_pw, ui_tit_hint;
 
-        dbhelper = new DBHelper(getContext());
+
+
+        ui_tv_id = userInfo.findViewById(R.id.ui_tv_id);
+        ui_tv_birth = userInfo.findViewById(R.id.ui_tv_birth);
+        ui_tit_pw = userInfo.findViewById(R.id.ui_tit_pw);
+        ui_tit_hint = userInfo.findViewById(R.id.ui_tit_hint);
+
+        ui_til_pw = userInfo.findViewById(R.id.ui_til_pw);
+        ui_til_hint = userInfo.findViewById(R.id.ui_til_hint);
+
+        ui_btn_update = userInfo.findViewById(R.id.ui_btn_update);
+        ui_btn_logout = userInfo.findViewById(R.id.ui_btn_logout);
+        ui_btn_cancel = userInfo.findViewById(R.id.ui_btn_cancel);
+
+        ui_til_pw.setCounterEnabled(true);
+        ui_til_pw.setCounterMaxLength(20);
+        ui_til_pw.setPasswordVisibilityToggleEnabled(true);
+
+        strChk = new StringChecker();
+
+        id = Login.getInstance().getId();
+        pw = Login.getInstance().getPw();
+        birth = Login.getInstance().getBirth();
+        hint = Login.getInstance().getHint();
+        //String temp = ui_tv_id.getText().toString() + id;
+        ui_tv_id.setText(id);
+        //temp = ui_tv_birth.getText().toString() + id;
+        ui_tit_pw.setText(pw);
+        ui_tv_birth.setText(birth);
+        ui_tit_hint.setText(hint);
+        /*dbhelper = new DBHelper(getContext());
         try {
             //Vector[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
             Response.Listener rListener = new Response.Listener<String>() {
@@ -72,10 +103,10 @@ public class UserInfoFragment extends Fragment {
                             Log.d("aaaa",jsonObject.toString());
                             //Log.d("aaaaa",jsonObject.get("id").toString()+jsonObject.get("pw").toString());
                         }
-                        /*id = result[0].get(0).toString();
+                        *//*id = result[0].get(0).toString();
                         pw = result[0].get(1).toString();
                         birth = result[0].get(2).toString();
-                        hint = result[0].get(3).toString();*/
+                        hint = result[0].get(3).toString();*//*
                     }
                     catch (Exception e){
                         Log.d("mytest",e.toString());
@@ -88,33 +119,7 @@ public class UserInfoFragment extends Fragment {
 
         } catch (SQLException sqle) {
             dbhelper.getError(sqle);
-        }
-
-        ui_tv_id = userInfo.findViewById(R.id.ui_tv_id);
-        ui_tv_birth = userInfo.findViewById(R.id.ui_tv_birth);
-        ui_tit_pw = userInfo.findViewById(R.id.ui_tit_pw);
-        ui_tit_hint = userInfo.findViewById(R.id.ui_tit_hint);
-
-        ui_til_pw = userInfo.findViewById(R.id.ui_til_pw);
-        ui_til_hint = userInfo.findViewById(R.id.ui_til_hint);
-
-        ui_btn_update = userInfo.findViewById(R.id.ui_btn_update);
-        ui_btn_logout = userInfo.findViewById(R.id.ui_btn_logout);
-        ui_btn_cancel = userInfo.findViewById(R.id.ui_btn_cancel);
-
-        ui_til_pw.setCounterEnabled(true);
-        ui_til_pw.setCounterMaxLength(20);
-        ui_til_pw.setPasswordVisibilityToggleEnabled(true);
-
-        strChk = new StringChecker();
-
-        String temp = ui_tv_id.getText().toString() + id;
-        ui_tv_id.setText(temp);
-        temp = ui_tv_birth.getText().toString() + id;
-        ui_tv_birth.setText(temp);
-        ui_tit_pw.setText(pw);
-        ui_tv_birth.setText(birth);
-        ui_tit_hint.setText(hint);
+        }*/
         /****************선언 및 초기화 ********************************/
 
 
@@ -275,13 +280,46 @@ public class UserInfoFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
-                                    dbhelper.update("Account", "pw = '" + pw + "', hint ='" + hint + "'", "id = '" + id + "'"); //테이블에 데이터 삽입
+                                    //dbhelper.update("Account", "pw = '" + pw + "', hint ='" + hint + "'", "id = '" + id + "'"); //테이블에 데이터 삽입
+                                    Response.Listener rListener = new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try{
+                                                JsonParser jsonParser = new JsonParser();
+                                                //JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
+                                                result = null;
+                                                //result = new Vector[jsonArray.size()];
+                                                //for (int i = 0; i < jsonArray.size(); i++) {
+                                                JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
+                                                //result[i] = new Vector();
+                                                //result[i].add(jsonObject.get("flag").toString().replace("\"",""));
+                                                //Log.d("aaaaa",result[0].get(0).toString()+" 제발");
+                                                //}
+                                                //Vector[] result = dbhelper.select("Account", " id='" + id + "' and birth='" + birth + "' and hint='" + hint + "'"); //테이블에서 데이터
+                                                //Log.d("aaaaa",jsonObject.toString().replace("\"",""));
+                                                //Log.d("aaaaa",jsonObject.toString().replace("\'","").equals("false")+"");
+
+                                                if (jsonObject.toString().replace("\"","").equals("false")) { //검색결과가 없으면 다시 입력
+                                                    Toast.makeText(getContext(), "입력 정보를 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
+                                                } else if(jsonObject.toString().replace("\"","").equals("true")) {
+                                                    Toast.makeText(getContext(),"다시 로그인 해주세요.",Toast.LENGTH_LONG).show();
+                                                    ui_btn_logout.callOnClick(); //회원정보가 수정되었으니 다시 로그인을 해야함
+                                                } else{
+                                                    throw new Exception();
+                                                }
+                                            }
+                                            catch (Exception e){
+                                                Log.d("mytest",e.toString());
+                                            }
+                                        }
+                                    };
+                                    ValidateRequest vRequest = new ValidateRequest(true,id,pw,hint,rListener);
+                                    RequestQueue queue = Volley.newRequestQueue(getContext());
+                                    queue.add(vRequest);
 
                                 } catch (SQLException sqle) {
                                     dbhelper.getError(sqle);
                                 }
-                                Toast.makeText(getContext(),"다시 로그인 해주세요.",Toast.LENGTH_LONG).show();
-                                ui_btn_logout.callOnClick(); //회원정보가 수정되었으니 다시 로그인을 해야함
                             }
                         })
                         .setNegativeButton("취소", null)
