@@ -1,8 +1,6 @@
 package jjh.com.palette;
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -19,8 +17,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
@@ -33,7 +29,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 //회원가입하는 화면
 public class SignUpActivity extends AppCompatActivity {
-    DBHelper dbhelper;
     View dlg_userInfo;
     StringChecker strChk;
     Vector[] result;
@@ -44,7 +39,6 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         /***************선언 및 초기화 ****************/
-        dbhelper = new DBHelper(this);
         final TextInputLayout signUp_til_id, signUp_til_pw, signUp_til_pwChk, signUp_til_hint;
         final TextInputEditText signUp_tit_id, signUp_tit_pw, signUp_tit_pwChk, signUp_tit_hint;
         final DatePicker signUp_dp_birth;
@@ -236,26 +230,19 @@ public class SignUpActivity extends AppCompatActivity {
                         .setPositiveButton("가입하기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                try {
                                     Response.Listener rListener = new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
                                             try{
                                                 JsonParser jsonParser = new JsonParser();
                                                 JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
-                                                //Log.d("aaaa",jsonObject.toString().replace("\"","")+"/"+jsonObject.toString().replace("\"","").equals("false"));
                                                 if (jsonObject.toString().replace("\"","").equals("false")) { //검색결과가 없으면 다시 입력
                                                     Toast.makeText(SignUpActivity.this, "입력 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
-                                                } else if(jsonObject.toString().replace("\"","").equals("overlap")) { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                                } else if(jsonObject.toString().replace("\"","").equals("overlap")) {
                                                     Toast.makeText(SignUpActivity.this, "중복되는 ID가 있습니다.", Toast.LENGTH_SHORT).show();
                                                 }else{
                                                     finish();
                                                 }
-                                                //result = dbhelper.select("Account", " id= '" + id + "'"); //테이블에서 id 조회
-                                                /*if (result.length != 0) { //id가 존재하는 지 확인
-                                                    Toast.makeText(getApplicationContext(), "중복되는 ID가 있습니다.", Toast.LENGTH_SHORT).show();
-                                                    return;
-                                                }*/
 
 
                                             }
@@ -268,11 +255,6 @@ public class SignUpActivity extends AppCompatActivity {
                                     RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                                     queue.add(vRequest);
 
-                                    //dbhelper.insert("Account", "'" + id + "','" + pw + "','" + birth + "','" + hint + "'"); //테이블에 데이터 삽입
-                                    //dbhelper.insert("Library", "'" + id + "','" + "기본 라이브러리'"); //기본 라이브러리 제공
-                                } catch (SQLException sqle) {
-                                    dbhelper.getError(sqle);
-                                }
                             }
                         })
                         .setNegativeButton("취소", null)

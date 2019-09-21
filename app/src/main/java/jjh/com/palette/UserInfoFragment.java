@@ -34,7 +34,6 @@ import androidx.fragment.app.Fragment;
 
 //회원정보를 확인하고 수정 탈퇴 로그아웃하는 화면
 public class UserInfoFragment extends Fragment {
-    DBHelper dbhelper;
     StringChecker strChk;
     View dlg_userInfo;
     private String id, pw, birth, hint;
@@ -76,50 +75,10 @@ public class UserInfoFragment extends Fragment {
         pw = Login.getInstance().getPw();
         birth = Login.getInstance().getBirth();
         hint = Login.getInstance().getHint();
-        //String temp = ui_tv_id.getText().toString() + id;
         ui_tv_id.setText(id);
-        //temp = ui_tv_birth.getText().toString() + id;
         ui_tit_pw.setText(pw);
         ui_tv_birth.setText(birth);
         ui_tit_hint.setText(hint);
-        /*dbhelper = new DBHelper(getContext());
-        try {
-            //Vector[] result = dbhelper.select("Account", "id = '" + Login.getInstance().getId() + "'");
-            Response.Listener rListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try{
-                        JsonParser jsonParser = new JsonParser();
-                        JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
-                        //result = null;
-                        //result = new Vector[jsonArray.size()];
-                        for (int i = 0; i < jsonArray.size(); i++) {
-                            JsonObject jsonObject = (JsonObject) jsonArray.get(i);
-                            //result[i] = new Vector();
-                            id = (jsonObject.get("id").toString().replace("\"",""));
-                            pw = (jsonObject.get("pw").toString().replace("\"",""));
-                            birth = (jsonObject.get("birth").toString().replace("\"",""));
-                            hint = (jsonObject.get("hint").toString().replace("\"",""));
-                            Log.d("aaaa",jsonObject.toString());
-                            //Log.d("aaaaa",jsonObject.get("id").toString()+jsonObject.get("pw").toString());
-                        }
-                        *//*id = result[0].get(0).toString();
-                        pw = result[0].get(1).toString();
-                        birth = result[0].get(2).toString();
-                        hint = result[0].get(3).toString();*//*
-                    }
-                    catch (Exception e){
-                        Log.d("mytest",e.toString());
-                    }
-                }
-            };
-            ValidateRequest vRequest = new ValidateRequest(Login.getInstance().getId(),rListener);
-            RequestQueue queue = Volley.newRequestQueue(getContext());
-            queue.add(vRequest);
-
-        } catch (SQLException sqle) {
-            dbhelper.getError(sqle);
-        }*/
         /****************선언 및 초기화 ********************************/
 
 
@@ -204,7 +163,6 @@ public class UserInfoFragment extends Fragment {
                         .setPositiveButton("탈퇴", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                try {
                                     Response.Listener rListener = new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
@@ -220,13 +178,6 @@ public class UserInfoFragment extends Fragment {
                                     RequestQueue queue = Volley.newRequestQueue(getContext());
                                     queue.add(vRequest);
 
-                                    /*dbhelper.delete("Account", "id = '" + Login.getInstance().getId() + "'");
-                                    dbhelper.delete("Library", "id = '" + Login.getInstance().getId() + "'");
-                                    dbhelper.delete("Theme", "id = '" + Login.getInstance().getId() + "'");*/
-
-                                } catch (SQLException sqle) {
-                                    dbhelper.getError(sqle);
-                                }
                                 Intent intent = new Intent(getContext(), SignInActivity.class);
                                 startActivity(intent);
                                 getActivity().finish();
@@ -279,26 +230,12 @@ public class UserInfoFragment extends Fragment {
                         .setPositiveButton("수정하기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    //dbhelper.update("Account", "pw = '" + pw + "', hint ='" + hint + "'", "id = '" + id + "'"); //테이블에 데이터 삽입
                                     Response.Listener rListener = new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
                                             try{
                                                 JsonParser jsonParser = new JsonParser();
-                                                //JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
-                                                result = null;
-                                                //result = new Vector[jsonArray.size()];
-                                                //for (int i = 0; i < jsonArray.size(); i++) {
                                                 JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
-                                                //result[i] = new Vector();
-                                                //result[i].add(jsonObject.get("flag").toString().replace("\"",""));
-                                                //Log.d("aaaaa",result[0].get(0).toString()+" 제발");
-                                                //}
-                                                //Vector[] result = dbhelper.select("Account", " id='" + id + "' and birth='" + birth + "' and hint='" + hint + "'"); //테이블에서 데이터
-                                                //Log.d("aaaaa",jsonObject.toString().replace("\"",""));
-                                                //Log.d("aaaaa",jsonObject.toString().replace("\'","").equals("false")+"");
-
                                                 if (jsonObject.toString().replace("\"","").equals("false")) { //검색결과가 없으면 다시 입력
                                                     Toast.makeText(getContext(), "입력 정보를 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
                                                 } else if(jsonObject.toString().replace("\"","").equals("true")) {
@@ -317,9 +254,6 @@ public class UserInfoFragment extends Fragment {
                                     RequestQueue queue = Volley.newRequestQueue(getContext());
                                     queue.add(vRequest);
 
-                                } catch (SQLException sqle) {
-                                    dbhelper.getError(sqle);
-                                }
                             }
                         })
                         .setNegativeButton("취소", null)

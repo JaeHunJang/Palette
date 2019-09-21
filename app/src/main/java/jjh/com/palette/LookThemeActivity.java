@@ -2,12 +2,10 @@ package jjh.com.palette;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.SQLException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -22,7 +20,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import java.util.Vector;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -30,7 +27,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 //테마 정보를 보는 화면
 public class LookThemeActivity extends AppCompatActivity {
-    DBHelper dbHelper;
     Button[] look_tv_colorPalette = new Button[5]; //색상을 보여줄 뷰
     TextView[] look_tv_colorName = new TextView[5]; //색상코드를 보여줄 뷰
     TextView look_tv_userID, look_tv_themeName, look_tv_LibraryName, look_tv_Tags, look_tv_date; //테마 이름, 만든이, 만든날짜 등의 정보를 보여줄 뷰
@@ -72,7 +68,6 @@ public class LookThemeActivity extends AppCompatActivity {
         look_btn_update = findViewById(R.id.look_btn_update);
         look_btn_copy = findViewById(R.id.look_btn_copy);
 
-        dbHelper = new DBHelper(this);
         strChk = new StringChecker();
         colors = new String[5];
 
@@ -133,12 +128,7 @@ public class LookThemeActivity extends AppCompatActivity {
         look_btn_copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    //Vector[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인된 아이디의 라이브러리를 가져옴
-                    /*items = new String[result.length];
-                    for (int i = 0; i < result.length; i++) {
-                        items[i] = result[i].get(1).toString();
-                    }*/
+
                     Response.Listener rListener = new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -153,7 +143,7 @@ public class LookThemeActivity extends AppCompatActivity {
                                 selected = 0;
                                 AlertDialog.Builder dlg = new AlertDialog.Builder(LookThemeActivity.this); //라이브러리 선택 대화상자 출력
                                 dlg.setTitle("라이브러리 선택")
-                                        .setSingleChoiceItems(items, items.length - 1, new DialogInterface.OnClickListener() {
+                                        .setSingleChoiceItems(items, selected, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 selected = which;
@@ -163,16 +153,15 @@ public class LookThemeActivity extends AppCompatActivity {
                                         .setPositiveButton("추가", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                //dbHelper.insert("Theme(id,library,name,color,date,tags)", "'" + Login.getInstance().getId() + "','" + items[selected] + "', '" + data[3] + "', '" + data[4] + "', '" + data[5] + "', '" + data[6] + "'");
                                                 Response.Listener rListener = new Response.Listener<String>() {
                                                     @Override
                                                     public void onResponse(String response) {
                                                         try{
                                                             JsonParser jsonParser = new JsonParser();
                                                             JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
-                                                            if (jsonObject.toString().replace("\"","").equals("false")/*result[0].get(0).toString().equals("true")*/) { //검색결과가 없으면 다시 입력
+                                                            if (jsonObject.toString().replace("\"","").equals("false")) { //검색결과가 없으면 다시 입력
                                                                 Toast.makeText(getApplicationContext(), "저장에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                                                            } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                                            } else {
                                                                 Toast.makeText(getApplicationContext(), "복사되었습니다.", Toast.LENGTH_SHORT).show();
                                                             }
                                                         }
@@ -185,7 +174,6 @@ public class LookThemeActivity extends AppCompatActivity {
                                                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                                                 queue.add(vRequest);
 
-                                                //Toast.makeText(getApplicationContext(), "복사되었습니다.", Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
                                                 intent.putExtra("page",1);//라이브러리화면으로 이동
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
@@ -205,26 +193,21 @@ public class LookThemeActivity extends AppCompatActivity {
                     RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                     queue.add(vRequest);
 
-                } catch (SQLException sqle) {
-                    dbHelper.getError(sqle);
-                }
             }
         });
         //삭제버튼 이벤트
         look_btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    //dbHelper.delete("Theme", "num = " + data[0] + " and id = '" + Login.getInstance().getId() + "' and library = '" + data[2] + "' and name = '" + data[3] + "'");
                     Response.Listener rListener = new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             try{
                                 JsonParser jsonParser = new JsonParser();
                                 JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
-                                if (jsonObject.toString().replace("\"","").equals("false")/*result[0].get(0).toString().equals("true")*/) { //검색결과가 없으면 다시 입력
+                                if (jsonObject.toString().replace("\"","").equals("false")) { //검색결과가 없으면 다시 입력
                                     Toast.makeText(getApplicationContext(), "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                                } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                } else {
                                     Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -233,18 +216,15 @@ public class LookThemeActivity extends AppCompatActivity {
                             }
                         }
                     };
-                    ValidateRequest vRequest = new ValidateRequest(true,Login.getInstance().getId(),data[2],data[3],data[0],rListener);
+                    ValidateRequest vRequest = new ValidateRequest(false,Login.getInstance().getId(),data[2],data[3],data[0],rListener);
                     RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                     queue.add(vRequest);
-                    //Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LookThemeActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //이전에 실행된 메인 화면을 종료함
                     intent.putExtra("page",1); //라이브러리화면으로 이동
                     startActivity(intent);
                     finish();
-                } catch (SQLException sqle) {
-                    dbHelper.getError(sqle);
-                }
+
             }
         });
         //색상모드 HEX Code

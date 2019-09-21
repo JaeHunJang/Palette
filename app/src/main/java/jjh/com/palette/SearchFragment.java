@@ -1,7 +1,5 @@
 package jjh.com.palette;
 
-import android.content.Intent;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -13,7 +11,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,7 +19,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.util.Arrays;
 import java.util.Vector;
 
 import androidx.annotation.NonNull;
@@ -37,7 +33,6 @@ public class SearchFragment extends Fragment {
     private Spinner search_sp_sort; //정렬 순서를 정하는 스피너
     private CheckBox search_chk_lib; //내 라이브러리에서만 검색할건지 판단할 체크박스
     private EditText search_edt_keyword; //검색 키워드를 입력받을 뷰
-    private DBHelper dbHelper;
     private Button search_btn_keyword;
     RecyclerViewAdapter recyclerViewAdapter;
     Vector[] result;
@@ -55,15 +50,14 @@ public class SearchFragment extends Fragment {
         search_chk_lib = search.findViewById(R.id.search_chk_lib);
         search_edt_keyword = search.findViewById(R.id.search_edt_keyword);
         search_btn_keyword=  search.findViewById(R.id.search_btn_keyword);
-        dbHelper = new DBHelper(search.getContext());
-        setRecyclerData("id like '%%'"); //모든 테마를 보여줌
+        setRecyclerData(); //모든 테마를 보여줌
         /*************** 선언 및 초기화 ******************/
 
         search_edt_keyword.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) { //검색 키워드 입력 후 Enter Key 입력시 검색 실행하는 이벤트
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    selectionQuery();
+                    setRecyclerData();
                 }
                 return false;
             }
@@ -72,7 +66,7 @@ public class SearchFragment extends Fragment {
         search_sp_sort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectionQuery();
+                setRecyclerData();
             }
 
             @Override
@@ -84,42 +78,20 @@ public class SearchFragment extends Fragment {
         search_btn_keyword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectionQuery();
+                setRecyclerData();
             }
         });
         return search;
     }
 
-    private void selectionQuery() { //선택된 각종 정보에 맞춰서 검색을 하는 메소드
-        String keyword = search_edt_keyword.getText().toString();
-        switch (search_sp_sort.getSelectedItemPosition()) {
-            case 0:
-                if (search_chk_lib.isChecked()) {
-                    setRecyclerData("(name like '%" + keyword + "%'  or tags like '%"+ keyword+"%')and id = '" + Login.getInstance().getId() + "'order by date desc");
-                    break;
-                }
-                setRecyclerData("(name like '%" + keyword + "%' or tags like '%"+ keyword+"%') and id like '%%' order by date desc");
-                break;
-            case 1:
-                if (search_chk_lib.isChecked()) {
-                    setRecyclerData("(name like '%" + keyword + "%'  or tags like '%"+ keyword+"%')and id = '" + Login.getInstance().getId() + "'");
-                    break;
-                }
-                setRecyclerData("(name like '%" + keyword + "%' or tags like '%"+ keyword+"%') and id like '%%'");
-                break;
-        }
-    }
 
-
-    void setRecyclerData(String where) { //DB 검색 결과를 리사이클러뷰에 새롭게 적용하는 메소드
-        try {
+    void setRecyclerData() { //DB 검색 결과를 리사이클러뷰에 새롭게 적용하는 메소드
             final Vector<RecyclerViewItems> items = new Vector<>();
             Response.Listener rListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try{
                         JsonParser jsonParser = new JsonParser();
-                        //Log.d("aaaa",response);
                         JsonArray jsonArray = (JsonArray)jsonParser.parse(response);
                         result = null;
                         result = new Vector[jsonArray.size()];
@@ -133,7 +105,6 @@ public class SearchFragment extends Fragment {
                             result[i].add(jsonObject.get("color").toString().replace("\"",""));
                             result[i].add(jsonObject.get("date").toString().replace("\"",""));
                             result[i].add(jsonObject.get("tags").toString().replace("\"",""));
-                            //Log.d("aaaa", result[i].toString());
                         }
                         recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
                         for (int i = 0; i < result.length; i++) {
@@ -155,22 +126,8 @@ public class SearchFragment extends Fragment {
             ValidateRequest vRequest = new ValidateRequest(Login.getInstance().getId(),search_sp_sort.getSelectedItemPosition(),search_chk_lib.isChecked(),search_edt_keyword.getText().toString(),rListener);
             RequestQueue queue = Volley.newRequestQueue(getContext());
             queue.add(vRequest);
-            //result = dbHelper.select("Theme", where);
-            /*recyclerViewAdapter = new RecyclerViewAdapter(items,getActivity());
-            for (int i = 0; i < result.length; i++) {
-                if (result.length == 0)
-                    break;
-                items.add(new RecyclerViewItems(result[i].get(0).toString(),result[i].get(1).toString(), result[i].get(2).toString(),
-                        result[i].get(3).toString(), result[i].get(4).toString(), result[i].get(5).toString(), result[i].get(6).toString()));
-            }
-            search_rv_themeList.setLayoutManager(new LinearLayoutManager(getContext()));
-
-            search_rv_themeList.setAdapter(recyclerViewAdapter);
-            recyclerViewAdapter.notifyDataSetChanged();*/
 
 
-        } catch (SQLException sqle) {
-            dbHelper.getError(sqle);
-        }
+
     }
 }

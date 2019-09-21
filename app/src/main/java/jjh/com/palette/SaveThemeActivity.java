@@ -1,7 +1,6 @@
 package jjh.com.palette;
 
 import android.content.Intent;
-import android.database.SQLException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -33,7 +32,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 //테마를 저장하는 화면
 public class SaveThemeActivity extends AppCompatActivity {
-    DBHelper dbHelper;
     Button[] save_tv_colorPalette = new Button[5]; //색상을 보여줄 뷰
     TextView[] save_tv_colorName = new TextView[5]; //색상코드를 보여줄 뷰
     EditText save_edt_themeName; //입력받을 테마이름
@@ -77,7 +75,6 @@ public class SaveThemeActivity extends AppCompatActivity {
         save_btn_reset = findViewById(R.id.save_btn_reset);
         save_btn_save = findViewById(R.id.save_btn_save);
 
-        dbHelper = new DBHelper(this);
         strChk = new StringChecker();
         flag = false;
         colors = new String[5];
@@ -95,18 +92,6 @@ public class SaveThemeActivity extends AppCompatActivity {
         if (request) {
             flag = true;
         }
-        /*try {
-            Vector[] result = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'"); //로그인한 아이디의 라이브러리를 불러옴
-            for (Vector r : result) {
-                items.add(r.get(1).toString());
-            }
-            ArrayAdapter<String> spinnerAdpater = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, items);
-            spinnerAdpater.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            save_sp_LibraryName.setAdapter(spinnerAdpater);
-            save_sp_LibraryName.setSelection(items.size() - 1);
-        } catch (SQLException sqle) {
-            dbHelper.getError(sqle);
-        }*/
          //라이브러리를 표시할 스피너를 갱신하는 메소드
 
             Response.Listener rListener = new Response.Listener<String>() {
@@ -133,9 +118,6 @@ public class SaveThemeActivity extends AppCompatActivity {
             ValidateRequest vRequest = new ValidateRequest(0,Login.getInstance().getId(),rListener);
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             queue.add(vRequest);
-
-            //Vector[] libResult = dbHelper.select("Library", "id = '" + Login.getInstance().getId() + "'");
-
 
 
         if(intent.getBooleanExtra("request",false)){ //수정버튼을 통해 왔을때
@@ -258,12 +240,10 @@ public class SaveThemeActivity extends AppCompatActivity {
                         continue;
                     tag += s.getSelectedItem().toString() + "#";
                 }
-                try {
                     Intent getIntent = getIntent();
                     boolean request = getIntent.getBooleanExtra("request",false); //수정 버튼을 통해서 왔을때
                     if (request) {
                         final String[] data = getIntent.getStringArrayExtra("selectedItem"); //기존 데이터를 가져옴
-                        //String where = "num="+data[0]; //기존 데이터를 update 의 where 절로 활용
 
                         Response.Listener rListener = new Response.Listener<String>() {
                             @Override
@@ -271,9 +251,9 @@ public class SaveThemeActivity extends AppCompatActivity {
                                 try{
                                     JsonParser jsonParser = new JsonParser();
                                     JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
-                                    if (jsonObject.toString().replace("\"","").equals("false")/*result[0].get(0).toString().equals("true")*/) { //검색결과가 없으면 다시 입력
+                                    if (jsonObject.toString().replace("\"","").equals("false")) {
                                         Toast.makeText(getApplicationContext(), "저장에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                                    } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                    } else {
                                         Toast.makeText(getApplicationContext(), "테마가 수정되었습니다.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -286,19 +266,17 @@ public class SaveThemeActivity extends AppCompatActivity {
                         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                         queue.add(vRequest);
 
-                        //dbHelper.update("Theme", "id ='" + Login.getInstance().getId() + "', library ='" + lib + "', name ='" + themeName + "', color = '" + color + "', date= '" + today + "',tags= '" + tag + "'", where);
                     }
                     else {
-                        //dbHelper.insert("Theme(id,library,name,color,date,tags)", "'" + Login.getInstance().getId() + "','" + lib + "', '" + themeName + "', '" + color + "', '" + today + "', '" + tag + "'");
                         Response.Listener rListener = new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 try{
                                     JsonParser jsonParser = new JsonParser();
                                     JsonPrimitive jsonObject = (JsonPrimitive) jsonParser.parse(response);
-                                    if (jsonObject.toString().replace("\"","").equals("false")/*result[0].get(0).toString().equals("true")*/) { //검색결과가 없으면 다시 입력
+                                    if (jsonObject.toString().replace("\"","").equals("false")) { //검색결과가 없으면 다시 입력
                                         Toast.makeText(getApplicationContext(), "저장에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                                    } else { //검색결과가 존재하다면 pw를 0000 으로 초기화해주고 종료
+                                    } else {
                                         Toast.makeText(getApplicationContext(), "테마가 저장되었습니다.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -310,13 +288,8 @@ public class SaveThemeActivity extends AppCompatActivity {
                         ValidateRequest vRequest = new ValidateRequest(Login.getInstance().getId(),lib,themeName,color,today,tag,rListener);
                         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                         queue.add(vRequest);
-                        /*Intent intent = new Intent(SaveThemeActivity.this, MainActivity.class); //저장이 되면 메인화면으로 돌아감
-                        intent.putExtra("page",1);
-                        startActivity(intent);*/
                     }
-                } catch (SQLException sqle) {
-                    dbHelper.getError(sqle);
-                }
+
                 Intent intent = new Intent(SaveThemeActivity.this, MainActivity.class); //저장이 되면 메인화면으로 돌아감
                 intent.putExtra("page",1);
                 startActivity(intent);
